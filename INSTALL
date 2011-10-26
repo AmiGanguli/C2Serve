@@ -1,0 +1,5 @@
+cd to build directory
+run 'cmake  -DINSTALL_PREFIX=<install-dir> <c2s-root>'
+run 'make install'
+
+to define boost root directory add option -DBOOST_ROOT=<path-to-boost>
