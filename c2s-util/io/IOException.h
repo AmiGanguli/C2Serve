@@ -34,7 +34,7 @@
 
 #include "GenericException.h"
 
-namespace g
+namespace c2s
 {
   namespace io
   {

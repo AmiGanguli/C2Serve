@@ -37,49 +37,44 @@
 #include "C2SHttpHeaderFields.h"
 #include "C2SHttpQueryFields.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  /**
+   * TODO: allow more charsets
+   */
+  typedef enum { ISO_8859_1 = 0 } EForRestCharSet;
+
+  class C2SHttpRequestHeader
   {
+  public:
 
-    /**
-     * TODO: allow more charsets
-     */
-    typedef enum { ISO_8859_1 = 0 } EForRestCharSet;
+    C2SHttpRequestHeader( C2SHttpMethod method , const std::string &sUri )
+      : Method( method ),
+        URI( sUri ),
+        Version( 1.1f )
+    {};
 
-    class C2SHttpRequestHeader
-    {
-    public:
+    C2SHttpRequestHeader()
+      : Method( GET ),
+        Version( 1.1f )
+    {};
 
-      C2SHttpRequestHeader( C2SHttpMethod method , const std::string &sUri )
-        : Method( method ),
-          URI( sUri ),
-          Version( 1.1f )
-      {};
+    virtual ~C2SHttpRequestHeader(){};
 
-      C2SHttpRequestHeader()
-        : Method( GET ),
-          Version( 1.1f )
-      {};
+    std::string toString() const;
 
-      virtual ~C2SHttpRequestHeader(){};
+    C2SHttpMethod Method;
 
-      std::string toString() const;
+    std::string URI;
 
-      C2SHttpMethod Method;
+    float Version;
 
-      std::string URI;
+    C2SHttpHeaderFields Fields;
 
-      float Version;
+    C2SHttpQueryFields QueryFields;
 
-      C2SHttpHeaderFields Fields;
-
-      C2SHttpQueryFields QueryFields;
-
-    };
-
-  }
+  };
 
 }
 

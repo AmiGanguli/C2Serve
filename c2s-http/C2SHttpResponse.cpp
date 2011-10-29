@@ -33,69 +33,66 @@
 
 #include <cassert>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  C2SHttpResponse::C2SHttpResponse( const C2SHttpResponseHeader &header )
+    : m_header( header ),
+      m_pBody( 0 )
   {
+  }
 
-    C2SHttpResponse::C2SHttpResponse( const C2SHttpResponseHeader &header )
-      : m_header( header ),
-        m_pBody( 0 )
+  C2SHttpResponse::C2SHttpResponse()
+    : m_pBody( 0 )
+  {};
+
+  C2SHttpResponse::C2SHttpResponse( const C2SHttpResponse &response )
+    : m_parser( response.m_parser ),
+      m_header( response.m_header ),
+      m_pBody( 0 )
+  {
+    if ( m_header.Fields.getContentLength() )
     {
+      if ( response.m_pBody )
+      {
+        assert( m_header.Fields.getContentLength() == response.m_pBody->size );
+
+        //copy content
+        char *data = new char[ response.m_pBody->size ];
+        memcpy( data , response.m_pBody->data , response.m_pBody->size );
+        m_pBody = new C2SHttpEntity( data , response.m_pBody->size , true );
+      }
+      else
+        m_pBody = new C2SHttpEntity( m_parser.entity( m_header.Fields.getContentLength() ) , m_header.Fields.getContentLength() );
     }
+  }
 
-    C2SHttpResponse::C2SHttpResponse()
-      : m_pBody( 0 )
-    {};
+  C2SHttpResponse::~C2SHttpResponse()
+  {
+    delete m_pBody;
+  }
 
-    C2SHttpResponse::C2SHttpResponse( const C2SHttpResponse &response )
-      : m_parser( response.m_parser ),
-        m_header( response.m_header ),
-        m_pBody( 0 )
+  C2SHttpResponse &C2SHttpResponse::operator=( const C2SHttpResponse &response )
+  {
+    if ( this != &response )
     {
+      if ( m_pBody )
+        delete m_pBody;
+      m_pBody = 0;
+
+      m_header = response.m_header;
+      m_parser = response.m_parser;
+
       if ( m_header.Fields.getContentLength() )
-      {
-        if ( response.m_pBody )
-        {
-          assert( m_header.Fields.getContentLength() == response.m_pBody->size );
-
-          //copy content
-          char *data = new char[ response.m_pBody->size ];
-          memcpy( data , response.m_pBody->data , response.m_pBody->size );
-          m_pBody = new C2SHttpEntity( data , response.m_pBody->size , true );
-        }
-        else
-          m_pBody = new C2SHttpEntity( m_parser.entity( m_header.Fields.getContentLength() ) , m_header.Fields.getContentLength() );
-      }
+        m_pBody = new C2SHttpEntity( m_parser.entity( m_header.Fields.getContentLength() ) , m_header.Fields.getContentLength() );
     }
+    return *this;
+  }
 
-    C2SHttpResponse::~C2SHttpResponse()
-    {
-      delete m_pBody;
-    }
-
-    C2SHttpResponse &C2SHttpResponse::operator=( const C2SHttpResponse &response )
-    {
-      if ( this != &response )
-      {
-        if ( m_pBody )
-          delete m_pBody;
-        m_pBody = 0;
-
-        m_header = response.m_header;
-        m_parser = response.m_parser;
-
-        if ( m_header.Fields.getContentLength() )
-          m_pBody = new C2SHttpEntity( m_parser.entity( m_header.Fields.getContentLength() ) , m_header.Fields.getContentLength() );
-      }
-      return *this;
-    }
-
-    void C2SHttpResponse::push( char *data , unsigned int size )
-    {
-      m_parser.parse( data , size , &m_header );
-    }
+  void C2SHttpResponse::push( char *data , unsigned int size )
+  {
+    m_parser.parse( data , size , &m_header );
+  }
 
 //    void C2SHttpResponse::setEntity( const char *data , unsigned int size )
 //    {
@@ -103,25 +100,23 @@ namespace g
 //      m_pBody = new C2SHttpEntity( data , size );
 //    }
 
-    void C2SHttpResponse::setEntity( C2SHttpEntity *pEntity )
-    {
-      delete m_pBody;
-      m_pBody = pEntity;
-      m_header.Fields.setContentLength( m_pBody->size );
-    }
+  void C2SHttpResponse::setEntity( C2SHttpEntity *pEntity )
+  {
+    delete m_pBody;
+    m_pBody = pEntity;
+    m_header.Fields.setContentLength( m_pBody->size );
+  }
 
-    C2SHttpResponse *C2SHttpResponse::build( C2SHttpStatus status )
-    {
-      return new C2SHttpResponse ( C2SHttpResponseHeader( status ) );
-    }
-    void C2SHttpResponse::finished()
-    {
-      delete m_pBody;
-      m_pBody = NULL;
-      if ( m_header.Fields.getContentLength() )
-        m_pBody = new C2SHttpEntity( m_parser.entity( m_header.Fields.getContentLength() ) , m_header.Fields.getContentLength() );
-    }
-
+  C2SHttpResponse *C2SHttpResponse::build( C2SHttpStatus status )
+  {
+    return new C2SHttpResponse ( C2SHttpResponseHeader( status ) );
+  }
+  void C2SHttpResponse::finished()
+  {
+    delete m_pBody;
+    m_pBody = NULL;
+    if ( m_header.Fields.getContentLength() )
+      m_pBody = new C2SHttpEntity( m_parser.entity( m_header.Fields.getContentLength() ) , m_header.Fields.getContentLength() );
   }
 
 }

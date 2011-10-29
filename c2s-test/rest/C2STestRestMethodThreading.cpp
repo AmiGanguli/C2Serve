@@ -33,47 +33,44 @@
 
 #include <boost/test/unit_test.hpp>
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+  namespace test
   {
-    namespace test
+
+    const std::string C2STestRestMethodThreading::sPath = "threading";
+
+    C2STestRestMethodThreading::C2STestRestMethodThreading( c2s::thread::Mutex *pGlobalMutex )
+      : C2SRestMethodPrototype( GET , sPath ),
+        m_bIsRunning( false ),
+        m_iSleepMS( 0 ),
+        m_globalMutex( *pGlobalMutex )
     {
+      C2SRestMethodPrototype::addPathParameter( "sleep" , &( m_iSleepMS ) );
+    };
 
-      const std::string C2STestRestMethodThreading::sPath = "threading";
-
-      C2STestRestMethodThreading::C2STestRestMethodThreading( g::thread::Mutex *pGlobalMutex )
-        : C2SRestMethodPrototype( GET , sPath ),
-          m_bIsRunning( false ),
-          m_iSleepMS( 0 ),
-          m_globalMutex( *pGlobalMutex )
-      {
-        C2SRestMethodPrototype::addPathParameter( "sleep" , &( m_iSleepMS ) );
-      };
-
-      C2SHttpResponse *C2STestRestMethodThreading::process()
-      {
-        m_globalMutex.lock();
-        BOOST_MESSAGE( "ForRestTestRestfulMethodThreading::process: sleep: " << m_iSleepMS );
-        BOOST_CHECK( !m_bIsRunning );
-        m_bIsRunning = true;
-        m_globalMutex.unlock();
+    C2SHttpResponse *C2STestRestMethodThreading::process()
+    {
+      m_globalMutex.lock();
+      BOOST_MESSAGE( "ForRestTestRestfulMethodThreading::process: sleep: " << m_iSleepMS );
+      BOOST_CHECK( !m_bIsRunning );
+      m_bIsRunning = true;
+      m_globalMutex.unlock();
 
 #ifdef WINXX
-        Sleep( m_iSleepMS );
+      Sleep( m_iSleepMS );
 #else
-        usleep( m_iSleepMS * 1000 );
+      usleep( m_iSleepMS * 1000 );
 #endif
 
-        m_bIsRunning = false;
-        return C2SHttpResponse::build( OK );
-      }
-
-      C2STestRestMethodThreading *C2STestRestMethodThreading::clone() const
-      {
-        return new C2STestRestMethodThreading( &m_globalMutex );
-      }
-
+      m_bIsRunning = false;
+      return C2SHttpResponse::build( OK );
     }
+
+    C2STestRestMethodThreading *C2STestRestMethodThreading::clone() const
+    {
+      return new C2STestRestMethodThreading( &m_globalMutex );
+    }
+
   }
 }

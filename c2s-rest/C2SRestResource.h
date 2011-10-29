@@ -40,51 +40,46 @@
 #include <list>
 #include <map>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SRestResource: public C2SHttpResource
   {
+  public:
 
-    class C2SRestResource: public C2SHttpResource
-    {
-    public:
+    virtual ~C2SRestResource();
 
-      virtual ~C2SRestResource();
+    typedef std::list<C2SRestMethodPrototype*> Methods;
 
-      typedef std::list<C2SRestMethodPrototype*> Methods;
+    static C2SRestResource *createRestResource( const std::string &sContextRoot );
 
-      static C2SRestResource *createRestResource( const std::string &sContextRoot );
+    void process( const C2SHttpRequest &request );
 
-      void process( const C2SHttpRequest &request );
+    C2SHttpResource *clone() const;
 
-      C2SHttpResource *clone() const;
+    //registering method prototype
+    void addMethod( C2SRestMethodPrototype *pMethod );
 
-      //registering method prototype
-      void addMethod( C2SRestMethodPrototype *pMethod );
+    //TODO: implement
+    bool existsMethod( const C2SRestMethodPrototype *pMethod ) const;
 
-      //TODO: implement
-      bool existsMethod( const C2SRestMethodPrototype *pMethod ) const;
+  protected:
 
-    protected:
+    C2SRestMethodPrototype *getBestMatch( const C2SHttpRequest &request );
 
-      C2SRestMethodPrototype *getBestMatch( const C2SHttpRequest &request );
+    std::list<C2SRestMethodPrototype*> m_methods;
 
-      std::list<C2SRestMethodPrototype*> m_methods;
+    std::map<std::string,C2SRestMethodPrototype*> m_methodsByPathGET;
 
-      std::map<std::string,C2SRestMethodPrototype*> m_methodsByPathGET;
+    C2SRestResourceDescription m_description;
 
-      C2SRestResourceDescription m_description;
+  private:
 
-    private:
+    C2SRestResource( const std::string &sHostName , const std::string &sContextRoot );
 
-      C2SRestResource( const std::string &sHostName , const std::string &sContextRoot );
+    C2SRestResource( const C2SRestResource &r );
 
-      C2SRestResource( const C2SRestResource &r );
-
-    };
-
-  }
+  };
 
 }
 

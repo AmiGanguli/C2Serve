@@ -33,60 +33,55 @@
 
 #include "StringUtils.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  C2SRestMethodPrototype::C2SRestMethodPrototype( C2SHttpMethod method , const std::string &sPath )
+    : m_method( method ),
+      m_sPath( sPath )
   {
-
-    C2SRestMethodPrototype::C2SRestMethodPrototype( C2SHttpMethod method , const std::string &sPath )
-      : m_method( method ),
-        m_sPath( sPath )
+    std::vector<std::string> vPathSegments = c2s::util::splitString( sPath , '/' );
+    for ( unsigned int i = 0; i < vPathSegments.size(); ++i )
     {
-      std::vector<std::string> vPathSegments = g::util::splitString( sPath , '/' );
-      for ( unsigned int i = 0; i < vPathSegments.size(); ++i )
+      if ( vPathSegments[ i ].size() )
+        m_pathSegments.append( new C2SRestPathSegment( vPathSegments[ i ] ) );
+    }
+  };
+
+  C2SHttpResponse *C2SRestMethodPrototype::process( const C2SHttpRequest &request )
+  {
+    const C2SHttpQueryFields &queryFields = request.header().QueryFields;
+
+    //TODO: what to do with query fields that couldn't be handled
+    QueryParameterList::iterator qpit = m_queryParameters.begin();
+    QueryParameterList::iterator qpend = m_queryParameters.end();
+    for ( ; qpit != qpend; ++qpit )
+    {
+      const std::string &sParameterID = qpit->first;
+      C2SRestQueryParameterBase *pParameter = qpit->second;
+
+      C2SHttpQueryFields::const_iterator qfit = queryFields.find( sParameterID );
+
+      if ( qfit == queryFields.end() )
+        pParameter->setDefault();
+      else
       {
-        if ( vPathSegments[ i ].size() )
-          m_pathSegments.append( new C2SRestPathSegment( vPathSegments[ i ] ) );
+        const std::string &sFieldValue = qfit->second;
+        pParameter->handle( sFieldValue );
       }
-    };
-
-    C2SHttpResponse *C2SRestMethodPrototype::process( const C2SHttpRequest &request )
-    {
-      const C2SHttpQueryFields &queryFields = request.header().QueryFields;
-
-      //TODO: what to do with query fields that couldn't be handled
-      QueryParameterList::iterator qpit = m_queryParameters.begin();
-      QueryParameterList::iterator qpend = m_queryParameters.end();
-      for ( ; qpit != qpend; ++qpit )
-      {
-        const std::string &sParameterID = qpit->first;
-        C2SRestQueryParameterBase *pParameter = qpit->second;
-
-        C2SHttpQueryFields::const_iterator qfit = queryFields.find( sParameterID );
-
-        if ( qfit == queryFields.end() )
-          pParameter->setDefault();
-        else
-        {
-          const std::string &sFieldValue = qfit->second;
-          pParameter->handle( sFieldValue );
-        }
-      }
-
-      return this->process();
     }
 
-    int C2SRestMethodPrototype::getDistance( const C2SRestPathIDList &pathList ) const
-    {
-      return m_pathSegments.getDistance( pathList );
-    }
+    return this->process();
+  }
 
-    void C2SRestMethodPrototype::handle( const C2SRestPathIDList &pathList )
-    {
-      m_pathSegments.handle( pathList );
-    }
+  int C2SRestMethodPrototype::getDistance( const C2SRestPathIDList &pathList ) const
+  {
+    return m_pathSegments.getDistance( pathList );
+  }
 
+  void C2SRestMethodPrototype::handle( const C2SRestPathIDList &pathList )
+  {
+    m_pathSegments.handle( pathList );
   }
 
 }

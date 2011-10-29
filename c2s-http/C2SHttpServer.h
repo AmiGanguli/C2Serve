@@ -32,71 +32,68 @@
 #ifndef C2SHTTPSERVER_H_
 #define C2SHTTPSERVER_H_
 
-namespace g
+namespace c2s
 {
-	namespace c2s
-	{
 
-	  class C2SHttpServerType;
+  class C2SHttpServerType;
 
-	  /**
-	   *
-	   * @brief   C2S http server runtime.
-	   *
-	   * @see     C2SRuntime
-	   *
-	   */
-    class C2SHttpServer
-    {
-    public:
+  /**
+   *
+   * @brief   C2S http server runtime.
+   *
+   * @see     C2SRuntime
+   *
+   */
+  class C2SHttpServer
+  {
+  public:
 
-	    /**
-	     *
-	     * @brief   Delete http server type instance.
-	     *
-	     */
-      virtual ~C2SHttpServer();
+    /**
+     *
+     * @brief   Delete http server type instance.
+     *
+     */
+    virtual ~C2SHttpServer();
 
-      /**
-       *
-       * @brief   Startup C2S http service.
-       *
-       * @see     C2SRuntime::run
-       *
-       * @throws  C2SException
-       *
-       */
-      static void run();
+    /**
+     *
+     * @brief   Startup C2S http service.
+     *
+     * @see     C2SRuntime::run
+     *
+     * @throws  C2SException
+     *
+     */
+    static void run();
 
-      /**
-       *
-       * @brief   Interrupt listener and shutdown C2S http service.
-       *
-       * @see     C2SRuntime::shutdown
-       *
-       */
-      static void shutdown();
+    /**
+     *
+     * @brief   Interrupt listener and shutdown C2S http service.
+     *
+     * @see     C2SRuntime::shutdown
+     *
+     */
+    static void shutdown();
 
-      /**
-       *
-       * @brief   Blocks until C2S http service startup is complete.
-       *
-       *          Use that function if you need to wait for startup (very useful for unit testing).
-       *
-       */
-      static void waitForStartup();
+    /**
+     *
+     * @brief   Blocks until C2S http service startup is complete.
+     *
+     *          Use that function if you need to wait for startup (very useful for unit testing).
+     *
+     */
+    static void waitForStartup();
 
-    private:
+  private:
 
-      C2SHttpServer();
+    C2SHttpServer();
 
-      static C2SHttpServer Instance;
+    static C2SHttpServer Instance;
 
-      C2SHttpServerType *m_st;
+    C2SHttpServerType *m_st;
 
-    };
+  };
 
-	}
 }
 
 #endif /* C2SHTTPSERVER_H_ */

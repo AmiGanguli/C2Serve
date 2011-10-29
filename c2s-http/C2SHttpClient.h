@@ -35,41 +35,36 @@
 #include "C2SException.h"
 #include "C2SHttpResponse.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SHttpRequest;
+
+  class C2SHttpClientException : public C2SException
   {
+  public:
 
-    class C2SHttpRequest;
+    C2SHttpClientException( const std::string &msg ) : C2SException( msg ) {};
 
-    class C2SHttpClientException : public C2SException
-    {
-    public:
+  };
 
-      C2SHttpClientException( const std::string &msg ) : C2SException( msg ) {};
+  class C2SHttpClient
+  {
+  public:
 
-    };
+    C2SHttpClient( const std::string &sHost , unsigned short iPort );
 
-    class C2SHttpClient
-    {
-    public:
+    virtual ~C2SHttpClient();
 
-      C2SHttpClient( const std::string &sHost , unsigned short iPort );
+    C2SHttpResponse send( const C2SHttpRequest &request );
 
-      virtual ~C2SHttpClient();
+  private:
 
-      C2SHttpResponse send( const C2SHttpRequest &request );
+    std::string m_sHost;
 
-    private:
+    unsigned short m_iPortNumber;
 
-      std::string m_sHost;
-
-      unsigned short m_iPortNumber;
-
-    };
-
-  }
+  };
 
 }
 

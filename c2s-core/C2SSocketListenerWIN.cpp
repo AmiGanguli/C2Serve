@@ -39,83 +39,78 @@
 #define BUFFERSIZE 4096
 #endif
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  void C2SSocketListenerWINDataCallback::handle( const char *data , unsigned int size )
   {
+    if ( m_socketInfo.SocketDescriptor == INVALID_SOCKET )
+      throw C2SSocketListenerException( "C2SSocketListenerWINDataCallback::handle: Invalid socket descriptor!" );
 
-    void C2SSocketListenerWINDataCallback::handle( const char *data , unsigned int size )
+    int iBytesWritten = send( m_socketInfo.SocketDescriptor , data , size , 0 );
+    if ( iBytesWritten < 0 )
+      throw C2SSocketListenerException( "C2SSocketListenerWINDataCallback::handle: Error writing to socket!" );
+  }
+
+  C2SSocketListenerWIN::C2SSocketListenerWIN( const ForRestSocketInfo &socketInfo , const ForRestServerType &type , c2s::thread::Mutex *pAcceptMutex )
+    : C2SSocketListenerBase( socketInfo , pAcceptMutex ),
+      m_bInterrupted( false )
+  {
+    m_pDataHandler = type.createDataHandler( &m_dataCallback );
+  }
+
+  C2SSocketListenerWIN::~C2SSocketListenerWIN()
+  {
+  }
+
+  void C2SSocketListenerWIN::interrupt()
+  {
+    //TODO: check and block if accept() is processing a requests
+    m_bInterrupted = true;
+  }
+
+  void C2SSocketListenerWIN::accept()
+  {
     {
-      if ( m_socketInfo.SocketDescriptor == INVALID_SOCKET )
-        throw C2SSocketListenerException( "C2SSocketListenerWINDataCallback::handle: Invalid socket descriptor!" );
-
-      int iBytesWritten = send( m_socketInfo.SocketDescriptor , data , size , 0 );
-      if ( iBytesWritten < 0 )
-        throw C2SSocketListenerException( "C2SSocketListenerWINDataCallback::handle: Error writing to socket!" );
-    }
-
-    C2SSocketListenerWIN::C2SSocketListenerWIN( const ForRestSocketInfo &socketInfo , const ForRestServerType &type , g::thread::Mutex *pAcceptMutex )
-      : C2SSocketListenerBase( socketInfo , pAcceptMutex ),
-        m_bInterrupted( false )
-    {
-      m_pDataHandler = type.createDataHandler( &m_dataCallback );
-    }
-
-    C2SSocketListenerWIN::~C2SSocketListenerWIN()
-    {
-    }
-
-    void C2SSocketListenerWIN::interrupt()
-    {
-      //TODO: check and block if accept() is processing a requests
-      m_bInterrupted = true;
-    }
-
-    void C2SSocketListenerWIN::accept()
-    {
-      {
-        g::thread::Lock lock( &m_acceptMutex );
-
-        if ( m_bInterrupted )
-          return;
-
-        //block process, until client connects
-        //returns new socket file descriptor which should be used for communication
-        m_connectionSocketInfo.SocketDescriptor = ::accept( m_socketInfo.SocketDescriptor , NULL , NULL );
-      }
+      c2s::thread::Lock lock( &m_acceptMutex );
 
       if ( m_bInterrupted )
         return;
 
-      if ( m_connectionSocketInfo.SocketDescriptor == INVALID_SOCKET )
-        throw C2SSocketListenerException( "C2SSocketListenerWIN::listen: Error on accept!" );
-
-      m_dataCallback.setSocketInfo( m_connectionSocketInfo );
-
-      m_pDataHandler->reset();
-
-      //initialize data buffer
-      char buffer[ BUFFERSIZE ];
-//      bzero( buffer , BUFFERSIZE );
-
-      long iBytesRead = BUFFERSIZE;
-      while ( iBytesRead == BUFFERSIZE )
-      {
-        //read data from buffer
-        iBytesRead = recv( m_connectionSocketInfo.SocketDescriptor , buffer , BUFFERSIZE , 0 );
-        if ( iBytesRead < 0 )
-          throw C2SSocketListenerException( "C2SSocketListenerWIN::listen: Error reading from socket!" );
-
-        m_pDataHandler->handle( buffer , iBytesRead );
-      }
-
-      m_pDataHandler->process();
-
-      //close socket
-      closesocket( m_connectionSocketInfo.SocketDescriptor );
+      //block process, until client connects
+      //returns new socket file descriptor which should be used for communication
+      m_connectionSocketInfo.SocketDescriptor = ::accept( m_socketInfo.SocketDescriptor , NULL , NULL );
     }
 
+    if ( m_bInterrupted )
+      return;
+
+    if ( m_connectionSocketInfo.SocketDescriptor == INVALID_SOCKET )
+      throw C2SSocketListenerException( "C2SSocketListenerWIN::listen: Error on accept!" );
+
+    m_dataCallback.setSocketInfo( m_connectionSocketInfo );
+
+    m_pDataHandler->reset();
+
+    //initialize data buffer
+    char buffer[ BUFFERSIZE ];
+//      bzero( buffer , BUFFERSIZE );
+
+    long iBytesRead = BUFFERSIZE;
+    while ( iBytesRead == BUFFERSIZE )
+    {
+      //read data from buffer
+      iBytesRead = recv( m_connectionSocketInfo.SocketDescriptor , buffer , BUFFERSIZE , 0 );
+      if ( iBytesRead < 0 )
+        throw C2SSocketListenerException( "C2SSocketListenerWIN::listen: Error reading from socket!" );
+
+      m_pDataHandler->handle( buffer , iBytesRead );
+    }
+
+    m_pDataHandler->process();
+
+    //close socket
+    closesocket( m_connectionSocketInfo.SocketDescriptor );
   }
 
 }

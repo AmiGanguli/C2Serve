@@ -38,7 +38,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace g
+namespace c2s
 {
   namespace util
   {

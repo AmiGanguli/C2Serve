@@ -36,91 +36,86 @@
 
 #define MEDIA_TYPE_QUALITY_DEFAULT 1.f
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  const std::string C2SHttpMediaType::wildcard = "*/*";
+  const std::string C2SHttpMediaType::text__css = "text/css";
+  const std::string C2SHttpMediaType::text__html = "text/html";
+  const std::string C2SHttpMediaType::application__xhtml_xml = "application/xhtml+xml";
+  const std::string C2SHttpMediaType::application__xml = "application/xml";
+  const std::string C2SHttpMediaType::application__json = "application/json";
+  const std::string C2SHttpMediaType::application__x_www_form_urlencoded = "application/x-www-form-urlencoded";
+
+  struct C2SHttpQualityInterpreter
   {
 
-    const std::string C2SHttpMediaType::wildcard = "*/*";
-    const std::string C2SHttpMediaType::text__css = "text/css";
-    const std::string C2SHttpMediaType::text__html = "text/html";
-    const std::string C2SHttpMediaType::application__xhtml_xml = "application/xhtml+xml";
-    const std::string C2SHttpMediaType::application__xml = "application/xml";
-    const std::string C2SHttpMediaType::application__json = "application/json";
-    const std::string C2SHttpMediaType::application__x_www_form_urlencoded = "application/x-www-form-urlencoded";
-
-    struct C2SHttpQualityInterpreter
-    {
-
-      C2SHttpQualityInterpreter()
-        : iArgIdx( 0 ),
-          fValue( MEDIA_TYPE_QUALITY_DEFAULT )
-      {};
-
-      void operator()( const char *data , unsigned int size )
-      {
-        if ( iArgIdx )
-          fValue = g::util::toNumber<float>( std::string( data , size ) );
-
-        ++iArgIdx;
-      }
-
-      unsigned int iArgIdx;
-
-      float fValue;
-
-    };
-
-    C2SHttpMediaType::C2SHttpMediaType( const std::string &sType )
-      : Type( sType ),
-        fQ( MEDIA_TYPE_QUALITY_DEFAULT ),
-        iArgIdx( 0 )
+    C2SHttpQualityInterpreter()
+      : iArgIdx( 0 ),
+        fValue( MEDIA_TYPE_QUALITY_DEFAULT )
     {};
 
-    C2SHttpMediaType::C2SHttpMediaType()
-      : Type( C2SHttpMediaType::wildcard ),
-        fQ( MEDIA_TYPE_QUALITY_DEFAULT ),
-        iArgIdx( 0 )
-    {};
-
-    void C2SHttpMediaType::detect( const char *data , unsigned int size )
+    void operator()( const char *data , unsigned int size )
     {
-      if ( !iArgIdx )
-        Type = std::string( data , size );
-
-      if ( iArgIdx > 1 )
-        throw C2SHttpException( "C2SHttpMediaType::operator():" , "Maximum arguments for media type is 2!" , BadRequest );
-
       if ( iArgIdx )
-        this->detectQualityValue( data , size );
+        fValue = c2s::util::toNumber<float>( std::string( data , size ) );
 
       ++iArgIdx;
     }
 
-    std::string C2SHttpMediaType::toString() const
-    {
-      std::stringstream strs;
+    unsigned int iArgIdx;
 
-      strs << Type;
-      if ( fQ != MEDIA_TYPE_QUALITY_DEFAULT )
-        strs << ";q=" << fQ;
+    float fValue;
 
-      return strs.str();
-    }
+  };
 
-    void C2SHttpMediaType::operator()( const char *data , unsigned int size )
-    {
-      this->detect( data , size );
-    }
+  C2SHttpMediaType::C2SHttpMediaType( const std::string &sType )
+    : Type( sType ),
+      fQ( MEDIA_TYPE_QUALITY_DEFAULT ),
+      iArgIdx( 0 )
+  {};
 
-    void C2SHttpMediaType::detectQualityValue( const char *data , unsigned int size )
-    {
-      C2SHttpQualityInterpreter qv;
-      splitNhandle( data , size , '=' , &qv );
-      fQ = qv.fValue;
-    }
+  C2SHttpMediaType::C2SHttpMediaType()
+    : Type( C2SHttpMediaType::wildcard ),
+      fQ( MEDIA_TYPE_QUALITY_DEFAULT ),
+      iArgIdx( 0 )
+  {};
 
+  void C2SHttpMediaType::detect( const char *data , unsigned int size )
+  {
+    if ( !iArgIdx )
+      Type = std::string( data , size );
+
+    if ( iArgIdx > 1 )
+      throw C2SHttpException( "C2SHttpMediaType::operator():" , "Maximum arguments for media type is 2!" , BadRequest );
+
+    if ( iArgIdx )
+      this->detectQualityValue( data , size );
+
+    ++iArgIdx;
+  }
+
+  std::string C2SHttpMediaType::toString() const
+  {
+    std::stringstream strs;
+
+    strs << Type;
+    if ( fQ != MEDIA_TYPE_QUALITY_DEFAULT )
+      strs << ";q=" << fQ;
+
+    return strs.str();
+  }
+
+  void C2SHttpMediaType::operator()( const char *data , unsigned int size )
+  {
+    this->detect( data , size );
+  }
+
+  void C2SHttpMediaType::detectQualityValue( const char *data , unsigned int size )
+  {
+    C2SHttpQualityInterpreter qv;
+    splitNhandle( data , size , '=' , &qv );
+    fQ = qv.fValue;
   }
 
 }

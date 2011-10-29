@@ -35,84 +35,79 @@
 
 #include <boost/test/unit_test.hpp>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  namespace test
   {
 
-    namespace test
+    C2STestRestRequest::C2STestRestRequest( C2SHttpMethod method , const std::string &sURI )
+      : m_request( C2SHttpRequestHeader( method , sURI ) )
     {
+    }
 
-      C2STestRestRequest::C2STestRestRequest( C2SHttpMethod method , const std::string &sURI )
-        : m_request( C2SHttpRequestHeader( method , sURI ) )
+    C2STestRestRequest::~C2STestRestRequest()
+    {
+    }
+
+    C2STestRestRequest C2STestRestRequest::build( C2SHttpMethod method , const std::string &sURI )
+    {
+      return C2STestRestRequest( method , sURI );
+    }
+
+    C2STestRestRequest &C2STestRestRequest::query_field( const std::string &name , const std::string &value )
+    {
+      m_request.header().QueryFields.add( name , value );
+      return *this;
+    }
+
+    C2STestRestRequest &C2STestRestRequest::accept( const C2SHttpMediaType &mediatype )
+    {
+      m_request.header().Fields.addAccept( mediatype );
+      return *this;
+    }
+
+    C2SHttpResponse C2STestRestRequest::process() const
+    {
+      C2SHttpClient client( "localhost" , USE_PORT );
+      return client.send( m_request );
+    }
+
+    C2STestRestResponse::C2STestRestResponse( C2SHttpStatus status )
+      : m_status( status )
+    {
+    }
+
+    C2STestRestResponse::~C2STestRestResponse()
+    {
+    }
+
+    C2STestRestResponse C2STestRestResponse::build( C2SHttpStatus status )
+    {
+      return C2STestRestResponse( status );
+    }
+
+    C2STestRestResponse &C2STestRestResponse::entity( const C2SHttpMediaType &mediatype , const std::string &entity )
+    {
+      m_entity = entity;
+      m_mediatype = mediatype;
+      return *this;
+    }
+
+    void C2STestRestResponse::check( const C2SHttpResponse &response ) const
+    {
+      BOOST_CHECK( response.header().Status == m_status );
+
+      if ( m_entity.size() )
       {
+        BOOST_MESSAGE( "response content length: " << response.header().Fields.getContentLength() );
+        BOOST_CHECK( response.header().Fields.getContentLength() == m_entity.size() );
+        std::string sResponseEntity;
+        response.getEntity( &sResponseEntity );
+        BOOST_MESSAGE( "response data: \"" << sResponseEntity << "\"" );
+        BOOST_CHECK( m_entity == sResponseEntity );
+        BOOST_CHECK( m_mediatype.Type == response.header().Fields.getContentType().Type );
       }
-
-      C2STestRestRequest::~C2STestRestRequest()
-      {
-      }
-
-      C2STestRestRequest C2STestRestRequest::build( C2SHttpMethod method , const std::string &sURI )
-      {
-        return C2STestRestRequest( method , sURI );
-      }
-
-      C2STestRestRequest &C2STestRestRequest::query_field( const std::string &name , const std::string &value )
-      {
-        m_request.header().QueryFields.add( name , value );
-        return *this;
-      }
-
-      C2STestRestRequest &C2STestRestRequest::accept( const C2SHttpMediaType &mediatype )
-      {
-        m_request.header().Fields.addAccept( mediatype );
-        return *this;
-      }
-
-      C2SHttpResponse C2STestRestRequest::process() const
-      {
-        C2SHttpClient client( "localhost" , USE_PORT );
-        return client.send( m_request );
-      }
-
-      C2STestRestResponse::C2STestRestResponse( C2SHttpStatus status )
-        : m_status( status )
-      {
-      }
-
-      C2STestRestResponse::~C2STestRestResponse()
-      {
-      }
-
-      C2STestRestResponse C2STestRestResponse::build( C2SHttpStatus status )
-      {
-        return C2STestRestResponse( status );
-      }
-
-      C2STestRestResponse &C2STestRestResponse::entity( const C2SHttpMediaType &mediatype , const std::string &entity )
-      {
-        m_entity = entity;
-        m_mediatype = mediatype;
-        return *this;
-      }
-
-      void C2STestRestResponse::check( const C2SHttpResponse &response ) const
-      {
-        BOOST_CHECK( response.header().Status == m_status );
-
-        if ( m_entity.size() )
-        {
-          BOOST_MESSAGE( "response content length: " << response.header().Fields.getContentLength() );
-          BOOST_CHECK( response.header().Fields.getContentLength() == m_entity.size() );
-          std::string sResponseEntity;
-          response.getEntity( &sResponseEntity );
-          BOOST_MESSAGE( "response data: \"" << sResponseEntity << "\"" );
-          BOOST_CHECK( m_entity == sResponseEntity );
-          BOOST_CHECK( m_mediatype.Type == response.header().Fields.getContentType().Type );
-        }
-      }
-
     }
 
   }

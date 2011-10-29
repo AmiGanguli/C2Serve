@@ -34,12 +34,12 @@
 
 #include "Logger.h"
 
-namespace g
+namespace c2s
 {
   namespace io
   {
 
-    class TimeLogger: public g::io::Logger
+    class TimeLogger: public Logger
     {
     public:
 

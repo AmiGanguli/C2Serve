@@ -32,31 +32,28 @@
 #ifndef C2SSERVERTYPEINTERFACE_H_
 #define C2SSERVERTYPEINTERFACE_H_
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  class C2SDataPullInterface;
+  class C2SDataPushInterface;
+
+  class C2SServerTypeInterface
   {
+  public:
 
-    class C2SDataPullInterface;
-    class C2SDataPushInterface;
+    virtual ~C2SServerTypeInterface(){};
 
-    class C2SServerTypeInterface
-    {
-    public:
+    virtual C2SDataPullInterface *createDataHandler( C2SDataPushInterface *pDataCallback ) const = 0;
 
-      virtual ~C2SServerTypeInterface(){};
+    virtual void release() const = 0;
 
-      virtual C2SDataPullInterface *createDataHandler( C2SDataPushInterface *pDataCallback ) const = 0;
+  protected:
 
-      virtual void release() const = 0;
+    C2SServerTypeInterface(){};
 
-    protected:
+  };
 
-      C2SServerTypeInterface(){};
-
-    };
-
-  }
 }
 
 #endif /* C2SSERVERTYPEINTERFACE_H_ */

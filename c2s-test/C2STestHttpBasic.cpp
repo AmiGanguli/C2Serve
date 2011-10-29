@@ -67,23 +67,23 @@ BOOST_AUTO_TEST_CASE( URLCoding )
   std::string s1_2 = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"�$&/()=?�*'-_.:;,<>";
   std::string sURLEncoded = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ%21%22%a4%24%25%26%2f%28%29%3d%3f%a7%2a%27-_.%3a%3b%2c%3c%3e";
 
-  std::string s2 = g::util::urlEncode( s1 );
+  std::string s2 = c2s::util::urlEncode( s1 );
   BOOST_MESSAGE( "url encoded: " << s2 );
   BOOST_CHECK( s2 == sURLEncoded );
 
-  std::string s3 = g::util::urlDecode( s2 );
+  std::string s3 = c2s::util::urlDecode( s2 );
   BOOST_MESSAGE( "url decoded: " << s3 );
   BOOST_CHECK( s1 == s3 );
 
-  std::string s4 = g::util::urlDecode( s1_2 );
+  std::string s4 = c2s::util::urlDecode( s1_2 );
   BOOST_MESSAGE( "url decoded without url encoding: " << s4 );
   BOOST_CHECK( s1_2 == s4 );
 }
 
 BOOST_AUTO_TEST_CASE( HttpResponseOK )
 {
-  g::c2s::C2SHttpParser parser;
-  g::c2s::C2SHttpResponseHeader header;
+  c2s::C2SHttpParser parser;
+  c2s::C2SHttpResponseHeader header;
 
   std::string sChunk1 = "\n\nHTTP/1.1 200\r";
   std::string sChunk2 = "\nContent-Length: ";
@@ -96,10 +96,10 @@ BOOST_AUTO_TEST_CASE( HttpResponseOK )
   parser.parse( sChunk4.c_str() , sChunk4.size() , &header );
 
   BOOST_CHECK( header.fVersion == 1.1f );
-  BOOST_CHECK( header.Status == g::c2s::OK );
+  BOOST_CHECK( header.Status == c2s::OK );
   BOOST_CHECK( !header.ReasonPhrase.size() );
 
-  BOOST_CHECK( header.Fields.getContentType().Type == g::c2s::C2SHttpMediaType::text__html );
+  BOOST_CHECK( header.Fields.getContentType().Type == c2s::C2SHttpMediaType::text__html );
   BOOST_CHECK( header.Fields.getContentType().fQ == 1.f );
 
   BOOST_REQUIRE( header.Fields.getContentLength() == 44 );
@@ -111,8 +111,8 @@ BOOST_AUTO_TEST_CASE( HttpResponseOK )
 
 BOOST_AUTO_TEST_CASE( HttpResponseNotFound )
 {
-  g::c2s::C2SHttpParser parser;
-  g::c2s::C2SHttpResponseHeader header;
+  c2s::C2SHttpParser parser;
+  c2s::C2SHttpResponseHeader header;
 
   std::string sChunk1 = "\n\nHTTP/1.1 404 Not Found\r";
   std::string sChunk2 = "\n\r\n";
@@ -121,14 +121,14 @@ BOOST_AUTO_TEST_CASE( HttpResponseNotFound )
   parser.parse( sChunk2.c_str() , sChunk2.size() , &header );
 
   BOOST_CHECK( header.fVersion == 1.1f );
-  BOOST_CHECK( header.Status == g::c2s::NotFound );
+  BOOST_CHECK( header.Status == c2s::NotFound );
   BOOST_CHECK( header.ReasonPhrase == "Not Found" );
 }
 
 BOOST_AUTO_TEST_CASE( HttpRequestPOST1 )
 {
-  g::c2s::C2SHttpParser parser;
-  g::c2s::C2SHttpRequestHeader header;
+  c2s::C2SHttpParser parser;
+  c2s::C2SHttpRequestHeader header;
 
   std::string sChunk1 = "\n\nPOST /c2s/test/http-parser HTTP/1.1\r";
   std::string sChunk2 = "\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.834\r\nContent-Length: 44\nContent-Type: application/x-www";
@@ -139,21 +139,21 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST1 )
   parser.parse( sChunk3.c_str() , sChunk3.size() , &header );
   parser.parse( sChunk4.c_str() , sChunk4.size() , &header );
 
-  BOOST_CHECK( header.Method == g::c2s::POST );
+  BOOST_CHECK( header.Method == c2s::POST );
   BOOST_CHECK( header.URI == "/c2s/test/http-parser" );
   BOOST_CHECK( header.Version == 1.1f );
 
-  BOOST_CHECK( header.Fields.isAccept( g::c2s::C2SHttpMediaType::text__html ) );
-  BOOST_CHECK( header.Fields.isAccept( g::c2s::C2SHttpMediaType::application__xhtml_xml ) );
-  BOOST_REQUIRE( header.Fields.isAccept( g::c2s::C2SHttpMediaType::application__xml ) );
-  BOOST_REQUIRE( header.Fields.isAccept( g::c2s::C2SHttpMediaType::wildcard ) );
-  BOOST_REQUIRE( !header.Fields.isAccept( g::c2s::C2SHttpMediaType::application__x_www_form_urlencoded ) );
+  BOOST_CHECK( header.Fields.isAccept( c2s::C2SHttpMediaType::text__html ) );
+  BOOST_CHECK( header.Fields.isAccept( c2s::C2SHttpMediaType::application__xhtml_xml ) );
+  BOOST_REQUIRE( header.Fields.isAccept( c2s::C2SHttpMediaType::application__xml ) );
+  BOOST_REQUIRE( header.Fields.isAccept( c2s::C2SHttpMediaType::wildcard ) );
+  BOOST_REQUIRE( !header.Fields.isAccept( c2s::C2SHttpMediaType::application__x_www_form_urlencoded ) );
 
-  BOOST_CHECK( header.Fields.getAccept( g::c2s::C2SHttpMediaType::text__html ).fQ == 1.f );
-  BOOST_CHECK( header.Fields.getAccept( g::c2s::C2SHttpMediaType::application__xml ).fQ == 0.9f );
-  BOOST_CHECK( header.Fields.getAccept( g::c2s::C2SHttpMediaType::wildcard ).fQ == 0.834f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::text__html ).fQ == 1.f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::application__xml ).fQ == 0.9f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::wildcard ).fQ == 0.834f );
 
-  BOOST_CHECK( header.Fields.getContentType().Type == g::c2s::C2SHttpMediaType::application__x_www_form_urlencoded );
+  BOOST_CHECK( header.Fields.getContentType().Type == c2s::C2SHttpMediaType::application__x_www_form_urlencoded );
   BOOST_CHECK( header.Fields.getContentType().fQ == 1.f );
 
   BOOST_REQUIRE( header.Fields.getContentLength() == 44 );
@@ -165,8 +165,8 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST1 )
 
 BOOST_AUTO_TEST_CASE( HttpRequestPOST2 )
 {
-  g::c2s::C2SHttpParser parser;
-  g::c2s::C2SHttpRequestHeader header;
+  c2s::C2SHttpParser parser;
+  c2s::C2SHttpRequestHeader header;
 
   std::string sChunk1 = "\n\nPOST /c2s/test/http-parser/ HTTP/1.1\r\nAccept: text/html,";
   std::string sChunk2 = "application/xhtml+xml,application/xml;q=0.9,*/*;q=0.834\r\nContent-Length: 44\nContent-Type: application/x-www";
@@ -177,21 +177,21 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST2 )
   parser.parse( sChunk3.c_str() , sChunk3.size() , &header );
   parser.parse( sChunk4.c_str() , sChunk4.size() , &header );
 
-  BOOST_CHECK( header.Method == g::c2s::POST );
+  BOOST_CHECK( header.Method == c2s::POST );
   BOOST_CHECK( header.URI == "/c2s/test/http-parser/" );
   BOOST_CHECK( header.Version == 1.1f );
 
-  BOOST_CHECK( header.Fields.isAccept( g::c2s::C2SHttpMediaType::text__html ) );
-  BOOST_CHECK( header.Fields.isAccept( g::c2s::C2SHttpMediaType::application__xhtml_xml ) );
-  BOOST_REQUIRE( header.Fields.isAccept( g::c2s::C2SHttpMediaType::application__xml ) );
-  BOOST_REQUIRE( header.Fields.isAccept( g::c2s::C2SHttpMediaType::wildcard ) );
-  BOOST_REQUIRE( !header.Fields.isAccept( g::c2s::C2SHttpMediaType::application__x_www_form_urlencoded ) );
+  BOOST_CHECK( header.Fields.isAccept( c2s::C2SHttpMediaType::text__html ) );
+  BOOST_CHECK( header.Fields.isAccept( c2s::C2SHttpMediaType::application__xhtml_xml ) );
+  BOOST_REQUIRE( header.Fields.isAccept( c2s::C2SHttpMediaType::application__xml ) );
+  BOOST_REQUIRE( header.Fields.isAccept( c2s::C2SHttpMediaType::wildcard ) );
+  BOOST_REQUIRE( !header.Fields.isAccept( c2s::C2SHttpMediaType::application__x_www_form_urlencoded ) );
 
-  BOOST_CHECK( header.Fields.getAccept( g::c2s::C2SHttpMediaType::text__html ).fQ == 1.f );
-  BOOST_CHECK( header.Fields.getAccept( g::c2s::C2SHttpMediaType::application__xml ).fQ == 0.9f );
-  BOOST_CHECK( header.Fields.getAccept( g::c2s::C2SHttpMediaType::wildcard ).fQ == 0.834f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::text__html ).fQ == 1.f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::application__xml ).fQ == 0.9f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::wildcard ).fQ == 0.834f );
 
-  BOOST_CHECK( header.Fields.getContentType().Type == g::c2s::C2SHttpMediaType::application__x_www_form_urlencoded );
+  BOOST_CHECK( header.Fields.getContentType().Type == c2s::C2SHttpMediaType::application__x_www_form_urlencoded );
   BOOST_CHECK( header.Fields.getContentType().fQ == 1.f );
 
   BOOST_REQUIRE( header.Fields.getContentLength() == 44 );
@@ -203,8 +203,8 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST2 )
 
 BOOST_AUTO_TEST_CASE( HttpRequestPOST3 )
 {
-  g::c2s::C2SHttpParser parser;
-  g::c2s::C2SHttpRequestHeader header;
+  c2s::C2SHttpParser parser;
+  c2s::C2SHttpRequestHeader header;
 
   std::string sChunk1 = "\n\nPOST /c2s/test/http-parser?fieldname1=value1&fieldname2=value2&fieldname3=value3 HTTP/1.1\r\nAccept: text/html,";
   std::string sChunk2 = "application/xhtml+xml,application/xml;q=0.9,*/*;q=0.834\r\nContent-Length: 44\nContent-Type: application/x-www";
@@ -219,21 +219,21 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST3 )
   BOOST_CHECK( header.QueryFields.get( "fieldname2" ) == "value2" );
   BOOST_CHECK( header.QueryFields.get( "fieldname3" ) == "value3" );
 
-  BOOST_CHECK( header.Method == g::c2s::POST );
+  BOOST_CHECK( header.Method == c2s::POST );
   BOOST_CHECK( header.URI == "/c2s/test/http-parser" );
   BOOST_CHECK( header.Version == 1.1f );
 
-  BOOST_CHECK( header.Fields.isAccept( g::c2s::C2SHttpMediaType::text__html ) );
-  BOOST_CHECK( header.Fields.isAccept( g::c2s::C2SHttpMediaType::application__xhtml_xml ) );
-  BOOST_REQUIRE( header.Fields.isAccept( g::c2s::C2SHttpMediaType::application__xml ) );
-  BOOST_REQUIRE( header.Fields.isAccept( g::c2s::C2SHttpMediaType::wildcard ) );
-  BOOST_REQUIRE( !header.Fields.isAccept( g::c2s::C2SHttpMediaType::application__x_www_form_urlencoded ) );
+  BOOST_CHECK( header.Fields.isAccept( c2s::C2SHttpMediaType::text__html ) );
+  BOOST_CHECK( header.Fields.isAccept( c2s::C2SHttpMediaType::application__xhtml_xml ) );
+  BOOST_REQUIRE( header.Fields.isAccept( c2s::C2SHttpMediaType::application__xml ) );
+  BOOST_REQUIRE( header.Fields.isAccept( c2s::C2SHttpMediaType::wildcard ) );
+  BOOST_REQUIRE( !header.Fields.isAccept( c2s::C2SHttpMediaType::application__x_www_form_urlencoded ) );
 
-  BOOST_CHECK( header.Fields.getAccept( g::c2s::C2SHttpMediaType::text__html ).fQ == 1.f );
-  BOOST_CHECK( header.Fields.getAccept( g::c2s::C2SHttpMediaType::application__xml ).fQ == 0.9f );
-  BOOST_CHECK( header.Fields.getAccept( g::c2s::C2SHttpMediaType::wildcard ).fQ == 0.834f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::text__html ).fQ == 1.f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::application__xml ).fQ == 0.9f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::wildcard ).fQ == 0.834f );
 
-  BOOST_CHECK( header.Fields.getContentType().Type == g::c2s::C2SHttpMediaType::application__x_www_form_urlencoded );
+  BOOST_CHECK( header.Fields.getContentType().Type == c2s::C2SHttpMediaType::application__x_www_form_urlencoded );
   BOOST_CHECK( header.Fields.getContentType().fQ == 1.f );
 
   BOOST_REQUIRE( header.Fields.getContentLength() == 44 );
@@ -245,10 +245,10 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST3 )
 
 BOOST_AUTO_TEST_CASE( HttpRequestGET )
 {
-  g::c2s::C2SHttpParser parser;
-  g::c2s::C2SHttpRequestHeader header;
+  c2s::C2SHttpParser parser;
+  c2s::C2SHttpRequestHeader header;
 
-  header.Method = g::c2s::POST;
+  header.Method = c2s::POST;
 
   std::string sChunk1 = "\n\nGET /c2s/test/http-parser/ HTTP/1.1\r\nAccept: text/html,";
   std::string sChunk2 = "application/xhtml+xml,application/xml;q=0.9,*/*;q=0.834\r\n";
@@ -256,19 +256,19 @@ BOOST_AUTO_TEST_CASE( HttpRequestGET )
   parser.parse( sChunk1.c_str() , sChunk1.size() , &header );
   parser.parse( sChunk2.c_str() , sChunk2.size() , &header );
 
-  BOOST_CHECK( header.Method == g::c2s::GET );
+  BOOST_CHECK( header.Method == c2s::GET );
   BOOST_CHECK( header.URI == "/c2s/test/http-parser/" );
   BOOST_CHECK( header.Version == 1.1f );
 
-  BOOST_CHECK( header.Fields.isAccept( g::c2s::C2SHttpMediaType::text__html ) );
-  BOOST_CHECK( header.Fields.isAccept( g::c2s::C2SHttpMediaType::application__xhtml_xml ) );
-  BOOST_REQUIRE( header.Fields.isAccept( g::c2s::C2SHttpMediaType::application__xml ) );
-  BOOST_REQUIRE( header.Fields.isAccept( g::c2s::C2SHttpMediaType::wildcard ) );
-  BOOST_REQUIRE( !header.Fields.isAccept( g::c2s::C2SHttpMediaType::application__x_www_form_urlencoded ) );
+  BOOST_CHECK( header.Fields.isAccept( c2s::C2SHttpMediaType::text__html ) );
+  BOOST_CHECK( header.Fields.isAccept( c2s::C2SHttpMediaType::application__xhtml_xml ) );
+  BOOST_REQUIRE( header.Fields.isAccept( c2s::C2SHttpMediaType::application__xml ) );
+  BOOST_REQUIRE( header.Fields.isAccept( c2s::C2SHttpMediaType::wildcard ) );
+  BOOST_REQUIRE( !header.Fields.isAccept( c2s::C2SHttpMediaType::application__x_www_form_urlencoded ) );
 
-  BOOST_CHECK( header.Fields.getAccept( g::c2s::C2SHttpMediaType::text__html ).fQ == 1.f );
-  BOOST_CHECK( header.Fields.getAccept( g::c2s::C2SHttpMediaType::application__xml ).fQ == 0.9f );
-  BOOST_CHECK( header.Fields.getAccept( g::c2s::C2SHttpMediaType::wildcard ).fQ == 0.834f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::text__html ).fQ == 1.f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::application__xml ).fQ == 0.9f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::wildcard ).fQ == 0.834f );
 
   BOOST_CHECK( header.Fields.getContentLength() == 0 );
 }
@@ -277,7 +277,7 @@ BOOST_AUTO_TEST_CASE( HttpRequestGET )
 void checkUriEquals( bool bExpectation , const std::string &s1 , const std::string &s2 , bool bCheckLeadingSlash = true )
 {
   BOOST_MESSAGE( "compare uri: \"" + s1 + "\" == \"" + s2 + "\"" );
-  BOOST_CHECK( bExpectation == g::c2s::uriEquals( s1.c_str() , s1.size() , s2.c_str() , s2.size() , bCheckLeadingSlash ) );
+  BOOST_CHECK( bExpectation == c2s::uriEquals( s1.c_str() , s1.size() , s2.c_str() , s2.size() , bCheckLeadingSlash ) );
 }
 
 BOOST_AUTO_TEST_CASE( URICompare )
@@ -299,8 +299,8 @@ BOOST_AUTO_TEST_CASE( URICompare )
 
 void checkUriSkip( int iExpectation , const std::string &s1 , const std::string &s2 , bool bCheckLeadingSlash = true )
 {
-  int iSkipPoint = g::c2s::uriSkip( s1.c_str() , s1.size() , s2.c_str() , s2.size() , bCheckLeadingSlash );
-  BOOST_MESSAGE( "skip uri: \"" + s1 + "\" == \"" + s2 + "\"" + "; result: " + g::util::toString( iSkipPoint ) + "; expected: " + g::util::toString( iExpectation ) );
+  int iSkipPoint = c2s::uriSkip( s1.c_str() , s1.size() , s2.c_str() , s2.size() , bCheckLeadingSlash );
+  BOOST_MESSAGE( "skip uri: \"" + s1 + "\" == \"" + s2 + "\"" + "; result: " + c2s::util::toString( iSkipPoint ) + "; expected: " + c2s::util::toString( iExpectation ) );
   BOOST_CHECK( iExpectation == iSkipPoint );
 }
 
@@ -331,11 +331,11 @@ BOOST_AUTO_TEST_CASE( URISkip )
 
 /*BOOST_AUTO_TEST_CASE( ServerStartupShutdown )
 {
-  g::c2s::test::C2STestServerRunner sr( USE_PORT );
+  c2s::test::C2STestServerRunner sr( USE_PORT );
 
-  std::string sCWD = g::util::getCWD();
-  BOOST_CHECK( g::c2s::C2SStatus::Status().C2SHome == sCWD + "/c2s/" );
-  BOOST_CHECK( g::c2s::C2SGlobalSettings::Settings().sC2SDocumentRoot == sCWD + "/c2s/deploy/ROOT/" );
+  std::string sCWD = c2s::util::getCWD();
+  BOOST_CHECK( c2s::C2SStatus::Status().C2SHome == sCWD + "/c2s/" );
+  BOOST_CHECK( c2s::C2SGlobalSettings::Settings().sC2SDocumentRoot == sCWD + "/c2s/deploy/ROOT/" );
 
 }*/
 

@@ -34,53 +34,48 @@
 
 #include <string>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SHttpQueryFields;
+
+  class C2SHttpParser
   {
+  public:
 
-    class C2SHttpQueryFields;
+    C2SHttpParser();
 
-    class C2SHttpParser
-    {
-    public:
+    C2SHttpParser( const C2SHttpParser &p );
 
-      C2SHttpParser();
+    virtual ~C2SHttpParser();
 
-      C2SHttpParser( const C2SHttpParser &p );
+    C2SHttpParser &operator=( const C2SHttpParser &p );
 
-      virtual ~C2SHttpParser();
+    template <class HeaderType>
+    void parse( const char *data , unsigned int size , HeaderType *pHeader );
 
-      C2SHttpParser &operator=( const C2SHttpParser &p );
+    char *entity( unsigned int size );
 
-      template <class HeaderType>
-      void parse( const char *data , unsigned int size , HeaderType *pHeader );
+  private:
 
-      char *entity( unsigned int size );
+    template <class HeaderType>
+    void parseLine( const char *data , unsigned int size , HeaderType *pHeader );
 
-    private:
+    std::string m_sLastIncompleteLine;
 
-      template <class HeaderType>
-      void parseLine( const char *data , unsigned int size , HeaderType *pHeader );
+    unsigned int m_iTotalLines;
 
-      std::string m_sLastIncompleteLine;
+    unsigned int m_iNumAdjacentCRLF;
 
-      unsigned int m_iTotalLines;
+    bool m_bHeaderFinished;
 
-      unsigned int m_iNumAdjacentCRLF;
+    char *m_body;
 
-      bool m_bHeaderFinished;
+    unsigned int m_iCurrentBodyIdx;
 
-      char *m_body;
+    unsigned int m_iContentSize;
 
-      unsigned int m_iCurrentBodyIdx;
-
-      unsigned int m_iContentSize;
-
-    };
-
-  }
+  };
 
 }
 

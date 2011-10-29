@@ -34,7 +34,7 @@
 
 #include "Mutex.h"
 
-namespace g
+namespace c2s
 {
 
   namespace thread

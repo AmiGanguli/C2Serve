@@ -36,34 +36,31 @@
 #include "C2SRestEntityStreamer.h"
 #include "StringUtils.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+  namespace test
   {
-    namespace test
+
+    template <class Type>
+    class C2STestRestEntityStreamerXML : public C2SRestEntityStreamer<Type>
     {
+    public:
 
-      template <class Type>
-      class C2STestRestEntityStreamerXML : public C2SRestEntityStreamer<Type>
+      C2STestRestEntityStreamerXML()
+        : C2SRestEntityStreamer<Type>( C2SHttpMediaType::application__xml )
+      {};
+
+
+      C2SHttpEntity *entity( const Type &data ) const
       {
-      public:
+        std::string sXML = "<result>" + c2s::util::toString( data ) + "</result>";
+        char *cdata = new char[ sXML.size() ];
+        std::memcpy( cdata , sXML.c_str() , sXML.size() );
+        return new C2SHttpEntity( cdata , sXML.size() , true );
+      }
 
-        C2STestRestEntityStreamerXML()
-          : C2SRestEntityStreamer<Type>( C2SHttpMediaType::application__xml )
-        {};
+    };
 
-
-        C2SHttpEntity *entity( const Type &data ) const
-        {
-          std::string sXML = "<result>" + g::util::toString( data ) + "</result>";
-          char *cdata = new char[ sXML.size() ];
-          std::memcpy( cdata , sXML.c_str() , sXML.size() );
-          return new C2SHttpEntity( cdata , sXML.size() , true );
-        }
-
-      };
-
-    }
   }
 }
 

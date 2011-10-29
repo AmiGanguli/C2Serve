@@ -35,26 +35,23 @@
 #include "C2SException.h"
 #include "C2SHttpStatus.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  class C2SHttpException : public C2SException
   {
+  public:
 
-    class C2SHttpException : public C2SException
-    {
-    public:
+    C2SHttpException( const std::string &prefix , const std::string &msg , C2SHttpStatus status ) : C2SException( prefix + " " + msg ), status( status ), phrase( msg ) {};
 
-      C2SHttpException( const std::string &prefix , const std::string &msg , C2SHttpStatus status ) : C2SException( prefix + " " + msg ), status( status ), phrase( msg ) {};
+    virtual ~C2SHttpException() throw() {};
 
-      virtual ~C2SHttpException() throw() {};
+    C2SHttpStatus status;
 
-      C2SHttpStatus status;
+    std::string phrase;
 
-      std::string phrase;
+  };
 
-    };
-
-  }
 }
 
 #endif /* C2SHTTPEXCEPTION_H_ */

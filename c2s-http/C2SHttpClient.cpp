@@ -54,145 +54,140 @@
 #define BUFFERSIZE 4096
 #endif
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  C2SHttpClient::C2SHttpClient( const std::string &sHost , unsigned short iPortNumber )
+    : m_sHost( sHost ),
+      m_iPortNumber( iPortNumber )
   {
-
-    C2SHttpClient::C2SHttpClient( const std::string &sHost , unsigned short iPortNumber )
-      : m_sHost( sHost ),
-        m_iPortNumber( iPortNumber )
-    {
 #ifdef WINXX
-      WSADATA wsa;
-      int ret;
+    WSADATA wsa;
+    int ret;
 
-      //initialize winsock
-      //use version 2.0
-      //struct wsa will be filled with information about winsock
-      ret = WSAStartup( MAKEWORD( 2 , 0 ) , &wsa );
-      if ( ret != 0 )
-        throw C2SHttpClientException( "C2SHttpClient::C2SHttpClient: Could not initialize winsock! Error: " + g::util::toString( ret ) );
+    //initialize winsock
+    //use version 2.0
+    //struct wsa will be filled with information about winsock
+    ret = WSAStartup( MAKEWORD( 2 , 0 ) , &wsa );
+    if ( ret != 0 )
+      throw C2SHttpClientException( "C2SHttpClient::C2SHttpClient: Could not initialize winsock! Error: " + c2s::util::toString( ret ) );
 #endif
+  }
+
+  C2SHttpClient::~C2SHttpClient()
+  {
+#ifdef WINXX
+    WSACleanup();
+#endif
+  }
+
+  C2SHttpResponse C2SHttpClient::send( const C2SHttpRequest &request )
+  {
+#ifdef WINXX
+
+    C2SSocketInfo info;
+
+    SOCKADDR_IN addr;
+
+    info.SocketDescriptor = socket( AF_INET , SOCK_STREAM , 0 );
+    if ( info.SocketDescriptor == INVALID_SOCKET )
+      throw C2SHttpClientException( "C2SHttpClient::send: Could not create socket! Error: " + c2s::util::toString( WSAGetLastError() ) );
+
+    //TODO: release addr??
+    memset( &addr , 0 , sizeof( SOCKADDR_IN ) );
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons( m_iPortNumber );
+    addr.sin_addr.s_addr = inet_addr( m_sHost.c_str() );
+
+    unsigned long ip = inet_addr( m_sHost.c_str() );
+    if( ip != INADDR_NONE )
+      addr.sin_addr.s_addr = ip;
+    else
+    {
+      // resolve host name to ip
+      //TODO: release he??
+      HOSTENT* he = gethostbyname( m_sHost.c_str() );
+      if( he == NULL )
+        throw C2SHttpClientException( "C2SHttpClient::send: Cannot resolve host: " + m_sHost );
+
+      memcpy( &( addr.sin_addr ) , he->h_addr_list[ 0 ] , 4 );
     }
 
-    C2SHttpClient::~C2SHttpClient()
-    {
-#ifdef WINXX
-      WSACleanup();
-#endif
-    }
+    int ret = connect( info.SocketDescriptor , ( SOCKADDR* )&addr , sizeof( SOCKADDR ) );
 
-    C2SHttpResponse C2SHttpClient::send( const C2SHttpRequest &request )
-    {
-#ifdef WINXX
-      
-      C2SSocketInfo info;
-      
-      SOCKADDR_IN addr;
-
-      info.SocketDescriptor = socket( AF_INET , SOCK_STREAM , 0 );
-      if ( info.SocketDescriptor == INVALID_SOCKET )
-        throw C2SHttpClientException( "C2SHttpClient::send: Could not create socket! Error: " + g::util::toString( WSAGetLastError() ) );
-
-      //TODO: release addr??
-      memset( &addr , 0 , sizeof( SOCKADDR_IN ) );
-      addr.sin_family = AF_INET;
-      addr.sin_port = htons( m_iPortNumber );
-      addr.sin_addr.s_addr = inet_addr( m_sHost.c_str() );
-
-      unsigned long ip = inet_addr( m_sHost.c_str() );
-      if( ip != INADDR_NONE )
-        addr.sin_addr.s_addr = ip;
-      else
-      {
-        // resolve host name to ip
-        //TODO: release he??
-        HOSTENT* he = gethostbyname( m_sHost.c_str() );
-        if( he == NULL )
-          throw C2SHttpClientException( "C2SHttpClient::send: Cannot resolve host: " + m_sHost );
-
-        memcpy( &( addr.sin_addr ) , he->h_addr_list[ 0 ] , 4 );
-      }
-
-      int ret = connect( info.SocketDescriptor , ( SOCKADDR* )&addr , sizeof( SOCKADDR ) );
-
-      if( ret == SOCKET_ERROR )
-        throw C2SHttpClientException( "C2SHttpClient::send: Could not connect to server: " + m_sHost + "; Port: " + g::util::toString( m_iPortNumber ) + "! Error: " + g::util::toString( WSAGetLastError() ) );
+    if( ret == SOCKET_ERROR )
+      throw C2SHttpClientException( "C2SHttpClient::send: Could not connect to server: " + m_sHost + "; Port: " + c2s::util::toString( m_iPortNumber ) + "! Error: " + c2s::util::toString( WSAGetLastError() ) );
 
 #else //WINXX
-      
-      int iSocketFileDesc = 0;
-      struct sockaddr_in serverAddress;
-      struct hostent *server;
 
-      iSocketFileDesc = socket( AF_INET , SOCK_STREAM , 0 );
-      if ( iSocketFileDesc < 0 )
-        throw C2SHttpClientException( "C2SHttpClient::send: ERROR opening socket" );
+    int iSocketFileDesc = 0;
+    struct sockaddr_in serverAddress;
+    struct hostent *server;
 
-      server = gethostbyname( m_sHost.c_str() );
-      if ( server == NULL )
-        throw C2SHttpClientException( "C2SHttpClient::send: ERROR, no such host" );
+    iSocketFileDesc = socket( AF_INET , SOCK_STREAM , 0 );
+    if ( iSocketFileDesc < 0 )
+      throw C2SHttpClientException( "C2SHttpClient::send: ERROR opening socket" );
 
-      bzero( reinterpret_cast<char *>( &serverAddress ) , sizeof( serverAddress ) );
-      serverAddress.sin_family = AF_INET;
-      bcopy( ( char * ) server->h_addr , ( char * ) &serverAddress.sin_addr.s_addr , server->h_length );
+    server = gethostbyname( m_sHost.c_str() );
+    if ( server == NULL )
+      throw C2SHttpClientException( "C2SHttpClient::send: ERROR, no such host" );
 
-      serverAddress.sin_port = htons( m_iPortNumber );
-      if ( connect( iSocketFileDesc , ( struct sockaddr *) &serverAddress , sizeof( serverAddress ) ) < 0 )
-        throw C2SHttpClientException( "C2SHttpClient::send: ERROR connecting to socket" );
+    bzero( reinterpret_cast<char *>( &serverAddress ) , sizeof( serverAddress ) );
+    serverAddress.sin_family = AF_INET;
+    bcopy( ( char * ) server->h_addr , ( char * ) &serverAddress.sin_addr.s_addr , server->h_length );
+
+    serverAddress.sin_port = htons( m_iPortNumber );
+    if ( connect( iSocketFileDesc , ( struct sockaddr *) &serverAddress , sizeof( serverAddress ) ) < 0 )
+      throw C2SHttpClientException( "C2SHttpClient::send: ERROR connecting to socket" );
 
 #endif //WINXX
-      
-      std::string sHeader = request.header().toString();
 
-      //send header
+    std::string sHeader = request.header().toString();
+
+    //send header
 #ifdef WINXX
-      int n = ::send( info.SocketDescriptor , sHeader.c_str() , sHeader.size() , 0 );
+    int n = ::send( info.SocketDescriptor , sHeader.c_str() , sHeader.size() , 0 );
 #else
-      int n = write( iSocketFileDesc , sHeader.c_str() , sHeader.size() );
+    int n = write( iSocketFileDesc , sHeader.c_str() , sHeader.size() );
 #endif
-      if (n < 0)
-        throw C2SHttpClientException( "C2SHttpClient::send: Cannot send header! ERROR writing to socket" );
+    if (n < 0)
+      throw C2SHttpClientException( "C2SHttpClient::send: Cannot send header! ERROR writing to socket" );
 
-      //TODO: send body
+    //TODO: send body
 
-      C2SHttpResponse response;
+    C2SHttpResponse response;
 
-      //initialize data buffer
-      char buffer[ BUFFERSIZE ];
+    //initialize data buffer
+    char buffer[ BUFFERSIZE ];
 #ifndef WINXX
-      bzero( buffer , BUFFERSIZE );
+    bzero( buffer , BUFFERSIZE );
 #endif
 
-      long iBytesRead = BUFFERSIZE;
-      while ( iBytesRead == BUFFERSIZE )
-      {
+    long iBytesRead = BUFFERSIZE;
+    while ( iBytesRead == BUFFERSIZE )
+    {
 
-        //read data from buffer
+      //read data from buffer
 #ifdef WINXX
-        iBytesRead = recv( info.SocketDescriptor , buffer , BUFFERSIZE , MSG_PARTIAL );
+      iBytesRead = recv( info.SocketDescriptor , buffer , BUFFERSIZE , MSG_PARTIAL );
 #else
-        iBytesRead = read( iSocketFileDesc , buffer , BUFFERSIZE );
+      iBytesRead = read( iSocketFileDesc , buffer , BUFFERSIZE );
 #endif
-        if ( iBytesRead < 0 )
-          throw C2SHttpClientException( "C2SHttpClient::send: Error reading from socket!" );
+      if ( iBytesRead < 0 )
+        throw C2SHttpClientException( "C2SHttpClient::send: Error reading from socket!" );
 
-        response.push( buffer , iBytesRead );
-      }
-
-#ifdef WINXX
-      closesocket( info.SocketDescriptor );
-#else
-      close( iSocketFileDesc );
-#endif
-
-      response.finished();
-
-      return response;
+      response.push( buffer , iBytesRead );
     }
 
+#ifdef WINXX
+    closesocket( info.SocketDescriptor );
+#else
+    close( iSocketFileDesc );
+#endif
+
+    response.finished();
+
+    return response;
   }
 
 }

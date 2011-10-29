@@ -38,81 +38,78 @@
 
 #include "Thread.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+  namespace test
   {
-    namespace test
+
+    class C2STestServerRunner
     {
+    public:
 
-      class C2STestServerRunner
+      C2STestServerRunner( unsigned short iPort = C2SGlobalSettings::Settings().iPort )
+        : m_serverThread( &m_serverRunTime )
       {
-      public:
-
-        C2STestServerRunner( unsigned short iPort = C2SGlobalSettings::Settings().iPort )
-          : m_serverThread( &m_serverRunTime )
-        {
 //          BOOST_MESSAGE( "startup server" );
 
-          g::thread::Lock lock( &m_mutex );
+        c2s::thread::Lock lock( &m_mutex );
 
-          C2SGlobalSettings::Settings().iPort = iPort;
+        C2SGlobalSettings::Settings().iPort = iPort;
 
-          m_serverThread.start();
+        m_serverThread.start();
 
-          C2SHttpServer::waitForStartup();
+        C2SHttpServer::waitForStartup();
 
 //          BOOST_MESSAGE( "startup complete" );
-        }
+      }
 
-        C2STestServerRunner( const std::list<C2SHttpResource*> &resources , unsigned short iPort = C2SGlobalSettings::Settings().iPort )
-          : m_serverThread( &m_serverRunTime )
+      C2STestServerRunner( const std::list<C2SHttpResource*> &resources , unsigned short iPort = C2SGlobalSettings::Settings().iPort )
+        : m_serverThread( &m_serverRunTime )
+      {
+        c2s::thread::Lock lock( &m_mutex );
+
+        std::list<C2SHttpResource*>::const_iterator it = resources.begin();
+        for ( ; it != resources.end(); ++it )
         {
-          g::thread::Lock lock( &m_mutex );
-
-          std::list<C2SHttpResource*>::const_iterator it = resources.begin();
-          for ( ; it != resources.end(); ++it )
-          {
 //            BOOST_MESSAGE( "add resource \"" + ( *it )->getContextRoot() + "\"" );
-            C2SHttpResourceManager::registerResource( *it );
-          }
+          C2SHttpResourceManager::registerResource( *it );
+        }
 
 //          BOOST_MESSAGE( "startup server" );
 
-          C2SGlobalSettings::Settings().iPort = iPort;
+        C2SGlobalSettings::Settings().iPort = iPort;
 
-          m_serverThread.start();
+        m_serverThread.start();
 
-          C2SHttpServer::waitForStartup();
+        C2SHttpServer::waitForStartup();
 
 //          BOOST_MESSAGE( "startup complete" );
-        }
+      }
 
-        virtual ~C2STestServerRunner()
-        {
-          g::thread::Lock lock( &m_mutex );
+      virtual ~C2STestServerRunner()
+      {
+        c2s::thread::Lock lock( &m_mutex );
 
-          BOOST_MESSAGE( "shutdown server" );
-          C2SHttpServer::shutdown();
+        BOOST_MESSAGE( "shutdown server" );
+        C2SHttpServer::shutdown();
 
-          BOOST_MESSAGE( "server is down" );
-        }
+        BOOST_MESSAGE( "server is down" );
+      }
 
-      private:
+    private:
 
-        C2STestServerRunner( const C2STestServerRunner & );
+      C2STestServerRunner( const C2STestServerRunner & );
 
-        C2STestServerRunner &operator=( const C2STestServerRunner & );
+      C2STestServerRunner &operator=( const C2STestServerRunner & );
 
-        C2STestServerThread m_serverRunTime;
+      C2STestServerThread m_serverRunTime;
 
-        g::thread::Thread<g::c2s::test::C2STestServerThread> m_serverThread;
+      c2s::thread::Thread<c2s::test::C2STestServerThread> m_serverThread;
 
-        g::thread::Mutex m_mutex;
+      c2s::thread::Mutex m_mutex;
 
-      };
+    };
 
-    }
   }
 }
 

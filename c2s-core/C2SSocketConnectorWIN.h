@@ -34,25 +34,20 @@
 
 #include "C2SSocketConnectorBase.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SSocketConnectorWIN : public C2SSocketConnectorBase
   {
+  public:
 
-    class C2SSocketConnectorWIN : public C2SSocketConnectorBase
-    {
-    public:
+    C2SSocketConnectorWIN();
 
-      C2SSocketConnectorWIN();
+    virtual ~C2SSocketConnectorWIN();
 
-      virtual ~C2SSocketConnectorWIN();
+    virtual C2SSocketInfo connect();
 
-      virtual C2SSocketInfo connect();
-
-    };
-
-  }
+  };
 
 }
 

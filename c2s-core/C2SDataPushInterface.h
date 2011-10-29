@@ -32,26 +32,23 @@
 #ifndef C2SDATAPUSHINTERFACE_H_
 #define C2SDATAPUSHINTERFACE_H_
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  class C2SDataPushInterface
   {
+  public:
 
-    class C2SDataPushInterface
-    {
-    public:
+    virtual ~C2SDataPushInterface(){};
 
-      virtual ~C2SDataPushInterface(){};
+    virtual void push( const char *data , unsigned int size ) = 0;
 
-      virtual void push( const char *data , unsigned int size ) = 0;
+  protected:
 
-    protected:
+    C2SDataPushInterface(){};
 
-      C2SDataPushInterface(){};
+  };
 
-    };
-
-  }
 }
 
 #endif /* C2SDATAPUSHINTERFACE_H_ */

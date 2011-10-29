@@ -39,62 +39,57 @@
 
 #define USE_PORT 8183
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  namespace test
   {
 
-    namespace test
+    class C2STestRestRequest
     {
+    public:
 
-      class C2STestRestRequest
-      {
-      public:
+      virtual ~C2STestRestRequest();
 
-        virtual ~C2STestRestRequest();
+      static C2STestRestRequest build( C2SHttpMethod method , const std::string &sURI );
 
-        static C2STestRestRequest build( C2SHttpMethod method , const std::string &sURI );
+      C2STestRestRequest &query_field( const std::string &name , const std::string &value );
 
-        C2STestRestRequest &query_field( const std::string &name , const std::string &value );
+      C2STestRestRequest &accept( const C2SHttpMediaType &mediatype );
 
-        C2STestRestRequest &accept( const C2SHttpMediaType &mediatype );
+      C2SHttpResponse process() const;
 
-        C2SHttpResponse process() const;
+    private:
 
-      private:
+      C2STestRestRequest( C2SHttpMethod method , const std::string &sURI );
 
-        C2STestRestRequest( C2SHttpMethod method , const std::string &sURI );
+      C2SHttpRequest m_request;
 
-        C2SHttpRequest m_request;
+    };
 
-      };
+    class C2STestRestResponse
+    {
+    public:
 
-      class C2STestRestResponse
-      {
-      public:
+      virtual ~C2STestRestResponse();
 
-        virtual ~C2STestRestResponse();
+      void check( const C2SHttpResponse &response ) const;
 
-        void check( const C2SHttpResponse &response ) const;
+      static C2STestRestResponse build( C2SHttpStatus status );
 
-        static C2STestRestResponse build( C2SHttpStatus status );
+      C2STestRestResponse &entity( const C2SHttpMediaType &mediatype , const std::string &entity );
 
-        C2STestRestResponse &entity( const C2SHttpMediaType &mediatype , const std::string &entity );
+    private:
 
-      private:
+      C2STestRestResponse( C2SHttpStatus status );
 
-        C2STestRestResponse( C2SHttpStatus status );
+      C2SHttpStatus m_status;
 
-        C2SHttpStatus m_status;
+      C2SHttpMediaType m_mediatype;
 
-        C2SHttpMediaType m_mediatype;
+      std::string m_entity;
 
-        std::string m_entity;
-
-      };
-
-    }
+    };
 
   }
 

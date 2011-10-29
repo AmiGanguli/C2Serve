@@ -44,7 +44,7 @@
 
 #define SLEEP_TIME_MS 30
 
-namespace g
+namespace c2s
 {
 
   namespace test
@@ -57,7 +57,7 @@ namespace g
       {
       public:
 
-        ThreadTestRunnable( const std::string &sID , g::thread::Mutex *pGlobalMutex )
+        ThreadTestRunnable( const std::string &sID , c2s::thread::Mutex *pGlobalMutex )
           : m_iRunCounter( 0 ),
             m_bRunning( false ),
             m_globalMutex( *pGlobalMutex ),
@@ -74,7 +74,7 @@ namespace g
 
         void run()
         {
-          g::thread::Lock lock( &m_mutex );
+          c2s::thread::Lock lock( &m_mutex );
 
           m_globalMutex.lock();
           BOOST_CHECK( !m_bRunning );
@@ -98,7 +98,7 @@ namespace g
 
         int runs()
         {
-          g::thread::Lock lock( &m_mutex );
+          c2s::thread::Lock lock( &m_mutex );
           return m_iRunCounter;
         }
 
@@ -108,9 +108,9 @@ namespace g
 
         bool m_bRunning;
 
-        g::thread::Mutex m_mutex;
+        c2s::thread::Mutex m_mutex;
         
-        g::thread::Mutex &m_globalMutex;
+        c2s::thread::Mutex &m_globalMutex;
 
         int m_iSleepMS;
 

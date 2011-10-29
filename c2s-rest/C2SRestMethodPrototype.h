@@ -43,91 +43,86 @@
 #include <list>
 #include <string>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SRestMethodPrototype
   {
+  public:
 
-    class C2SRestMethodPrototype
+    virtual ~C2SRestMethodPrototype()
     {
-    public:
-
-      virtual ~C2SRestMethodPrototype()
-      {
-        QueryParameterList::iterator qpIt = m_queryParameters.begin();
-        for ( ; qpIt != m_queryParameters.end(); ++qpIt )
-          delete qpIt->second;
-      };
-
-      virtual C2SHttpResponse *process( const C2SHttpRequest &request );
-
-      virtual C2SRestMethodPrototype *clone() const = 0;
-
-      template <class Type>
-      void addPathParameter( const std::string &sID , Type *pDest );
-
-      template <class Type>
-      void addQueryParameter( const std::string &sID , Type *pDest , const Type &defaultv );
-
-      template <class Type>
-      void addQueryParameter( const std::string &sID , Type *pDest );
-
-      int getDistance( const C2SRestPathIDList &pathList ) const;
-
-      C2SHttpMethod getMethod() const { return m_method; }
-
-      void handle( const C2SRestPathIDList &pathList );
-
-      const std::string &getPath() const { return m_sPath; }
-
-      C2SHttpResponse *buildResponse( C2SHttpStatus status ) const { return C2SHttpResponse::build( status ); }
-
-    protected:
-
-      C2SRestMethodPrototype( C2SHttpMethod method , const std::string &sPath );
-
-      virtual C2SHttpResponse *process() = 0;
-
-    private:
-
-      typedef std::map<std::string,C2SRestQueryParameterBase*> QueryParameterList;
-
-      C2SHttpMethod m_method;
-
-      C2SRestPathSegmentList m_pathSegments;
-
-      QueryParameterList m_queryParameters;
-
-      std::string m_sPath;
-
+      QueryParameterList::iterator qpIt = m_queryParameters.begin();
+      for ( ; qpIt != m_queryParameters.end(); ++qpIt )
+        delete qpIt->second;
     };
 
+    virtual C2SHttpResponse *process( const C2SHttpRequest &request );
+
+    virtual C2SRestMethodPrototype *clone() const = 0;
+
     template <class Type>
-    void C2SRestMethodPrototype::addPathParameter( const std::string &sID , Type *pDest )
-    {
+    void addPathParameter( const std::string &sID , Type *pDest );
+
+    template <class Type>
+    void addQueryParameter( const std::string &sID , Type *pDest , const Type &defaultv );
+
+    template <class Type>
+    void addQueryParameter( const std::string &sID , Type *pDest );
+
+    int getDistance( const C2SRestPathIDList &pathList ) const;
+
+    C2SHttpMethod getMethod() const { return m_method; }
+
+    void handle( const C2SRestPathIDList &pathList );
+
+    const std::string &getPath() const { return m_sPath; }
+
+    C2SHttpResponse *buildResponse( C2SHttpStatus status ) const { return C2SHttpResponse::build( status ); }
+
+  protected:
+
+    C2SRestMethodPrototype( C2SHttpMethod method , const std::string &sPath );
+
+    virtual C2SHttpResponse *process() = 0;
+
+  private:
+
+    typedef std::map<std::string,C2SRestQueryParameterBase*> QueryParameterList;
+
+    C2SHttpMethod m_method;
+
+    C2SRestPathSegmentList m_pathSegments;
+
+    QueryParameterList m_queryParameters;
+
+    std::string m_sPath;
+
+  };
+
+  template <class Type>
+  void C2SRestMethodPrototype::addPathParameter( const std::string &sID , Type *pDest )
+  {
 //      m_pathSegments.append( new C2SRestPathParameterBase( sID ) );
-      m_pathSegments.append( new C2SRestPathParameter( sID , new C2SRestParameter<Type>( pDest ) ) );
-    }
+    m_pathSegments.append( new C2SRestPathParameter( sID , new C2SRestParameter<Type>( pDest ) ) );
+  }
 
-    template <class Type>
-    void C2SRestMethodPrototype::addQueryParameter( const std::string &sID , Type *pDest , const Type &defaultv )
-    {
-      if ( m_queryParameters.find( sID ) != m_queryParameters.end() )
-        throw C2SRestException( "C2SRestMethodPrototype::addQueryParameter: " , "Query parameter already exists: " + sID , InternalServerError );
+  template <class Type>
+  void C2SRestMethodPrototype::addQueryParameter( const std::string &sID , Type *pDest , const Type &defaultv )
+  {
+    if ( m_queryParameters.find( sID ) != m_queryParameters.end() )
+      throw C2SRestException( "C2SRestMethodPrototype::addQueryParameter: " , "Query parameter already exists: " + sID , InternalServerError );
 
-      m_queryParameters.insert( std::make_pair( sID , new C2SRestQueryParameter<Type>( sID , pDest , defaultv ) ) );
-    }
+    m_queryParameters.insert( std::make_pair( sID , new C2SRestQueryParameter<Type>( sID , pDest , defaultv ) ) );
+  }
 
-    template <class Type>
-    void C2SRestMethodPrototype::addQueryParameter( const std::string &sID , Type *pDest )
-    {
-      if ( m_queryParameters.find( sID ) != m_queryParameters.end() )
-        throw C2SRestException( "C2SRestMethodPrototype::addQueryParameter: " , "Query parameter already exists: " + sID , InternalServerError );
+  template <class Type>
+  void C2SRestMethodPrototype::addQueryParameter( const std::string &sID , Type *pDest )
+  {
+    if ( m_queryParameters.find( sID ) != m_queryParameters.end() )
+      throw C2SRestException( "C2SRestMethodPrototype::addQueryParameter: " , "Query parameter already exists: " + sID , InternalServerError );
 
-      m_queryParameters.insert( std::make_pair( sID , new C2SRestQueryParameter<Type>( sID , pDest ) ) );
-    }
-
+    m_queryParameters.insert( std::make_pair( sID , new C2SRestQueryParameter<Type>( sID , pDest ) ) );
   }
 
 }

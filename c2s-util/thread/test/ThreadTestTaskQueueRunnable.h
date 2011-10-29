@@ -37,18 +37,18 @@
 #define NUM_TASK_THREADS 30
 #define SLEEP_TIME_MS_TASK 10
 
-namespace g
+namespace c2s
 {
   namespace test
   {
     namespace thread
     {
 
-      class ThreadTestTaskQueueRunnable : public g::thread::TaskBase
+      class ThreadTestTaskQueueRunnable : public c2s::thread::TaskBase
       {
       public:
 
-        ThreadTestTaskQueueRunnable( unsigned int *pRunningThreads , g::thread::Mutex *pGlobalMutex )
+        ThreadTestTaskQueueRunnable( unsigned int *pRunningThreads , c2s::thread::Mutex *pGlobalMutex )
           : m_pRunningThreads( pRunningThreads ),
             m_globalMutex( *pGlobalMutex )
         {};
@@ -75,7 +75,7 @@ namespace g
 
         unsigned int *m_pRunningThreads;
 
-        g::thread::Mutex &m_globalMutex;
+        c2s::thread::Mutex &m_globalMutex;
 
       };
 

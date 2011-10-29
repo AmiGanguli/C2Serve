@@ -34,38 +34,33 @@
 
 #include "C2SDataPullInterface.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SHttpRequest;
+  class C2SHttpResourceManager;
+
+  class C2SHttpDataPull : public C2SDataPullInterface
   {
+  public:
 
-    class C2SHttpRequest;
-    class C2SHttpResourceManager;
+    C2SHttpDataPull( C2SDataPushInterface *pDataPush );
 
-    class C2SHttpDataPull : public C2SDataPullInterface
-    {
-    public:
+    virtual ~C2SHttpDataPull();
 
-      C2SHttpDataPull( C2SDataPushInterface *pDataPush );
+    virtual void reset();
 
-      virtual ~C2SHttpDataPull();
+    virtual void receive( char *data , unsigned int size );
 
-      virtual void reset();
+    void flush();
 
-      virtual void receive( char *data , unsigned int size );
+  private:
 
-      void flush();
+    C2SHttpRequest *m_pRequest;
 
-    private:
+    C2SHttpResourceManager * m_pResourceManager;
 
-      C2SHttpRequest *m_pRequest;
-
-      C2SHttpResourceManager * m_pResourceManager;
-
-    };
-
-  }
+  };
 
 }
 

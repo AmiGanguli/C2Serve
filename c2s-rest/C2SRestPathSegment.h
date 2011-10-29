@@ -37,62 +37,59 @@
 #include <string>
 #include <vector>
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  typedef std::vector<std::string> C2SRestPathIDList;
+
+  class C2SRestPathSegment
   {
+  public:
 
-    typedef std::vector<std::string> C2SRestPathIDList;
-
-    class C2SRestPathSegment
+    typedef enum
     {
-    public:
 
-      typedef enum
-      {
+      ID = 0,
+      Parameter = 1
 
-        ID = 0,
-        Parameter = 1
+    } EPathSegmentType;
 
-      } EPathSegmentType;
+    C2SRestPathSegment( const std::string &sID )
+      : m_sID( sID ),
+        m_type( ID )
+    {};
 
-      C2SRestPathSegment( const std::string &sID )
-        : m_sID( sID ),
-          m_type( ID )
-      {};
+    C2SRestPathSegment( const std::string &sID , EPathSegmentType type )
+      : m_sID( sID ),
+        m_type( type )
+    {};
 
-      C2SRestPathSegment( const std::string &sID , EPathSegmentType type )
-        : m_sID( sID ),
-          m_type( type )
-      {};
+    virtual ~C2SRestPathSegment(){};
 
-      virtual ~C2SRestPathSegment(){};
+    virtual void handle( const std::string &sID )
+    {
+      if ( m_sID != sID )
+        throw C2SRestException( "C2SRestPathSegment::handle: " , "Mismatch: \"" + m_sID + "\" != " + "\"" + sID + "\"" , InternalServerError );
+    }
 
-      virtual void handle( const std::string &sID )
-      {
-        if ( m_sID != sID )
-          throw C2SRestException( "C2SRestPathSegment::handle: " , "Mismatch: \"" + m_sID + "\" != " + "\"" + sID + "\"" , InternalServerError );
-      }
+    virtual bool isValid( const std::string &sID ) const { return m_sID == sID; }
 
-      virtual bool isValid( const std::string &sID ) const { return m_sID == sID; }
+    const std::string &id() const { return m_sID; }
 
-      const std::string &id() const { return m_sID; }
+    EPathSegmentType type() const { return m_type; }
 
-      EPathSegmentType type() const { return m_type; }
+  private:
 
-    private:
+    C2SRestPathSegment( const C2SRestPathSegment & );
 
-      C2SRestPathSegment( const C2SRestPathSegment & );
+    C2SRestPathSegment &operator=( const C2SRestPathSegment & );
 
-      C2SRestPathSegment &operator=( const C2SRestPathSegment & );
+    std::string m_sID;
 
-      std::string m_sID;
+    EPathSegmentType m_type;
 
-      EPathSegmentType m_type;
+  };
 
-    };
-
-  }
 }
 
 #endif /* C2SRESTPATHSEGMENT_H_ */

@@ -37,7 +37,7 @@
 
 #include <list>
 
-namespace g
+namespace c2s
 {
 
   namespace thread

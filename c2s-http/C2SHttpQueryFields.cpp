@@ -37,51 +37,46 @@
 
 #include <iostream>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  C2SHttpQueryFields::C2SHttpQueryFields()
   {
+  }
 
-    C2SHttpQueryFields::C2SHttpQueryFields()
-    {
-    }
+  C2SHttpQueryFields::~C2SHttpQueryFields()
+  {
+  }
 
-    C2SHttpQueryFields::~C2SHttpQueryFields()
-    {
-    }
+  void C2SHttpQueryFields::add( const std::string &name , const std::string &value )
+  {
+    if ( m_fields.find( name ) != m_fields.end() )
+      throw C2SHttpException( "C2SHttpQueryFields::add: " , "Duplicate field name: " + name , BadRequest );
 
-    void C2SHttpQueryFields::add( const std::string &name , const std::string &value )
-    {
-      if ( m_fields.find( name ) != m_fields.end() )
-        throw C2SHttpException( "C2SHttpQueryFields::add: " , "Duplicate field name: " + name , BadRequest );
+    m_fields[ name ] = value;
+  }
 
-      m_fields[ name ] = value;
-    }
+  const std::string &C2SHttpQueryFields::get( const std::string &name ) const
+  {
+    const_iterator it = m_fields.find( name );
+    if ( it == m_fields.end() )
+      throw C2SHttpException( "C2SHttpQueryFields::get: " , "Cannot find query field: " + name , InternalServerError );
 
-    const std::string &C2SHttpQueryFields::get( const std::string &name ) const
-    {
-      const_iterator it = m_fields.find( name );
-      if ( it == m_fields.end() )
-        throw C2SHttpException( "C2SHttpQueryFields::get: " , "Cannot find query field: " + name , InternalServerError );
+    return it->second;
+  }
 
-      return it->second;
-    }
-
-    std::ostream &operator<<( std::ostream &os , const C2SHttpQueryFields &fields )
-    {
-      if ( !fields.size() )
-        return os;
-
-      os << "?";
-
-      C2SHttpQueryFields::const_iterator it = fields.begin();
-      for ( ; it != fields.end(); ++it )
-        os << it->first << "=" << g::util::urlEncode( it->second );
-
+  std::ostream &operator<<( std::ostream &os , const C2SHttpQueryFields &fields )
+  {
+    if ( !fields.size() )
       return os;
-    }
 
+    os << "?";
+
+    C2SHttpQueryFields::const_iterator it = fields.begin();
+    for ( ; it != fields.end(); ++it )
+      os << it->first << "=" << c2s::util::urlEncode( it->second );
+
+    return os;
   }
 
 }

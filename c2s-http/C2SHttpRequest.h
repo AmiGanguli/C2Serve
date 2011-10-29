@@ -36,43 +36,38 @@
 #include "C2SHttpEntity.h"
 #include "C2SHttpParser.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SHttpRequest
   {
+  public:
 
-    class C2SHttpRequest
-    {
-    public:
+    C2SHttpRequest();
 
-      C2SHttpRequest();
+    C2SHttpRequest( const C2SHttpRequestHeader &header );
 
-      C2SHttpRequest( const C2SHttpRequestHeader &header );
+    virtual ~C2SHttpRequest();
 
-      virtual ~C2SHttpRequest();
+    void push( char *data , unsigned int size );
 
-      void push( char *data , unsigned int size );
+    void finished();
 
-      void finished();
+    const C2SHttpRequestHeader &header() const { return m_header; }
 
-      const C2SHttpRequestHeader &header() const { return m_header; }
+    C2SHttpRequestHeader &header() { return m_header; }
 
-      C2SHttpRequestHeader &header() { return m_header; }
+    const C2SHttpEntity &entity() const;
 
-      const C2SHttpEntity &entity() const;
+  private:
 
-    private:
+    C2SHttpRequestHeader m_header;
 
-      C2SHttpRequestHeader m_header;
+    C2SHttpParser m_parser;
 
-      C2SHttpParser m_parser;
+    C2SHttpEntity *m_pEntity;
 
-      C2SHttpEntity *m_pEntity;
-
-    };
-
-  }
+  };
 
 }
 

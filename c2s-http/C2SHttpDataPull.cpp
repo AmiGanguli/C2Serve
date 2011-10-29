@@ -37,46 +37,41 @@
 #include <assert.h>
 #include <iostream>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  C2SHttpDataPull::C2SHttpDataPull( C2SDataPushInterface *pDataPush )
+    : C2SDataPullInterface( pDataPush ),
+      m_pRequest( NULL ),
+      m_pResourceManager( new C2SHttpResourceManager( pDataPush ) )
   {
+  }
 
-    C2SHttpDataPull::C2SHttpDataPull( C2SDataPushInterface *pDataPush )
-      : C2SDataPullInterface( pDataPush ),
-        m_pRequest( NULL ),
-        m_pResourceManager( new C2SHttpResourceManager( pDataPush ) )
-    {
-    }
+  C2SHttpDataPull::~C2SHttpDataPull()
+  {
+    delete m_pRequest;
+    delete m_pResourceManager;
+  }
 
-    C2SHttpDataPull::~C2SHttpDataPull()
-    {
-      delete m_pRequest;
-      delete m_pResourceManager;
-    }
+  void C2SHttpDataPull::reset()
+  {
+    delete m_pRequest;
+    m_pRequest = new C2SHttpRequest();
+  }
 
-    void C2SHttpDataPull::reset()
-    {
-      delete m_pRequest;
-      m_pRequest = new C2SHttpRequest();
-    }
+  void C2SHttpDataPull::receive( char *data , unsigned int size )
+  {
+    assert( m_pRequest );
 
-    void C2SHttpDataPull::receive( char *data , unsigned int size )
-    {
-      assert( m_pRequest );
+    m_pRequest->push( data , size );
+  }
 
-      m_pRequest->push( data , size );
-    }
+  void C2SHttpDataPull::flush()
+  {
+    assert( m_pRequest );
 
-    void C2SHttpDataPull::flush()
-    {
-      assert( m_pRequest );
-
-      m_pRequest->finished();
-      m_pResourceManager->handleRequest( *m_pRequest );
-    }
-
+    m_pRequest->finished();
+    m_pResourceManager->handleRequest( *m_pRequest );
   }
 
 }

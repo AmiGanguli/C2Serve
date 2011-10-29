@@ -34,27 +34,22 @@
 
 #include "C2SServerTypeInterface.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SHttpServerType : public C2SServerTypeInterface
   {
+  public:
 
-    class C2SHttpServerType : public C2SServerTypeInterface
-    {
-    public:
+    C2SHttpServerType();
 
-      C2SHttpServerType();
+    virtual ~C2SHttpServerType();
 
-      virtual ~C2SHttpServerType();
+    virtual C2SDataPullInterface *createDataHandler( C2SDataPushInterface *pDataCallback ) const;
 
-      virtual C2SDataPullInterface *createDataHandler( C2SDataPushInterface *pDataCallback ) const;
+    virtual void release() const;
 
-      virtual void release() const;
-
-    };
-
-  }
+  };
 
 }
 

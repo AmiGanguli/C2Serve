@@ -31,22 +31,19 @@
 
 #include "C2SGlobalSettings.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  C2SGlobalSettings::C2SGlobalSettings()
+    : iPort( 8180 ),
+      iNumThreads( 4 ),
+      C2SHostName( "localhost" )
+  {};
+
+  C2SGlobalSettings &C2SGlobalSettings::Settings()
   {
-
-    C2SGlobalSettings::C2SGlobalSettings()
-      : iPort( 8180 ),
-        iNumThreads( 4 ),
-        C2SHostName( "localhost" )
-    {};
-
-    C2SGlobalSettings &C2SGlobalSettings::Settings()
-    {
-      static C2SGlobalSettings settings;
-      return settings;
-    }
-
+    static C2SGlobalSettings settings;
+    return settings;
   }
+
 }

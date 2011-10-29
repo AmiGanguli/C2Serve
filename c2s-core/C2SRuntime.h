@@ -36,84 +36,79 @@
 
 #include <list>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
-  {
+  class C2SSocketListener;
+  class C2SServerTypeInterface;
 
-    class C2SSocketListener;
-    class C2SServerTypeInterface;
+  /**
+   *
+   * @brief   Startup and shutdown your C2S service.
+   *
+   */
+  class C2SRuntime
+  {
+  public:
 
     /**
      *
-     * @brief   Startup and shutdown your C2S service.
+     * @brief   Startup C2S service.
+     *
+     *          Create socket listener, bind socket and start listener event loop.
+     *
+     * @param   type    Service type to use.
+     *                  The service type specifies how data received from the socket has to be interpreted.
+     *                  @see C2SHttpServerType
+     *
+     * @throws  C2SException
      *
      */
-    class C2SRuntime
-    {
-    public:
+    static void run( const C2SServerTypeInterface &type );
 
-      /**
-       *
-       * @brief   Startup C2S service.
-       *
-       *          Create socket listener, bind socket and start listener event loop.
-       *
-       * @param   type    Service type to use.
-       *                  The service type specifies how data received from the socket has to be interpreted.
-       *                  @see C2SHttpServerType
-       *
-       * @throws  C2SException
-       *
-       */
-      static void run( const C2SServerTypeInterface &type );
+    /**
+     *
+     * @brief   Interrupt listener and shutdown C2S service.
+     *
+     *          This method blocks until shutdown is complete.
+     *
+     */
+    static void shutdown();
 
-      /**
-       *
-       * @brief   Interrupt listener and shutdown C2S service.
-       *
-       *          This method blocks until shutdown is complete.
-       *
-       */
-      static void shutdown();
+    /**
+     *
+     * @brief   Blocks until C2S service startup is complete.
+     *
+     *          Use that function if you need to wait for startup (very useful for unit testing).
+     *
+     */
+    static void waitForStartup();
 
-      /**
-       *
-       * @brief   Blocks until C2S service startup is complete.
-       *
-       *          Use that function if you need to wait for startup (very useful for unit testing).
-       *
-       */
-      static void waitForStartup();
+  private:
 
-    private:
+    C2SRuntime( const C2SServerTypeInterface &type );
 
-      C2SRuntime( const C2SServerTypeInterface &type );
+    virtual ~C2SRuntime();
 
-      virtual ~C2SRuntime();
+    C2SRuntime( const C2SRuntime & );
 
-      C2SRuntime( const C2SRuntime & );
+    C2SRuntime &operator=( const C2SRuntime & );
 
-      C2SRuntime &operator=( const C2SRuntime & );
+    void runInternal();
 
-      void runInternal();
+    void shutdownInternal();
 
-      void shutdownInternal();
+    C2SSocketListener *m_pSocketListener;
 
-      C2SSocketListener *m_pSocketListener;
+    static C2SRuntime *pInstance;
 
-      static C2SRuntime *pInstance;
+    static volatile bool bIsRunning;
 
-      static volatile bool bIsRunning;
+    static volatile bool bIsOnStartup;
 
-      static volatile bool bIsOnStartup;
+    static volatile bool bIsOnShutdown;
 
-      static volatile bool bIsOnShutdown;
-
-    };
-
-  }
+  };
 
 }
 

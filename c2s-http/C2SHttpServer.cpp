@@ -34,37 +34,34 @@
 
 #include "C2SRuntime.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  C2SHttpServer C2SHttpServer::Instance = C2SHttpServer();
+
+  C2SHttpServer::C2SHttpServer()
   {
+    m_st = new C2SHttpServerType();
+  }
 
-    C2SHttpServer C2SHttpServer::Instance = C2SHttpServer();
+  C2SHttpServer::~C2SHttpServer()
+  {
+    delete m_st;
+  }
 
-    C2SHttpServer::C2SHttpServer()
-    {
-      m_st = new C2SHttpServerType();
-    }
+  void C2SHttpServer::run()
+  {
+    C2SRuntime::run( *( Instance.m_st ) );
+  }
 
-    C2SHttpServer::~C2SHttpServer()
-    {
-      delete m_st;
-    }
+  void C2SHttpServer::waitForStartup()
+  {
+    C2SRuntime::waitForStartup();
+  }
 
-    void C2SHttpServer::run()
-    {
-      C2SRuntime::run( *( Instance.m_st ) );
-    }
+  void C2SHttpServer::shutdown()
+  {
+    C2SRuntime::shutdown();
+  }
 
-    void C2SHttpServer::waitForStartup()
-    {
-      C2SRuntime::waitForStartup();
-    }
-
-    void C2SHttpServer::shutdown()
-    {
-      C2SRuntime::shutdown();
-    }
-
-  } /* namespace c2s */
-} /* namespace g */
+}

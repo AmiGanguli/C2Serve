@@ -34,30 +34,25 @@
 #include "C2SHttpDataPull.h"
 #include "C2SHttpResourceManager.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  C2SHttpServerType::C2SHttpServerType()
   {
+  }
 
-    C2SHttpServerType::C2SHttpServerType()
-    {
-    }
+  C2SHttpServerType::~C2SHttpServerType()
+  {
+  }
 
-    C2SHttpServerType::~C2SHttpServerType()
-    {
-    }
+  C2SDataPullInterface *C2SHttpServerType::createDataHandler( C2SDataPushInterface *pDataCallback ) const
+  {
+    return new C2SHttpDataPull( pDataCallback );
+  }
 
-    C2SDataPullInterface *C2SHttpServerType::createDataHandler( C2SDataPushInterface *pDataCallback ) const
-    {
-      return new C2SHttpDataPull( pDataCallback );
-    }
-
-    void C2SHttpServerType::release() const
-    {
-      C2SHttpResourceManager::releaseResources();
-    }
-
+  void C2SHttpServerType::release() const
+  {
+    C2SHttpResourceManager::releaseResources();
   }
 
 }

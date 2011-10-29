@@ -36,61 +36,56 @@
 
 #define BACKLOG_QUEUE_SIZE 5
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  C2SSocketConnectorWIN::C2SSocketConnectorWIN()
   {
+  }
 
-    C2SSocketConnectorWIN::C2SSocketConnectorWIN()
-    {
-    }
+  C2SSocketConnectorWIN::~C2SSocketConnectorWIN()
+  {
+  }
 
-    C2SSocketConnectorWIN::~C2SSocketConnectorWIN()
-    {
-    }
+  ForRestSocketInfo C2SSocketConnectorWIN::connect()
+  {
+    ForRestSocketInfo info;
+    WSADATA wsa;
+    int ret;
 
-    ForRestSocketInfo C2SSocketConnectorWIN::connect()
-    {
-      ForRestSocketInfo info;
-      WSADATA wsa;
-      int ret;
+    m_pLogger->debug( "Create socket" );
 
-      m_pLogger->debug( "Create socket" );
+    //initialize winsock
+    //use version 2.0
+    //struct wsa will be filled with information about winsock
+    ret = WSAStartup( MAKEWORD( 2 , 0 ) , &wsa );
+    if ( ret != 0 )
+      throw C2SSocketConnectorException( "C2SSocketConnectorWIN::connect: Could not initialize winsock! Error: " + c2s::utils::toString( ret ) );
 
-      //initialize winsock
-      //use version 2.0
-      //struct wsa will be filled with information about winsock
-      ret = WSAStartup( MAKEWORD( 2 , 0 ) , &wsa );
-      if ( ret != 0 )
-        throw C2SSocketConnectorException( "C2SSocketConnectorWIN::connect: Could not initialize winsock! Error: " + g::utils::toString( ret ) );
+    SOCKADDR_IN addr;
 
-      SOCKADDR_IN addr;
+    info.SocketDescriptor = socket( AF_INET , SOCK_STREAM , 0 );
+    if ( info.SocketDescriptor == INVALID_SOCKET )
+      throw C2SSocketConnectorException( "C2SSocketConnectorWIN::connect: Could not create socket! Error: " + c2s::utils::toString( WSAGetLastError() ) );
 
-      info.SocketDescriptor = socket( AF_INET , SOCK_STREAM , 0 );
-      if ( info.SocketDescriptor == INVALID_SOCKET )
-        throw C2SSocketConnectorException( "C2SSocketConnectorWIN::connect: Could not create socket! Error: " + g::utils::toString( WSAGetLastError() ) );
+    m_pLogger->debug( "Bind socket; port: " + c2s::utils::toString( C2SGlobalSettings::Settings().iPortNumber ) );
 
-      m_pLogger->debug( "Bind socket; port: " + g::utils::toString( C2SGlobalSettings::Settings().iPortNumber ) );
+    memset( &addr , 0 , sizeof( SOCKADDR_IN ) );
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons( C2SGlobalSettings::Settings().iPortNumber );
+    addr.sin_addr.s_addr = ADDR_ANY;
 
-      memset( &addr , 0 , sizeof( SOCKADDR_IN ) );
-      addr.sin_family = AF_INET;
-      addr.sin_port = htons( C2SGlobalSettings::Settings().iPortNumber );
-      addr.sin_addr.s_addr = ADDR_ANY;
+    ret = bind( info.SocketDescriptor , ( SOCKADDR* ) &addr , sizeof( SOCKADDR_IN ) );
+    if( ret == SOCKET_ERROR )
+      throw C2SSocketConnectorException( "C2SSocketConnectorWIN::connect: Could not bind socket! Error: " + c2s::utils::toString( WSAGetLastError() ) );
 
-      ret = bind( info.SocketDescriptor , ( SOCKADDR* ) &addr , sizeof( SOCKADDR_IN ) );
-      if( ret == SOCKET_ERROR )
-        throw C2SSocketConnectorException( "C2SSocketConnectorWIN::connect: Could not bind socket! Error: " + g::utils::toString( WSAGetLastError() ) );
+    m_pLogger->debug( "Create listener; size of backlog queue: " + c2s::utils::toString<int>( BACKLOG_QUEUE_SIZE ) );
 
-      m_pLogger->debug( "Create listener; size of backlog queue: " + g::utils::toString<int>( BACKLOG_QUEUE_SIZE ) );
+    ret = listen( info.SocketDescriptor , BACKLOG_QUEUE_SIZE );
+    if ( ret == SOCKET_ERROR )
+      throw C2SSocketConnectorException( "C2SSocketConnectorWIN::connect: Could not create listener! Error: " + c2s::utils::toString( WSAGetLastError() ) );
 
-      ret = listen( info.SocketDescriptor , BACKLOG_QUEUE_SIZE );
-      if ( ret == SOCKET_ERROR )
-        throw C2SSocketConnectorException( "C2SSocketConnectorWIN::connect: Could not create listener! Error: " + g::utils::toString( WSAGetLastError() ) );
-
-      return info;
-    }
-
+    return info;
   }
 
 }

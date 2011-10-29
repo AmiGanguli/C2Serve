@@ -34,20 +34,17 @@
 
 #include "GenericException.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  class C2SException : public GenericException
   {
+  public:
 
-    class C2SException : public GenericException
-    {
-    public:
+    C2SException( const std::string &msg ) : GenericException( msg ) {};
 
-      C2SException( const std::string &msg ) : GenericException( msg ) {};
+  };
 
-    };
-
-  }
 }
 
 #endif /* C2SEXCEPTION_H_ */

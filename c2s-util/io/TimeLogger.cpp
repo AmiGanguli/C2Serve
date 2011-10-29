@@ -40,7 +40,7 @@
 #include <sys/time.h>
 #endif
 
-namespace g
+namespace c2s
 {
   namespace io
   {

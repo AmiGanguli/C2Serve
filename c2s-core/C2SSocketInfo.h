@@ -44,32 +44,29 @@
 
 #endif
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  struct C2SSocketInfo
   {
-
-    struct C2SSocketInfo
-    {
-      C2SSocketInfo()
+    C2SSocketInfo()
 #ifdef WINXX
-        : SocketDescriptor( INVALID_SOCKET )
+      : SocketDescriptor( INVALID_SOCKET )
 #else
-        : SocketDescriptor( 0 )
+      : SocketDescriptor( 0 )
 #endif
-      {};
+    {};
 
 #ifdef WINXX
-      SOCKET
+    SOCKET
 #else
-      int
+    int
 #endif
 
-      SocketDescriptor;
+    SocketDescriptor;
 
-    };
+  };
 
-  }
 }
 
 #endif /* C2SSOCKETINFO_H_ */

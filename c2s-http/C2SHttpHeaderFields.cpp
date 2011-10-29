@@ -39,71 +39,66 @@
 #define FIELD_CONTENT_TYPE "Content-Type"
 #define FIELD_CONTENT_LENGTH "Content-Length"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  C2SHttpHeaderFields::C2SHttpHeaderFields()
+    : m_iContentLength( 0 )
   {
+  }
 
-    C2SHttpHeaderFields::C2SHttpHeaderFields()
-      : m_iContentLength( 0 )
-    {
-    }
-
-    C2SHttpHeaderFields::~C2SHttpHeaderFields()
-    {
-    }
+  C2SHttpHeaderFields::~C2SHttpHeaderFields()
+  {
+  }
 
 
-    void C2SHttpHeaderFields::set( const std::string &sFieldName , const std::string &sFieldValue )
-    {
-      //TODO: What if this error occurs when creating the response header?? Which status code?
+  void C2SHttpHeaderFields::set( const std::string &sFieldName , const std::string &sFieldValue )
+  {
+    //TODO: What if this error occurs when creating the response header?? Which status code?
 //      if ( m_fields.find( sFieldName ) != m_fields.end() )
 //        throw C2SHttpException( "C2SHttpHeaderFields::addField: " , "Duplicate header field: " + sFieldName , BadRequest );
 
-      m_fields[ sFieldName ] = sFieldValue;
+    m_fields[ sFieldName ] = sFieldValue;
 
-      if ( sFieldName == FIELD_ACCEPT )
-        m_accept = C2SHttpMediaTypeList::detect( sFieldValue.c_str() , sFieldValue.size() );
-      else if ( sFieldName == FIELD_CONTENT_TYPE )
-        m_contentType.detect( sFieldValue.c_str() , sFieldValue.size() );
-      else if ( sFieldName == FIELD_CONTENT_LENGTH )
-        m_iContentLength = g::util::toNumber<unsigned int>( sFieldValue );
-    }
+    if ( sFieldName == FIELD_ACCEPT )
+      m_accept = C2SHttpMediaTypeList::detect( sFieldValue.c_str() , sFieldValue.size() );
+    else if ( sFieldName == FIELD_CONTENT_TYPE )
+      m_contentType.detect( sFieldValue.c_str() , sFieldValue.size() );
+    else if ( sFieldName == FIELD_CONTENT_LENGTH )
+      m_iContentLength = c2s::util::toNumber<unsigned int>( sFieldValue );
+  }
 
-    bool C2SHttpHeaderFields::isAccept( const std::string &sMediaType ) const
-    {
-      return m_accept.exists( sMediaType );
-    }
+  bool C2SHttpHeaderFields::isAccept( const std::string &sMediaType ) const
+  {
+    return m_accept.exists( sMediaType );
+  }
 
-    void C2SHttpHeaderFields::addAccept( const C2SHttpMediaType &mediaType )
-    {
-      m_accept.add( mediaType );
-      std::string &sAcceptValue = m_fields[ FIELD_ACCEPT ];
-      if ( sAcceptValue.size() )
-        sAcceptValue += ",";
+  void C2SHttpHeaderFields::addAccept( const C2SHttpMediaType &mediaType )
+  {
+    m_accept.add( mediaType );
+    std::string &sAcceptValue = m_fields[ FIELD_ACCEPT ];
+    if ( sAcceptValue.size() )
+      sAcceptValue += ",";
 
-      sAcceptValue += mediaType.toString();
-    }
+    sAcceptValue += mediaType.toString();
+  }
 
-    const C2SHttpMediaType &C2SHttpHeaderFields::getAccept( const std::string &sMediaType ) const
-    {
-      return m_accept.get( sMediaType );
-    }
+  const C2SHttpMediaType &C2SHttpHeaderFields::getAccept( const std::string &sMediaType ) const
+  {
+    return m_accept.get( sMediaType );
+  }
 
-    void C2SHttpHeaderFields::setContentType( const std::string &sMediaType )
-    {
-      m_fields[ FIELD_CONTENT_TYPE ] = sMediaType;
-      m_contentType.Type = sMediaType;
-      m_contentType.fQ = 1.f;
-    }
+  void C2SHttpHeaderFields::setContentType( const std::string &sMediaType )
+  {
+    m_fields[ FIELD_CONTENT_TYPE ] = sMediaType;
+    m_contentType.Type = sMediaType;
+    m_contentType.fQ = 1.f;
+  }
 
-    void C2SHttpHeaderFields::setContentLength( unsigned int iContentLength )
-    {
-      m_iContentLength = iContentLength;
-      m_fields[ FIELD_CONTENT_LENGTH ] = g::util::toString( iContentLength );
-    }
-
+  void C2SHttpHeaderFields::setContentLength( unsigned int iContentLength )
+  {
+    m_iContentLength = iContentLength;
+    m_fields[ FIELD_CONTENT_LENGTH ] = c2s::util::toString( iContentLength );
   }
 
 }

@@ -33,7 +33,7 @@
 
 #define BUFFER_SIZE 4096
 
-namespace g
+namespace c2s
 {
 
   namespace io

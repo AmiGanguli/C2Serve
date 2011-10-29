@@ -37,32 +37,27 @@
 
 #include <string>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  template <class Type>
+  class C2SRestEntityStreamer
   {
+  public:
 
-    template <class Type>
-    class C2SRestEntityStreamer
-    {
-    public:
+    virtual ~C2SRestEntityStreamer(){};
 
-      virtual ~C2SRestEntityStreamer(){};
+    virtual C2SHttpEntity *entity( const Type &data ) const = 0;
 
-      virtual C2SHttpEntity *entity( const Type &data ) const = 0;
+    const C2SHttpMediaType &getMediaType() const { return m_mediatype; }
 
-      const C2SHttpMediaType &getMediaType() const { return m_mediatype; }
+  protected:
 
-    protected:
+    C2SRestEntityStreamer( const C2SHttpMediaType &mediatype ) : m_mediatype( mediatype ) {};
 
-      C2SRestEntityStreamer( const C2SHttpMediaType &mediatype ) : m_mediatype( mediatype ) {};
+    C2SHttpMediaType m_mediatype;
 
-      C2SHttpMediaType m_mediatype;
-
-    };
-
-  }
+  };
 
 }
 

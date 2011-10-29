@@ -34,32 +34,27 @@
 
 #include "C2SHttpServer.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  namespace test
   {
 
-    namespace test
+    class C2STestServerThread
     {
+    public:
 
-      class C2STestServerThread
+      C2STestServerThread(){};
+
+      virtual ~C2STestServerThread(){};
+
+      void run()
       {
-      public:
-
-        C2STestServerThread(){};
-
-        virtual ~C2STestServerThread(){};
-
-        void run()
-        {
-          C2SHttpServer::run();
+        C2SHttpServer::run();
 //          BOOST_MESSAGE( "server is shutdown" );
-        }
+      }
 
-      };
-
-    }
+    };
 
   }
 

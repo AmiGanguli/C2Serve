@@ -33,18 +33,15 @@
 
 #include "C2SHttpException.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  void C2SHttpResource::sendResponse( const C2SHttpResponse &response )
   {
+    if ( !m_pResponseHandler )
+      throw C2SHttpException( "C2SHttpResource::sendResponse:" , "Response handler is NULL!" , InternalServerError );
 
-    void C2SHttpResource::sendResponse( const C2SHttpResponse &response )
-    {
-      if ( !m_pResponseHandler )
-        throw C2SHttpException( "C2SHttpResource::sendResponse:" , "Response handler is NULL!" , InternalServerError );
-
-      m_pResponseHandler->sendResponse( response );
-    }
-
+    m_pResponseHandler->sendResponse( response );
   }
+
 }

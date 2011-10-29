@@ -36,76 +36,71 @@
 
 #include <list>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  struct C2SSocketInfo;
+  class C2SServerTypeInterface;
+  class C2SSocketAcceptHandler;
+
+  struct C2SSocketListenerSettings
   {
 
-    struct C2SSocketInfo;
-    class C2SServerTypeInterface;
-    class C2SSocketAcceptHandler;
+    C2SSocketListenerSettings()
+      : iPort( 8180 ),
+        iNumThreads( 4 ),
+        iSizeBacklogQueue( 5 )
+    {};
 
-    struct C2SSocketListenerSettings
-    {
+    unsigned short iPort;
 
-      C2SSocketListenerSettings()
-        : iPort( 8180 ),
-          iNumThreads( 4 ),
-          iSizeBacklogQueue( 5 )
-      {};
+    unsigned short iNumThreads;
 
-      unsigned short iPort;
+    unsigned short iSizeBacklogQueue;
 
-      unsigned short iNumThreads;
+  };
 
-      unsigned short iSizeBacklogQueue;
+  class C2SSocketListenerException : public C2SException
+  {
+  public:
 
-    };
+    C2SSocketListenerException( const std::string &msg ) : C2SException( msg ) {};
 
-    class C2SSocketListenerException : public C2SException
-    {
-    public:
+  };
 
-      C2SSocketListenerException( const std::string &msg ) : C2SException( msg ) {};
+  class C2SSocketListener
+  {
+  public:
 
-    };
+    C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SServerTypeInterface &type );
 
-    class C2SSocketListener
-    {
-    public:
+    virtual ~C2SSocketListener();
 
-      C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SServerTypeInterface &type );
+    void run();
 
-      virtual ~C2SSocketListener();
+    void interrupt();
 
-      void run();
+  private:
 
-      void interrupt();
+    void connect();
 
-    private:
+    C2SSocketListener( const C2SSocketListener & );
 
-      void connect();
+    C2SSocketListener &operator=( const C2SSocketListener & );
 
-      C2SSocketListener( const C2SSocketListener & );
+    typedef std::list<C2SSocketAcceptHandler*> C2SSocketAcceptHandlerList;
 
-      C2SSocketListener &operator=( const C2SSocketListener & );
+    C2SSocketListenerSettings m_settings;
 
-      typedef std::list<C2SSocketAcceptHandler*> C2SSocketAcceptHandlerList;
+    const C2SServerTypeInterface &m_type;
 
-      C2SSocketListenerSettings m_settings;
+    C2SSocketAcceptHandlerList m_acceptHandlers;
 
-      const C2SServerTypeInterface &m_type;
+    C2SSocketInfo *m_pSocketInfo;
 
-      C2SSocketAcceptHandlerList m_acceptHandlers;
+    volatile bool m_bKeepRunning;
 
-      C2SSocketInfo *m_pSocketInfo;
-
-      volatile bool m_bKeepRunning;
-
-    };
-
-  }
+  };
 
 }
 

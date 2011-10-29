@@ -38,58 +38,55 @@
 #include <string>
 #include <cassert>
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  template <class Type>
+  Type *findLongestMatchString( const std::string &sURI , const std::map<std::string,Type*> &resources )
   {
-
-    template <class Type>
-    Type *findLongestMatchString( const std::string &sURI , const std::map<std::string,Type*> &resources )
+    std::map<unsigned int,Type*> matches;
+    typename std::map<std::string,Type*>::const_iterator it = resources.begin();
+    for ( ; it != resources.end(); ++it )
     {
-      std::map<unsigned int,Type*> matches;
-      typename std::map<std::string,Type*>::const_iterator it = resources.begin();
-      for ( ; it != resources.end(); ++it )
+      //skip root resource
+      if ( !it->first.size() || it->first == "/" )
+        continue;
+
+      const char *pRes = it->first.c_str();
+      unsigned int iResSize = it->first.size();
+      const char *pReq = sURI.c_str();
+      unsigned int iReqSize = sURI.size();
+
+      //remove leading '/'
+      while ( *pRes == '/' && iResSize )
       {
-        //skip root resource
-        if ( !it->first.size() || it->first == "/" )
-          continue;
-
-        const char *pRes = it->first.c_str();
-        unsigned int iResSize = it->first.size();
-        const char *pReq = sURI.c_str();
-        unsigned int iReqSize = sURI.size();
-
-        //remove leading '/'
-        while ( *pRes == '/' && iResSize )
-        {
-          ++pRes;
-          --iResSize;
-        }
-
-        while ( *pReq == '/' && iReqSize )
-        {
-          ++pReq;
-          --iReqSize;
-        }
-
-        if ( startsWith( pReq , iReqSize , pRes , iResSize ) )
-        {
-          if ( iReqSize == iResSize || pReq[ iResSize ] == '/' )
-          {
-            assert( matches.find( iResSize ) == matches.end() );
-            matches[ iResSize ] = it->second;
-          }
-        }
+        ++pRes;
+        --iResSize;
       }
 
-      //return resource with longest match string
-      if ( matches.size() )
-        return matches.rbegin()->second;
+      while ( *pReq == '/' && iReqSize )
+      {
+        ++pReq;
+        --iReqSize;
+      }
 
-      return NULL;
+      if ( startsWith( pReq , iReqSize , pRes , iResSize ) )
+      {
+        if ( iReqSize == iResSize || pReq[ iResSize ] == '/' )
+        {
+          assert( matches.find( iResSize ) == matches.end() );
+          matches[ iResSize ] = it->second;
+        }
+      }
     }
 
+    //return resource with longest match string
+    if ( matches.size() )
+      return matches.rbegin()->second;
+
+    return NULL;
   }
+
 }
 
 #endif /* C2SMATCHING_H_ */

@@ -38,72 +38,67 @@
 
 #include "Mutex.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SServerTypeInterface;
+  class C2SDataPullInterface;
+
+  class C2SSocketAcceptHandlerException : public C2SException
   {
+  public:
 
-    class C2SServerTypeInterface;
-    class C2SDataPullInterface;
+    C2SSocketAcceptHandlerException( const std::string &msg ) : C2SException( msg ) {};
 
-    class C2SSocketAcceptHandlerException : public C2SException
-    {
-    public:
+  };
 
-      C2SSocketAcceptHandlerException( const std::string &msg ) : C2SException( msg ) {};
+  class C2SSocketAcceptHandlerDataPushImpl : public C2SDataPushInterface
+  {
+  public:
 
-    };
+    virtual void push( const char *data , unsigned int size );
 
-    class C2SSocketAcceptHandlerDataPushImpl : public C2SDataPushInterface
-    {
-    public:
+    void setSocketInfo( const C2SSocketInfo &socketInfo ) { m_socketInfo = socketInfo; }
 
-      virtual void push( const char *data , unsigned int size );
+  private:
 
-      void setSocketInfo( const C2SSocketInfo &socketInfo ) { m_socketInfo = socketInfo; }
+    C2SSocketInfo m_socketInfo;
 
-    private:
+  };
 
-      C2SSocketInfo m_socketInfo;
+  class C2SSocketAcceptHandler
+  {
+  public:
 
-    };
+    C2SSocketAcceptHandler( const C2SSocketInfo &socketInfo , const C2SServerTypeInterface &type , c2s::thread::Mutex *pAcceptMutex );
 
-    class C2SSocketAcceptHandler
-    {
-    public:
+    virtual ~C2SSocketAcceptHandler();
 
-      C2SSocketAcceptHandler( const C2SSocketInfo &socketInfo , const C2SServerTypeInterface &type , g::thread::Mutex *pAcceptMutex );
+    void run() { this->accept(); }
 
-      virtual ~C2SSocketAcceptHandler();
+    void interrupt();
 
-      void run() { this->accept(); }
+  private:
 
-      void interrupt();
+    void accept();
 
-    private:
+    C2SSocketAcceptHandler( const C2SSocketAcceptHandler & );
 
-      void accept();
+    C2SSocketAcceptHandler &operator=( const C2SSocketAcceptHandler & );
 
-      C2SSocketAcceptHandler( const C2SSocketAcceptHandler & );
+    C2SSocketInfo m_socketInfo;
 
-      C2SSocketAcceptHandler &operator=( const C2SSocketAcceptHandler & );
+    C2SSocketInfo m_connectionSocketInfo;
 
-      C2SSocketInfo m_socketInfo;
+    C2SDataPullInterface *m_pDataPull;
 
-      C2SSocketInfo m_connectionSocketInfo;
+    C2SSocketAcceptHandlerDataPushImpl m_dataPush;
 
-      C2SDataPullInterface *m_pDataPull;
+    bool m_bInterrupted;
 
-      C2SSocketAcceptHandlerDataPushImpl m_dataPush;
+    c2s::thread::Mutex &m_acceptMutex;
 
-      bool m_bInterrupted;
-
-      g::thread::Mutex &m_acceptMutex;
-
-    };
-
-  }
+  };
 
 }
 

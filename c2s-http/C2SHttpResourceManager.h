@@ -39,70 +39,65 @@
 
 #include <map>
 
-namespace g
+namespace io
+{
+  class Logger;
+}
+
+namespace c2s
 {
 
-  namespace io
+  class C2SHttpResourceManagerResponseHandler : public C2SHttpResponseHandlerInterface
   {
-    class Logger;
-  }
+  public:
 
-  namespace c2s
+    C2SHttpResourceManagerResponseHandler( C2SDataPushInterface *pDataPush )
+      : m_pDataPush( pDataPush )
+    {};
+
+    virtual void sendResponse( const C2SHttpResponse &response );
+
+  private:
+
+    C2SDataPushInterface *m_pDataPush;
+
+  };
+
+  class C2SHttpResourceManager
   {
+  public:
 
-    class C2SHttpResourceManagerResponseHandler : public C2SHttpResponseHandlerInterface
-    {
-    public:
+    C2SHttpResourceManager( C2SDataPushInterface *pDataCallback );
 
-      C2SHttpResourceManagerResponseHandler( C2SDataPushInterface *pDataPush )
-        : m_pDataPush( pDataPush )
-      {};
+    virtual ~C2SHttpResourceManager();
 
-      virtual void sendResponse( const C2SHttpResponse &response );
+    void handleRequest( const C2SHttpRequest &request );
 
-    private:
+    C2SHttpResource *bestMatch( const C2SHttpRequest &request );
 
-      C2SDataPushInterface *m_pDataPush;
+    //register prototype
+    static void registerResource( C2SHttpResource *pResource );
 
-    };
+    //release prototypes
+    static void releaseResources();
 
-    class C2SHttpResourceManager
-    {
-    public:
+  private:
 
-      C2SHttpResourceManager( C2SDataPushInterface *pDataCallback );
+    C2SHttpResourceManager( const C2SHttpResourceManager & );
 
-      virtual ~C2SHttpResourceManager();
+    C2SHttpResourceManager &operator=( const C2SHttpResourceManager & );
 
-      void handleRequest( const C2SHttpRequest &request );
+    typedef std::map<std::string,C2SHttpResource*> ResourceContainer;
+    typedef std::map<std::string,C2SHttpResource*>::const_iterator const_iterator;
+    typedef std::map<std::string,C2SHttpResource*>::iterator iterator;
 
-      C2SHttpResource *bestMatch( const C2SHttpRequest &request );
+    static ResourceContainer &getResourcePrototypes();
 
-      //register prototype
-      static void registerResource( C2SHttpResource *pResource );
+    ResourceContainer m_resources;
 
-      //release prototypes
-      static void releaseResources();
+    C2SHttpResourceManagerResponseHandler m_responseHandler;
 
-    private:
-
-      C2SHttpResourceManager( const C2SHttpResourceManager & );
-
-      C2SHttpResourceManager &operator=( const C2SHttpResourceManager & );
-
-      typedef std::map<std::string,C2SHttpResource*> ResourceContainer;
-      typedef std::map<std::string,C2SHttpResource*>::const_iterator const_iterator;
-      typedef std::map<std::string,C2SHttpResource*>::iterator iterator;
-
-      static ResourceContainer &getResourcePrototypes();
-
-      ResourceContainer m_resources;
-
-      C2SHttpResourceManagerResponseHandler m_responseHandler;
-
-    };
-
-  }
+  };
 
 }
 

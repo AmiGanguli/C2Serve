@@ -39,47 +39,44 @@
 #include <map>
 #include <set>
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  class C2SHttpMediaTypeList
   {
+  public:
 
-    class C2SHttpMediaTypeList
-    {
-    public:
+    C2SHttpMediaTypeList(){};
 
-      C2SHttpMediaTypeList(){};
+    typedef std::multiset<C2SHttpMediaType>::const_reverse_iterator const_iterator;
 
-      typedef std::multiset<C2SHttpMediaType>::const_reverse_iterator const_iterator;
+    bool exists( const std::string &id ) const;
 
-      bool exists( const std::string &id ) const;
+    void add( const C2SHttpMediaType &type );
 
-      void add( const C2SHttpMediaType &type );
+    const C2SHttpMediaType &get( const std::string &id ) const;
 
-      const C2SHttpMediaType &get( const std::string &id ) const;
+    static C2SHttpMediaTypeList detect( const char *data , unsigned int size );
 
-      static C2SHttpMediaTypeList detect( const char *data , unsigned int size );
+    const_iterator begin() const { return m_typesByQuality.rbegin(); }
 
-      const_iterator begin() const { return m_typesByQuality.rbegin(); }
+    const_iterator end() const { return m_typesByQuality.rend(); }
 
-      const_iterator end() const { return m_typesByQuality.rend(); }
+    std::size_t size() const { return m_typesByQuality.size(); }
 
-      std::size_t size() const { return m_typesByQuality.size(); }
+  private:
 
-    private:
+    template <class Handler>
+    friend void splitNhandle( const char *data , unsigned int size , char separator , Handler *pHandler );
 
-      template <class Handler>
-      friend void splitNhandle( const char *data , unsigned int size , char separator , Handler *pHandler );
+    void operator()( const char *data , unsigned int size );
 
-      void operator()( const char *data , unsigned int size );
+    std::multiset<C2SHttpMediaType> m_typesByQuality;
 
-      std::multiset<C2SHttpMediaType> m_typesByQuality;
+    std::map<std::string,C2SHttpMediaType> m_typesByType;
 
-      std::map<std::string,C2SHttpMediaType> m_typesByType;
+  };
 
-    };
-
-  }
 }
 
 #endif /* C2SHTTPMEDIATYPELIST_H_ */

@@ -34,59 +34,56 @@
 
 #include <cstring>
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  class C2SHttpEntity
   {
+  public:
 
-    class C2SHttpEntity
+    C2SHttpEntity( const char *data , unsigned int size )
+      : data( data ),
+        size( size ),
+        m_bCleanUp( false )
+    {};
+
+    C2SHttpEntity( const char *data , unsigned int size , bool bCleanUp )
+      : data( data ),
+        size( size ),
+        m_bCleanUp( bCleanUp )
+    {};
+
+    C2SHttpEntity( const C2SHttpEntity &e )
+      : data( e.data ),
+        size( e.size ),
+        m_bCleanUp( e.m_bCleanUp )
     {
-    public:
-
-      C2SHttpEntity( const char *data , unsigned int size )
-        : data( data ),
-          size( size ),
-          m_bCleanUp( false )
-      {};
-
-      C2SHttpEntity( const char *data , unsigned int size , bool bCleanUp )
-        : data( data ),
-          size( size ),
-          m_bCleanUp( bCleanUp )
-      {};
-
-      C2SHttpEntity( const C2SHttpEntity &e )
-        : data( e.data ),
-          size( e.size ),
-          m_bCleanUp( e.m_bCleanUp )
+      if ( m_bCleanUp )
       {
-        if ( m_bCleanUp )
-        {
-          char *arr = new char[ size ];
-          std::memcpy( arr , e.data , size );
-          data = arr;
-        }
-      };
-
-      virtual ~C2SHttpEntity()
-      {
-        if ( m_bCleanUp )
-          delete[] data;
+        char *arr = new char[ size ];
+        std::memcpy( arr , e.data , size );
+        data = arr;
       }
-
-      const char *data;
-
-      unsigned int size;
-
-    private:
-
-      C2SHttpEntity &operator=( const C2SHttpEntity & );
-
-      bool m_bCleanUp;
-
     };
 
-  }
+    virtual ~C2SHttpEntity()
+    {
+      if ( m_bCleanUp )
+        delete[] data;
+    }
+
+    const char *data;
+
+    unsigned int size;
+
+  private:
+
+    C2SHttpEntity &operator=( const C2SHttpEntity & );
+
+    bool m_bCleanUp;
+
+  };
+
 }
 
 #endif /* C2SHTTPENTITY_H_ */

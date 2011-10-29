@@ -36,34 +36,31 @@
 #include "C2SRestEntityStreamer.h"
 #include "StringUtils.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+  namespace test
   {
-    namespace test
+
+    template <class Type>
+    class C2STestRestEntityStreamerJSON : public C2SRestEntityStreamer<Type>
     {
+    public:
 
-      template <class Type>
-      class C2STestRestEntityStreamerJSON : public C2SRestEntityStreamer<Type>
+      C2STestRestEntityStreamerJSON()
+        : C2SRestEntityStreamer<Type>( C2SHttpMediaType::application__json )
+      {};
+
+
+      C2SHttpEntity *entity( const Type &data ) const
       {
-      public:
+        std::string sJSON = "{ \"result\" : " + c2s::util::toString( data ) + " }";
+        char *cdata = new char[ sJSON.size() ];
+        std::memcpy( cdata , sJSON.c_str() , sJSON.size() );
+        return new C2SHttpEntity( cdata , sJSON.size() , true );
+      }
 
-        C2STestRestEntityStreamerJSON()
-          : C2SRestEntityStreamer<Type>( C2SHttpMediaType::application__json )
-        {};
+    };
 
-
-        C2SHttpEntity *entity( const Type &data ) const
-        {
-          std::string sJSON = "{ \"result\" : " + g::util::toString( data ) + " }";
-          char *cdata = new char[ sJSON.size() ];
-          std::memcpy( cdata , sJSON.c_str() , sJSON.size() );
-          return new C2SHttpEntity( cdata , sJSON.size() , true );
-        }
-
-      };
-
-    }
   }
 }
 

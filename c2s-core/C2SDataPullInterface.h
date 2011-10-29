@@ -34,38 +34,35 @@
 
 #include "C2SDataPushInterface.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  class C2SDataPullInterface
   {
+  public:
 
-    class C2SDataPullInterface
-    {
-    public:
+    virtual ~C2SDataPullInterface() {};
 
-      virtual ~C2SDataPullInterface() {};
+    virtual void reset() = 0;
 
-      virtual void reset() = 0;
+    virtual void receive( char *data , unsigned int size ) = 0;
 
-      virtual void receive( char *data , unsigned int size ) = 0;
+    virtual void flush() = 0;
 
-      virtual void flush() = 0;
+  protected:
 
-    protected:
+    C2SDataPullInterface( C2SDataPushInterface *pDataPush ) : m_dataPush( *pDataPush ) {};
 
-      C2SDataPullInterface( C2SDataPushInterface *pDataPush ) : m_dataPush( *pDataPush ) {};
+    C2SDataPushInterface &m_dataPush;
 
-      C2SDataPushInterface &m_dataPush;
+  private:
 
-    private:
+    C2SDataPullInterface( const C2SDataPullInterface & );
 
-      C2SDataPullInterface( const C2SDataPullInterface & );
+    C2SDataPullInterface &operator=( const C2SDataPullInterface & );
 
-      C2SDataPullInterface &operator=( const C2SDataPullInterface & );
+  };
 
-    };
-
-  }
 }
 
 #endif /* C2SDATAPULLINTERFACE_H_ */

@@ -32,29 +32,24 @@
 #ifndef C2SSTATUSSETTER_H_
 #define C2SSTATUSSETTER_H_
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SStatusSetter
   {
+  public:
 
-    class C2SStatusSetter
-    {
-    public:
+    C2SStatusSetter( volatile bool *pStatus , bool bValue ) : m_pStatus( pStatus ) , m_bValue( bValue ) { ( *m_pStatus ) = m_bValue; }
 
-      C2SStatusSetter( volatile bool *pStatus , bool bValue ) : m_pStatus( pStatus ) , m_bValue( bValue ) { ( *m_pStatus ) = m_bValue; }
+    ~C2SStatusSetter() { ( *m_pStatus ) = !m_bValue; }
 
-      ~C2SStatusSetter() { ( *m_pStatus ) = !m_bValue; }
+  private:
 
-    private:
+    volatile bool *m_pStatus;
 
-      volatile bool *m_pStatus;
+    bool m_bValue;
 
-      bool m_bValue;
-
-    };
-
-  }
+  };
 
 }
 

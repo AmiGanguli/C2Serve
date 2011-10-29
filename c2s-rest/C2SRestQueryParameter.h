@@ -34,72 +34,69 @@
 
 #include "C2SRestParameter.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  class C2SRestQueryParameterBase
   {
+  public:
 
-    class C2SRestQueryParameterBase
+    C2SRestQueryParameterBase( const std::string &sID )
+      : m_sID( sID )
+    {};
+
+    virtual void setDefault() = 0;
+
+    virtual void handle( const std::string &sValue ) = 0;
+
+  protected:
+
+    std::string m_sID;
+
+  };
+
+  template <class Type>
+  class C2SRestQueryParameter : public C2SRestQueryParameterBase
+  {
+  public:
+
+    C2SRestQueryParameter( const std::string &sID , Type *pDest , const Type &defaultv )
+      : C2SRestQueryParameterBase( sID ),
+        m_parameter( pDest ),
+        m_default( defaultv ),
+        m_bIsDefaultAllowed( true )
+    {};
+
+
+    C2SRestQueryParameter( const std::string &sID , Type *pDest )
+      : C2SRestQueryParameterBase( sID ),
+        m_parameter( pDest ),
+        m_bIsDefaultAllowed( false )
+    {};
+
+    void setDefault()
     {
-    public:
+      if ( m_bIsDefaultAllowed )
+        m_parameter.setValue( m_default );
+      else
+        throw C2SRestException( "C2SRestQueryParameter::setDefault: " , "Query parameter missing: " + m_sID , BadRequest );
+    }
 
-      C2SRestQueryParameterBase( const std::string &sID )
-        : m_sID( sID )
-      {};
-
-      virtual void setDefault() = 0;
-
-      virtual void handle( const std::string &sValue ) = 0;
-
-    protected:
-
-      std::string m_sID;
-
-    };
-
-    template <class Type>
-    class C2SRestQueryParameter : public C2SRestQueryParameterBase
+    void handle( const std::string &sValue )
     {
-    public:
+      m_parameter.handle( sValue );
+    }
 
-      C2SRestQueryParameter( const std::string &sID , Type *pDest , const Type &defaultv )
-        : C2SRestQueryParameterBase( sID ),
-          m_parameter( pDest ),
-          m_default( defaultv ),
-          m_bIsDefaultAllowed( true )
-      {};
+  private:
 
+    C2SRestParameter<Type> m_parameter;
 
-      C2SRestQueryParameter( const std::string &sID , Type *pDest )
-        : C2SRestQueryParameterBase( sID ),
-          m_parameter( pDest ),
-          m_bIsDefaultAllowed( false )
-      {};
+    Type m_default;
 
-      void setDefault()
-      {
-        if ( m_bIsDefaultAllowed )
-          m_parameter.setValue( m_default );
-        else
-          throw C2SRestException( "C2SRestQueryParameter::setDefault: " , "Query parameter missing: " + m_sID , BadRequest );
-      }
+    bool m_bIsDefaultAllowed;
 
-      void handle( const std::string &sValue )
-      {
-        m_parameter.handle( sValue );
-      }
+  };
 
-    private:
-
-      C2SRestParameter<Type> m_parameter;
-
-      Type m_default;
-
-      bool m_bIsDefaultAllowed;
-
-    };
-
-  }
 }
 
 #endif /* C2SRESTQUERYPARAMETER_H_ */

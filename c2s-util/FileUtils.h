@@ -34,7 +34,7 @@
 
 #include <string>
 
-namespace g
+namespace c2s
 {
   namespace util
   {

@@ -34,22 +34,19 @@
 
 #include "C2SHttpException.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  class C2SRestException : public C2SHttpException
   {
+  public:
 
-    class C2SRestException : public C2SHttpException
-    {
-    public:
+    C2SRestException( const std::string &prefix , const std::string &msg , C2SHttpStatus status ) : C2SHttpException( prefix , msg , status ) {};
 
-      C2SRestException( const std::string &prefix , const std::string &msg , C2SHttpStatus status ) : C2SHttpException( prefix , msg , status ) {};
+    virtual ~C2SRestException() throw() {};
 
-      virtual ~C2SRestException() throw() {};
+  };
 
-    };
-
-  }
 }
 
 #endif /* C2SRESTEXCEPTION_H_ */

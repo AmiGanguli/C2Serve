@@ -46,112 +46,107 @@
 
 #define BUFFERSIZE 4096
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  void C2SSocketAcceptHandlerDataPushImpl::push( const char *data , unsigned int size )
   {
-
-    void C2SSocketAcceptHandlerDataPushImpl::push( const char *data , unsigned int size )
-    {
-      if ( m_socketInfo.SocketDescriptor < 0 )
-        throw C2SSocketAcceptHandlerException( "C2SSocketAcceptHandlerDataCallback::handle: Invalid socket file descriptor!" );
+    if ( m_socketInfo.SocketDescriptor < 0 )
+      throw C2SSocketAcceptHandlerException( "C2SSocketAcceptHandlerDataCallback::handle: Invalid socket file descriptor!" );
 
 #ifdef WINXX
-      int iBytesWritten = send( m_socketInfo.SocketDescriptor , data , size , 0 );
+    int iBytesWritten = send( m_socketInfo.SocketDescriptor , data , size , 0 );
 #else
-      int iBytesWritten = write( m_socketInfo.SocketDescriptor , data , size );
+    int iBytesWritten = write( m_socketInfo.SocketDescriptor , data , size );
 #endif
-      if ( iBytesWritten < 0 )
-        throw C2SSocketAcceptHandlerException( "C2SSocketAcceptHandlerDataCallback::handle: Error writing to socket!" );
-    }
+    if ( iBytesWritten < 0 )
+      throw C2SSocketAcceptHandlerException( "C2SSocketAcceptHandlerDataCallback::handle: Error writing to socket!" );
+  }
 
-    //pDataHandler will be deleted
-    C2SSocketAcceptHandler::C2SSocketAcceptHandler( const C2SSocketInfo &socketInfo , const C2SServerTypeInterface &type , g::thread::Mutex *pAcceptMutex )
-      : m_socketInfo( socketInfo ),
-        m_pDataPull( NULL ),
-        m_bInterrupted( false ),
-        m_acceptMutex( *pAcceptMutex )
-    {
-      m_pDataPull = type.createDataHandler( &m_dataPush );
-    }
+  //pDataHandler will be deleted
+  C2SSocketAcceptHandler::C2SSocketAcceptHandler( const C2SSocketInfo &socketInfo , const C2SServerTypeInterface &type , c2s::thread::Mutex *pAcceptMutex )
+    : m_socketInfo( socketInfo ),
+      m_pDataPull( NULL ),
+      m_bInterrupted( false ),
+      m_acceptMutex( *pAcceptMutex )
+  {
+    m_pDataPull = type.createDataHandler( &m_dataPush );
+  }
 
-    C2SSocketAcceptHandler::~C2SSocketAcceptHandler()
-    {
-      delete m_pDataPull;
-    }
+  C2SSocketAcceptHandler::~C2SSocketAcceptHandler()
+  {
+    delete m_pDataPull;
+  }
 
-    void C2SSocketAcceptHandler::interrupt()
-    {
-      //TODO: check and block if accept() is processing a requests
-      m_bInterrupted = true;
-    }
+  void C2SSocketAcceptHandler::interrupt()
+  {
+    //TODO: check and block if accept() is processing a requests
+    m_bInterrupted = true;
+  }
 
-    void C2SSocketAcceptHandler::accept()
-    {
+  void C2SSocketAcceptHandler::accept()
+  {
 #ifndef WINXX
-      //address of the client
-      struct sockaddr_in clientAddress;
-      socklen_t iClientAddressLength = sizeof( clientAddress );
+    //address of the client
+    struct sockaddr_in clientAddress;
+    socklen_t iClientAddressLength = sizeof( clientAddress );
 #endif
 
-      {
-        g::thread::Lock lock( &m_acceptMutex );
-
-        if ( m_bInterrupted )
-          return;
-
-        //block process, until client connects
-        //returns new socket file descriptor which should be used for communication
-#ifdef WINXX
-        m_connectionSocketInfo.SocketDescriptor = ::accept( m_socketInfo.SocketDescriptor , NULL , NULL );
-#else
-        m_connectionSocketInfo.SocketDescriptor = ::accept( m_socketInfo.SocketDescriptor , ( struct sockaddr* ) &clientAddress , &iClientAddressLength );
-#endif
-      }
+    {
+      c2s::thread::Lock lock( &m_acceptMutex );
 
       if ( m_bInterrupted )
         return;
 
-      if ( m_connectionSocketInfo.SocketDescriptor < 0 )
-        throw C2SSocketAcceptHandlerException( "C2SSocketAcceptHandler::listen: Error on accept!" );
-
-      m_dataPush.setSocketInfo( m_connectionSocketInfo );
-
-      m_pDataPull->reset();
-
-      //initialize data buffer
-      char buffer[ BUFFERSIZE ];
-
-#ifndef WINXX
-      bzero( buffer , BUFFERSIZE );
-#endif
-
-      int iBytesRead = BUFFERSIZE;
-      while ( iBytesRead == BUFFERSIZE )
-      {
-        //read data from buffer
+      //block process, until client connects
+      //returns new socket file descriptor which should be used for communication
 #ifdef WINXX
-        iBytesRead = recv( m_connectionSocketInfo.SocketDescriptor , buffer , BUFFERSIZE , 0 );
+      m_connectionSocketInfo.SocketDescriptor = ::accept( m_socketInfo.SocketDescriptor , NULL , NULL );
 #else
-        iBytesRead = read( m_connectionSocketInfo.SocketDescriptor , buffer , BUFFERSIZE );
-#endif
-        if ( iBytesRead < 0 )
-          throw C2SSocketAcceptHandlerException( "C2SSocketAcceptHandler::listen: Error reading from socket!" );
-
-        m_pDataPull->receive( buffer , iBytesRead );
-      }
-
-      m_pDataPull->flush();
-
-      //close socket
-#ifdef WINXX
-      closesocket( m_connectionSocketInfo.SocketDescriptor );
-#else
-      close( m_connectionSocketInfo.SocketDescriptor );
+      m_connectionSocketInfo.SocketDescriptor = ::accept( m_socketInfo.SocketDescriptor , ( struct sockaddr* ) &clientAddress , &iClientAddressLength );
 #endif
     }
 
+    if ( m_bInterrupted )
+      return;
+
+    if ( m_connectionSocketInfo.SocketDescriptor < 0 )
+      throw C2SSocketAcceptHandlerException( "C2SSocketAcceptHandler::listen: Error on accept!" );
+
+    m_dataPush.setSocketInfo( m_connectionSocketInfo );
+
+    m_pDataPull->reset();
+
+    //initialize data buffer
+    char buffer[ BUFFERSIZE ];
+
+#ifndef WINXX
+    bzero( buffer , BUFFERSIZE );
+#endif
+
+    int iBytesRead = BUFFERSIZE;
+    while ( iBytesRead == BUFFERSIZE )
+    {
+      //read data from buffer
+#ifdef WINXX
+      iBytesRead = recv( m_connectionSocketInfo.SocketDescriptor , buffer , BUFFERSIZE , 0 );
+#else
+      iBytesRead = read( m_connectionSocketInfo.SocketDescriptor , buffer , BUFFERSIZE );
+#endif
+      if ( iBytesRead < 0 )
+        throw C2SSocketAcceptHandlerException( "C2SSocketAcceptHandler::listen: Error reading from socket!" );
+
+      m_pDataPull->receive( buffer , iBytesRead );
+    }
+
+    m_pDataPull->flush();
+
+    //close socket
+#ifdef WINXX
+    closesocket( m_connectionSocketInfo.SocketDescriptor );
+#else
+    close( m_connectionSocketInfo.SocketDescriptor );
+#endif
   }
 
 }

@@ -37,40 +37,37 @@
 
 #include "Mutex.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+  namespace test
   {
-    namespace test
+
+    class C2STestRestMethodThreading : public C2SRestMethodPrototype
     {
+    public:
 
-      class C2STestRestMethodThreading : public C2SRestMethodPrototype
-      {
-      public:
+      C2STestRestMethodThreading( c2s::thread::Mutex *pGlobalMutex );
 
-        C2STestRestMethodThreading( g::thread::Mutex *pGlobalMutex );
+      C2SHttpResponse *process();
 
-        C2SHttpResponse *process();
+      C2STestRestMethodThreading *clone() const;
 
-        C2STestRestMethodThreading *clone() const;
+      static const std::string sPath;
 
-        static const std::string sPath;
+    private:
 
-      private:
+      C2STestRestMethodThreading( const C2STestRestMethodThreading & );
 
-        C2STestRestMethodThreading( const C2STestRestMethodThreading & );
+      C2STestRestMethodThreading &operator=( const C2STestRestMethodThreading & );
 
-        C2STestRestMethodThreading &operator=( const C2STestRestMethodThreading & );
+      bool m_bIsRunning;
 
-        bool m_bIsRunning;
+      int m_iSleepMS;
 
-        int m_iSleepMS;
+      c2s::thread::Mutex &m_globalMutex;
 
-        g::thread::Mutex &m_globalMutex;
+    };
 
-      };
-
-    }
   }
 }
 

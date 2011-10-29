@@ -34,58 +34,55 @@
 
 #include <string>
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  class C2SHttpRequest;
+  class C2SHttpResponse;
+
+  class C2SHttpResponseHandlerInterface
   {
+  public:
 
-    class C2SHttpRequest;
-    class C2SHttpResponse;
+    virtual ~C2SHttpResponseHandlerInterface(){};
 
-    class C2SHttpResponseHandlerInterface
-    {
-    public:
+    virtual void sendResponse( const C2SHttpResponse &response ) = 0;
 
-      virtual ~C2SHttpResponseHandlerInterface(){};
+  protected:
 
-      virtual void sendResponse( const C2SHttpResponse &response ) = 0;
+    C2SHttpResponseHandlerInterface(){};
 
-    protected:
+  };
 
-      C2SHttpResponseHandlerInterface(){};
+  class C2SHttpResource
+  {
+  public:
 
-    };
+    C2SHttpResource( const std::string &sContextRoot )
+      : m_sContextRoot( sContextRoot ),
+        m_pResponseHandler( NULL )
+    {};
 
-    class C2SHttpResource
-    {
-    public:
+    virtual ~C2SHttpResource(){};
 
-      C2SHttpResource( const std::string &sContextRoot )
-        : m_sContextRoot( sContextRoot ),
-          m_pResponseHandler( NULL )
-      {};
+    virtual void process(  const C2SHttpRequest &request ) = 0;
 
-      virtual ~C2SHttpResource(){};
+    virtual C2SHttpResource *clone() const = 0;
 
-      virtual void process(  const C2SHttpRequest &request ) = 0;
+    virtual void sendResponse( const C2SHttpResponse &response );
 
-      virtual C2SHttpResource *clone() const = 0;
+    const std::string &getContextRoot() const { return m_sContextRoot; }
 
-      virtual void sendResponse( const C2SHttpResponse &response );
+    void setResponseHandler( C2SHttpResponseHandlerInterface *pResponseHandler ) { m_pResponseHandler = pResponseHandler; }
 
-      const std::string &getContextRoot() const { return m_sContextRoot; }
+  protected:
 
-      void setResponseHandler( C2SHttpResponseHandlerInterface *pResponseHandler ) { m_pResponseHandler = pResponseHandler; }
+    std::string m_sContextRoot;
 
-    protected:
+    C2SHttpResponseHandlerInterface *m_pResponseHandler;
 
-      std::string m_sContextRoot;
+  };
 
-      C2SHttpResponseHandlerInterface *m_pResponseHandler;
-
-    };
-
-  }
 }
 
 #endif /* C2SHTTPRESOURCE_H_ */

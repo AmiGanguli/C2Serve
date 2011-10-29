@@ -34,59 +34,54 @@
 
 #include "C2SSocketListenerBase.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class ForRestServerType;
+
+  class C2SSocketListenerWINDataCallback : public ForRestDataCallbackInterface
   {
+  public:
 
-    class ForRestServerType;
+    C2SSocketListenerWINDataCallback(){};
 
-    class C2SSocketListenerWINDataCallback : public ForRestDataCallbackInterface
-    {
-    public:
+    virtual void handle( const char *data , unsigned int size );
 
-      C2SSocketListenerWINDataCallback(){};
+    void setSocketInfo( const ForRestSocketInfo &socketInfo ) { m_socketInfo = socketInfo; }
 
-      virtual void handle( const char *data , unsigned int size );
+  private:
 
-      void setSocketInfo( const ForRestSocketInfo &socketInfo ) { m_socketInfo = socketInfo; }
+    ForRestSocketInfo m_socketInfo;
 
-    private:
+  };
 
-      ForRestSocketInfo m_socketInfo;
+  class C2SSocketListenerWIN : public C2SSocketListenerBase
+  {
+  public:
 
-    };
+    C2SSocketListenerWIN( const ForRestSocketInfo &socketInfo , const ForRestServerType &type , c2s::thread::Mutex *pAcceptMutex );
 
-    class C2SSocketListenerWIN : public C2SSocketListenerBase
-    {
-    public:
+    virtual ~C2SSocketListenerWIN();
 
-      C2SSocketListenerWIN( const ForRestSocketInfo &socketInfo , const ForRestServerType &type , g::thread::Mutex *pAcceptMutex );
+    virtual void interrupt();
 
-      virtual ~C2SSocketListenerWIN();
+    virtual void accept();
 
-      virtual void interrupt();
+  private:
 
-      virtual void accept();
+    C2SSocketListenerWIN( const C2SSocketListenerWIN & );
 
-    private:
-      
-      C2SSocketListenerWIN( const C2SSocketListenerWIN & );
-      
-      C2SSocketListenerWIN &operator=( const C2SSocketListenerWIN & );
+    C2SSocketListenerWIN &operator=( const C2SSocketListenerWIN & );
 
-      bool m_bInterrupted;
+    bool m_bInterrupted;
 
-      C2SSocketListenerWINDataCallback m_dataCallback;
+    C2SSocketListenerWINDataCallback m_dataCallback;
 
-      ForRestDataHandleInterface *m_pDataHandler;
+    ForRestDataHandleInterface *m_pDataHandler;
 
-      ForRestSocketInfo m_connectionSocketInfo;
+    ForRestSocketInfo m_connectionSocketInfo;
 
-    };
-
-  }
+  };
 
 }
 

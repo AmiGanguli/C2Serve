@@ -49,7 +49,7 @@
 #define GIO_NUM_LEVEL_CHARS 7
 
 
-namespace g
+namespace c2s
 {
   namespace io
   {

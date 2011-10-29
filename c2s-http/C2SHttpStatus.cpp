@@ -32,61 +32,58 @@
 #include "C2SHttpStatus.h"
 #include "C2SHttpException.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  C2SHttpStatus fromString( const std::string &status )
   {
+    //success
+    if ( status == "200" ) return OK;
+    if ( status == "201" ) return Created;
+    if ( status == "202" ) return Accepted;
+    if ( status == "203" ) return NonAuthoritativeInformation;
+    if ( status == "204" ) return NoContent;
+    if ( status == "205" ) return ResetContent;
+    if ( status == "206" ) return PartialContent;
 
-    C2SHttpStatus fromString( const std::string &status )
-    {
-      //success
-      if ( status == "200" ) return OK;
-      if ( status == "201" ) return Created;
-      if ( status == "202" ) return Accepted;
-      if ( status == "203" ) return NonAuthoritativeInformation;
-      if ( status == "204" ) return NoContent;
-      if ( status == "205" ) return ResetContent;
-      if ( status == "206" ) return PartialContent;
+    //redirection
+    if ( status == "300" ) return MultipleChoices;
+    if ( status == "301" ) return MovedPermanently;
+    if ( status == "302" ) return Found;
+    if ( status == "303" ) return SeeOther;
+    if ( status == "304" ) return NotModified;
+    if ( status == "305" ) return UseProxy;
+    if ( status == "307" ) return TemporaryRedirect;
 
-      //redirection
-      if ( status == "300" ) return MultipleChoices;
-      if ( status == "301" ) return MovedPermanently;
-      if ( status == "302" ) return Found;
-      if ( status == "303" ) return SeeOther;
-      if ( status == "304" ) return NotModified;
-      if ( status == "305" ) return UseProxy;
-      if ( status == "307" ) return TemporaryRedirect;
+    //client error
+    if ( status == "400" ) return BadRequest;
+    if ( status == "401" ) return Unauthorized;
+    if ( status == "402" ) return PaymentRequired;
+    if ( status == "403" ) return Forbidden;
+    if ( status == "404" ) return NotFound;
+    if ( status == "405" ) return MethodNotAllowed;
+    if ( status == "406" ) return NotAcceptable;
+    if ( status == "407" ) return ProxyAuthenticationRequired;
+    if ( status == "408" ) return RequestTimeout;
+    if ( status == "409" ) return Conflict;
+    if ( status == "410" ) return Gone;
+    if ( status == "411" ) return LengthRequired;
+    if ( status == "412" ) return PreconditionFailed;
+    if ( status == "413" ) return RequestEntityTooLarge;
+    if ( status == "414" ) return RequestURITooLong;
+    if ( status == "415" ) return UnsupportedMediaType;
+    if ( status == "416" ) return RequestedRangeNotSatisfiable;
+    if ( status == "417" ) return ExpectationFailed;
 
-      //client error
-      if ( status == "400" ) return BadRequest;
-      if ( status == "401" ) return Unauthorized;
-      if ( status == "402" ) return PaymentRequired;
-      if ( status == "403" ) return Forbidden;
-      if ( status == "404" ) return NotFound;
-      if ( status == "405" ) return MethodNotAllowed;
-      if ( status == "406" ) return NotAcceptable;
-      if ( status == "407" ) return ProxyAuthenticationRequired;
-      if ( status == "408" ) return RequestTimeout;
-      if ( status == "409" ) return Conflict;
-      if ( status == "410" ) return Gone;
-      if ( status == "411" ) return LengthRequired;
-      if ( status == "412" ) return PreconditionFailed;
-      if ( status == "413" ) return RequestEntityTooLarge;
-      if ( status == "414" ) return RequestURITooLong;
-      if ( status == "415" ) return UnsupportedMediaType;
-      if ( status == "416" ) return RequestedRangeNotSatisfiable;
-      if ( status == "417" ) return ExpectationFailed;
+    //server error
+    if ( status == "500" ) return InternalServerError;
+    if ( status == "501" ) return NotImplemented;
+    if ( status == "502" ) return BadGateway;
+    if ( status == "503" ) return ServiceUnavailable;
+    if ( status == "504" ) return GatewayTimeout;
+    if ( status == "505" ) return HTTPVersionNotSupported;
 
-      //server error
-      if ( status == "500" ) return InternalServerError;
-      if ( status == "501" ) return NotImplemented;
-      if ( status == "502" ) return BadGateway;
-      if ( status == "503" ) return ServiceUnavailable;
-      if ( status == "504" ) return GatewayTimeout;
-      if ( status == "505" ) return HTTPVersionNotSupported;
-
-      throw C2SHttpException( "fromString: " , "Unknown HTTP status code: " + status , InternalServerError );
-    }
-
+    throw C2SHttpException( "fromString: " , "Unknown HTTP status code: " + status , InternalServerError );
   }
+
 }

@@ -37,37 +37,32 @@
 
 #include "C2SHttpException.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SHttpResponseHeader
   {
+  public:
 
-    class C2SHttpResponseHeader
-    {
-    public:
+    C2SHttpResponseHeader();
 
-      C2SHttpResponseHeader();
+    C2SHttpResponseHeader( C2SHttpStatus status );
 
-      C2SHttpResponseHeader( C2SHttpStatus status );
+    C2SHttpResponseHeader( C2SHttpStatus status , const std::string &sReasonPhrase );
 
-      C2SHttpResponseHeader( C2SHttpStatus status , const std::string &sReasonPhrase );
+    virtual ~C2SHttpResponseHeader();
 
-      virtual ~C2SHttpResponseHeader();
+    std::string toString() const;
 
-      std::string toString() const;
+    float fVersion;
 
-      float fVersion;
+    C2SHttpStatus Status;
 
-      C2SHttpStatus Status;
+    std::string ReasonPhrase;
 
-      std::string ReasonPhrase;
+    C2SHttpHeaderFields Fields;
 
-      C2SHttpHeaderFields Fields;
-
-    };
-
-  }
+  };
 
 }
 

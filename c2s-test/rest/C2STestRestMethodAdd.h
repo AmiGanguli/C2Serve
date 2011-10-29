@@ -35,36 +35,33 @@
 
 #include "C2SRestEntityMethodPrototype.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+  namespace test
   {
-    namespace test
+
+    class C2STestRestMethodAdd : public C2SRestEntityMethodPrototype<unsigned int>
     {
+    public:
 
-      class C2STestRestMethodAdd : public C2SRestEntityMethodPrototype<unsigned int>
-      {
-      public:
+      C2STestRestMethodAdd();
 
-        C2STestRestMethodAdd();
+      C2SHttpResponse *process();
 
-        C2SHttpResponse *process();
+      C2STestRestMethodAdd *clone() const;
 
-        C2STestRestMethodAdd *clone() const;
+      static const std::string sPath;
 
-        static const std::string sPath;
+    private:
 
-      private:
+      unsigned int m_iArg1;
 
-        unsigned int m_iArg1;
+      unsigned int m_iArg2;
 
-        unsigned int m_iArg2;
+      unsigned int m_iMultiplier;
 
-        unsigned int m_iMultiplier;
+    };
 
-      };
-
-    }
   }
 }
 

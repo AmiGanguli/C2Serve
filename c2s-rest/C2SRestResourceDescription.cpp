@@ -31,66 +31,61 @@
 
 #include "C2SRestResourceDescription.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  C2SRestResourceDescription::C2SRestResourceDescription( const std::string sHostURL , const std::string &sContextRoot )
+    : m_sHostURL( sHostURL ),
+      m_sContextRoot( sContextRoot )
   {
+  }
 
-    C2SRestResourceDescription::C2SRestResourceDescription( const std::string sHostURL , const std::string &sContextRoot )
-      : m_sHostURL( sHostURL ),
-        m_sContextRoot( sContextRoot )
-    {
-    }
+  C2SRestResourceDescription::~C2SRestResourceDescription()
+  {
+    // TODO Auto-generated destructor stub
+  }
 
-    C2SRestResourceDescription::~C2SRestResourceDescription()
-    {
-      // TODO Auto-generated destructor stub
-    }
+  C2SHttpResponse C2SRestResourceDescription::process( const C2SHttpRequest & )
+  {
+    std::string sContent = "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n";
+    sContent += "<html>";
 
-    C2SHttpResponse C2SRestResourceDescription::process( const C2SHttpRequest & )
-    {
-      std::string sContent = "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n";
-      sContent += "<html>";
+    sContent += this->createHtmlHeader();
+    sContent += this->createHtmlBody();
 
-      sContent += this->createHtmlHeader();
-      sContent += this->createHtmlBody();
+    sContent += "</html>";
 
-      sContent += "</html>";
+    C2SHttpResponseHeader responseHeader( OK );
+    responseHeader.Fields.setContentType( C2SHttpMediaType::text__html );
+    responseHeader.Fields.setContentLength( sContent.size() );
+    C2SHttpResponse response( responseHeader );
+    char *data = new char[ sContent.size() ];
+    std::memcpy( data , sContent.c_str() , sContent.size() );
+    response.setEntity( new C2SHttpEntity( data , sContent.size() , true ) );
+    return response;
+  }
 
-      C2SHttpResponseHeader responseHeader( OK );
-      responseHeader.Fields.setContentType( C2SHttpMediaType::text__html );
-      responseHeader.Fields.setContentLength( sContent.size() );
-      C2SHttpResponse response( responseHeader );
-      char *data = new char[ sContent.size() ];
-      std::memcpy( data , sContent.c_str() , sContent.size() );
-      response.setEntity( new C2SHttpEntity( data , sContent.size() , true ) );
-      return response;
-    }
+  std::string C2SRestResourceDescription::createHtmlHeader()
+  {
+    std::string sHeader;
 
-    std::string C2SRestResourceDescription::createHtmlHeader()
-    {
-      std::string sHeader;
+    sHeader += "<header>";
+    sHeader += "</header>";
 
-      sHeader += "<header>";
-      sHeader += "</header>";
+    return sHeader;
+  }
 
-      return sHeader;
-    }
+  std::string C2SRestResourceDescription::createHtmlBody()
+  {
+    std::string sBody;
 
-    std::string C2SRestResourceDescription::createHtmlBody()
-    {
-      std::string sBody;
+    sBody += "<body>";
 
-      sBody += "<body>";
+    sBody += "http://" + m_sHostURL + ":" + "PORT" + "/" + m_sContextRoot;
 
-      sBody += "http://" + m_sHostURL + ":" + "PORT" + "/" + m_sContextRoot;
+    sBody += "</body>";
 
-      sBody += "</body>";
-
-      return sBody;
-    }
-
+    return sBody;
   }
 
 }

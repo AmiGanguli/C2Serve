@@ -35,7 +35,7 @@
 #include <string>
 #include <exception>
 
-namespace g
+namespace c2s
 {
 
   class GenericException : public std::exception

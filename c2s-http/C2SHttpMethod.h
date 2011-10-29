@@ -32,21 +32,18 @@
 #ifndef C2SHTTPMETHOD_H_
 #define C2SHTTPMETHOD_H_
 
-namespace g
+namespace c2s
 {
-  namespace c2s
-  {
 
-    typedef enum {
+  typedef enum {
 
-      GET = 0,
-      POST = 1,
-      PUT = 2,
-      DELETE = 3
+    GET = 0,
+    POST = 1,
+    PUT = 2,
+    DELETE = 3
 
-    } C2SHttpMethod;
+  } C2SHttpMethod;
 
-  }
 }
 
 #endif /* C2SHTTPMETHOD_H_ */

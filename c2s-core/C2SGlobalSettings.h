@@ -34,35 +34,30 @@
 
 #include <string>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SGlobalSettings
   {
+  public:
 
-    class C2SGlobalSettings
-    {
-    public:
+    unsigned short iPort;
 
-      unsigned short iPort;
+    unsigned short iNumThreads;
 
-      unsigned short iNumThreads;
+    std::string C2SHostName;
 
-      std::string C2SHostName;
+    static C2SGlobalSettings &Settings();
 
-      static C2SGlobalSettings &Settings();
+  private:
 
-    private:
+    C2SGlobalSettings( const C2SGlobalSettings & );
 
-      C2SGlobalSettings( const C2SGlobalSettings & );
+    C2SGlobalSettings &operator=( const C2SGlobalSettings & );
 
-      C2SGlobalSettings &operator=( const C2SGlobalSettings & );
+    C2SGlobalSettings();
 
-      C2SGlobalSettings();
-
-    };
-
-  }
+  };
 
 }
 

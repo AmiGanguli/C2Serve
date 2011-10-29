@@ -35,7 +35,7 @@
 #include <string>
 #include <iostream>
 
-namespace g
+namespace c2s
 {
   namespace io
   {

@@ -36,41 +36,38 @@
 
 #include <boost/test/unit_test.hpp>
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+  namespace test
   {
-    namespace test
+
+    const std::string C2STestRestMethodAdd::sPath = "math/add";
+
+    C2STestRestMethodAdd::C2STestRestMethodAdd()
+      : C2SRestEntityMethodPrototype<unsigned int>( GET , sPath ),
+        m_iArg1( 0 ),
+        m_iArg2( 0 ),
+        m_iMultiplier( 0 )
     {
+      C2SRestEntityMethodPrototype<unsigned int>::addPathParameter( "arg1" , &m_iArg1 );
+      C2SRestEntityMethodPrototype<unsigned int>::addPathParameter( "arg2" , &m_iArg2 );
+      C2SRestEntityMethodPrototype<unsigned int>::addQueryParameter( "multiplier" , &m_iMultiplier , m_iMultiplier );
+      C2SRestEntityMethodPrototype<unsigned int>::addEntityStreamer( new C2STestRestEntityStreamerXML<unsigned int>() );
+      C2SRestEntityMethodPrototype<unsigned int>::addEntityStreamer( new C2STestRestEntityStreamerJSON<unsigned int>() );
+    };
 
-      const std::string C2STestRestMethodAdd::sPath = "math/add";
-
-      C2STestRestMethodAdd::C2STestRestMethodAdd()
-        : C2SRestEntityMethodPrototype<unsigned int>( GET , sPath ),
-          m_iArg1( 0 ),
-          m_iArg2( 0 ),
-          m_iMultiplier( 0 )
-      {
-        C2SRestEntityMethodPrototype<unsigned int>::addPathParameter( "arg1" , &m_iArg1 );
-        C2SRestEntityMethodPrototype<unsigned int>::addPathParameter( "arg2" , &m_iArg2 );
-        C2SRestEntityMethodPrototype<unsigned int>::addQueryParameter( "multiplier" , &m_iMultiplier , m_iMultiplier );
-        C2SRestEntityMethodPrototype<unsigned int>::addEntityStreamer( new C2STestRestEntityStreamerXML<unsigned int>() );
-        C2SRestEntityMethodPrototype<unsigned int>::addEntityStreamer( new C2STestRestEntityStreamerJSON<unsigned int>() );
-      };
-
-      C2SHttpResponse *C2STestRestMethodAdd::process()
-      {
-        BOOST_MESSAGE( "C2STestRestMethodAdder::process: " << m_iArg1 << " + " << m_iArg2 << " * " << m_iMultiplier );
-        unsigned int iResult = ( m_iArg1 + m_iArg2 ) * m_iMultiplier;
-        return C2SRestEntityMethodPrototype<unsigned int>::buildResponse( OK , iResult );
-      }
-
-      C2STestRestMethodAdd *C2STestRestMethodAdd::clone() const
-      {
-        return new C2STestRestMethodAdd();
-      }
-
+    C2SHttpResponse *C2STestRestMethodAdd::process()
+    {
+      BOOST_MESSAGE( "C2STestRestMethodAdder::process: " << m_iArg1 << " + " << m_iArg2 << " * " << m_iMultiplier );
+      unsigned int iResult = ( m_iArg1 + m_iArg2 ) * m_iMultiplier;
+      return C2SRestEntityMethodPrototype<unsigned int>::buildResponse( OK , iResult );
     }
+
+    C2STestRestMethodAdd *C2STestRestMethodAdd::clone() const
+    {
+      return new C2STestRestMethodAdd();
+    }
+
   }
 }
 

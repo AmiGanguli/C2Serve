@@ -35,40 +35,37 @@
 #include "C2SRestPathSegment.h"
 #include "C2SRestParameter.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  class C2SRestPathParameter : public C2SRestPathSegment
   {
+  public:
 
-    class C2SRestPathParameter : public C2SRestPathSegment
+    C2SRestPathParameter( const std::string &sID , C2SRestParameterBase *pParameter )
+      : C2SRestPathSegment( "{" + sID + "}" , Parameter ),
+        m_pParameter( pParameter )
+    {};
+
+    virtual ~C2SRestPathParameter()
     {
-    public:
-
-      C2SRestPathParameter( const std::string &sID , C2SRestParameterBase *pParameter )
-        : C2SRestPathSegment( "{" + sID + "}" , Parameter ),
-          m_pParameter( pParameter )
-      {};
-
-      virtual ~C2SRestPathParameter()
-      {
-        delete m_pParameter;
-      };
-
-      virtual bool isValid( const std::string &sID ) const { return m_pParameter->isValid( sID ); }
-
-      virtual void handle( const std::string &sID ) { return m_pParameter->handle( sID ); };
-
-    private:
-
-      C2SRestPathParameter( const C2SRestPathParameter & );
-
-      C2SRestPathParameter &operator=( const C2SRestPathParameter & );
-
-      C2SRestParameterBase *m_pParameter;
-
+      delete m_pParameter;
     };
 
-  }
+    virtual bool isValid( const std::string &sID ) const { return m_pParameter->isValid( sID ); }
+
+    virtual void handle( const std::string &sID ) { return m_pParameter->handle( sID ); };
+
+  private:
+
+    C2SRestPathParameter( const C2SRestPathParameter & );
+
+    C2SRestPathParameter &operator=( const C2SRestPathParameter & );
+
+    C2SRestParameterBase *m_pParameter;
+
+  };
+
 }
 
 #endif /* C2SRESTPATHPARAMETER_H_ */

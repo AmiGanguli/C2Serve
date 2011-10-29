@@ -42,76 +42,71 @@
 
 #define TIMEOUT_MS 5000
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  volatile bool C2SRuntime::bIsRunning = false;
+  volatile bool C2SRuntime::bIsOnStartup = false;
+  volatile bool C2SRuntime::bIsOnShutdown = false;
+  C2SRuntime *C2SRuntime::pInstance = NULL;
+
+  C2SRuntime::C2SRuntime( const C2SServerTypeInterface &type )
   {
-
-    volatile bool C2SRuntime::bIsRunning = false;
-    volatile bool C2SRuntime::bIsOnStartup = false;
-    volatile bool C2SRuntime::bIsOnShutdown = false;
-    C2SRuntime *C2SRuntime::pInstance = NULL;
-
-    C2SRuntime::C2SRuntime( const C2SServerTypeInterface &type )
-    {
-      //TODO: set listeners from outside (allow multiple listeners)
-      const C2SGlobalSettings &gs = C2SGlobalSettings::Settings();
-      C2SSocketListenerSettings ls;
-      ls.iPort = gs.iPort;
-      ls.iNumThreads = gs.iNumThreads;
-      m_pSocketListener = new C2SSocketListener( ls , type );
-    }
-
-    C2SRuntime::~C2SRuntime()
-    {
-      delete m_pSocketListener;
-    }
-
-    void C2SRuntime::run( const C2SServerTypeInterface &type )
-    {
-      if ( pInstance )
-        throw C2SException( "C2SRuntime::run: c2s is already running!" );
-
-      bIsOnStartup = true;
-
-      pInstance = new C2SRuntime( type );
-      C2SStatusSetter running( &bIsRunning , true );
-      pInstance->runInternal();
-
-      delete pInstance;
-      pInstance = NULL;
-    }
-
-    void C2SRuntime::shutdown()
-    {
-      if ( !pInstance )
-        throw C2SException( "C2SRuntime::shutdown: c2s is not running!" );
-
-      C2SStatusSetter running( &bIsOnShutdown , true );
-
-      pInstance->shutdownInternal();
-    }
-
-    void C2SRuntime::waitForStartup()
-    {
-      while( bIsOnStartup || !bIsRunning );
-    }
-
-    void C2SRuntime::runInternal()
-    {
-      bIsOnStartup = false;
-
-      m_pSocketListener->run();
-    }
-
-    void C2SRuntime::shutdownInternal()
-    {
-      m_pSocketListener->interrupt();
-
-      //wait for run shutdown
-      while( bIsRunning );
-    }
+    //TODO: set listeners from outside (allow multiple listeners)
+    const C2SGlobalSettings &gs = C2SGlobalSettings::Settings();
+    C2SSocketListenerSettings ls;
+    ls.iPort = gs.iPort;
+    ls.iNumThreads = gs.iNumThreads;
+    m_pSocketListener = new C2SSocketListener( ls , type );
   }
 
+  C2SRuntime::~C2SRuntime()
+  {
+    delete m_pSocketListener;
+  }
+
+  void C2SRuntime::run( const C2SServerTypeInterface &type )
+  {
+    if ( pInstance )
+      throw C2SException( "C2SRuntime::run: c2s is already running!" );
+
+    bIsOnStartup = true;
+
+    pInstance = new C2SRuntime( type );
+    C2SStatusSetter running( &bIsRunning , true );
+    pInstance->runInternal();
+
+    delete pInstance;
+    pInstance = NULL;
+  }
+
+  void C2SRuntime::shutdown()
+  {
+    if ( !pInstance )
+      throw C2SException( "C2SRuntime::shutdown: c2s is not running!" );
+
+    C2SStatusSetter running( &bIsOnShutdown , true );
+
+    pInstance->shutdownInternal();
+  }
+
+  void C2SRuntime::waitForStartup()
+  {
+    while( bIsOnStartup || !bIsRunning );
+  }
+
+  void C2SRuntime::runInternal()
+  {
+    bIsOnStartup = false;
+
+    m_pSocketListener->run();
+  }
+
+  void C2SRuntime::shutdownInternal()
+  {
+    m_pSocketListener->interrupt();
+
+    //wait for run shutdown
+    while( bIsRunning );
+  }
 }

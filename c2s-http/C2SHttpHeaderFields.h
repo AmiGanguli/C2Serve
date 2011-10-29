@@ -37,61 +37,56 @@
 #include <map>
 #include <string>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SHttpHeaderFields
   {
+  public:
 
-    class C2SHttpHeaderFields
-    {
-    public:
+    C2SHttpHeaderFields();
 
-      C2SHttpHeaderFields();
+    virtual ~C2SHttpHeaderFields();
 
-      virtual ~C2SHttpHeaderFields();
+    typedef std::map<std::string,std::string>::const_iterator const_iterator;
 
-      typedef std::map<std::string,std::string>::const_iterator const_iterator;
+    typedef std::map<std::string,std::string>::iterator iterator;
 
-      typedef std::map<std::string,std::string>::iterator iterator;
+    void set( const std::string &sName , const std::string &sValue );
 
-      void set( const std::string &sName , const std::string &sValue );
+    bool isAccept( const std::string &sMediaType ) const;
 
-      bool isAccept( const std::string &sMediaType ) const;
+    void addAccept( const C2SHttpMediaType &mediatype );
 
-      void addAccept( const C2SHttpMediaType &mediatype );
+    const C2SHttpMediaType &getAccept( const std::string &sMediaType ) const;
 
-      const C2SHttpMediaType &getAccept( const std::string &sMediaType ) const;
+    void setContentType( const std::string &sMediaType );
 
-      void setContentType( const std::string &sMediaType );
+    const C2SHttpMediaType &getContentType() const { return m_contentType; }
 
-      const C2SHttpMediaType &getContentType() const { return m_contentType; }
+    void setContentLength( unsigned int iContentLength );
 
-      void setContentLength( unsigned int iContentLength );
+    unsigned int getContentLength() const { return m_iContentLength; }
 
-      unsigned int getContentLength() const { return m_iContentLength; }
+    const_iterator begin() const { return m_fields.begin(); }
 
-      const_iterator begin() const { return m_fields.begin(); }
+    const_iterator end() const { return m_fields.end(); }
 
-      const_iterator end() const { return m_fields.end(); }
+    iterator begin() { return m_fields.begin(); }
 
-      iterator begin() { return m_fields.begin(); }
+    iterator end() { return m_fields.end(); }
 
-      iterator end() { return m_fields.end(); }
+  private:
 
-    private:
+    std::map<std::string,std::string> m_fields;
 
-      std::map<std::string,std::string> m_fields;
+    C2SHttpMediaTypeList m_accept;
 
-      C2SHttpMediaTypeList m_accept;
+    C2SHttpMediaType m_contentType;
 
-      C2SHttpMediaType m_contentType;
+    unsigned int m_iContentLength;
 
-      unsigned int m_iContentLength;
-
-    };
-
-  }
+  };
 
 }
 

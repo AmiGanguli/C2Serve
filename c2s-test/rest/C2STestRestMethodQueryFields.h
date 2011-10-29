@@ -35,34 +35,31 @@
 
 #include "C2SRestMethodPrototype.h"
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+  namespace test
   {
-    namespace test
+
+    class C2STestRestMethodQueryFields : public C2SRestMethodPrototype
     {
+    public:
 
-      class C2STestRestMethodQueryFields : public C2SRestMethodPrototype
-      {
-      public:
+      C2STestRestMethodQueryFields();
 
-        C2STestRestMethodQueryFields();
+      C2SHttpResponse *process();
 
-        C2SHttpResponse *process();
+      C2STestRestMethodQueryFields *clone() const;
 
-        C2STestRestMethodQueryFields *clone() const;
+      static const std::string sPath;
 
-        static const std::string sPath;
+      static const std::string sQueryFieldValueExpected;
 
-        static const std::string sQueryFieldValueExpected;
+    private:
 
-      private:
+      std::string m_sTestURI;
 
-        std::string m_sTestURI;
+    };
 
-      };
-
-    }
   }
 }
 

@@ -33,56 +33,51 @@
 
 #include <sstream>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  C2SHttpResponseHeader::C2SHttpResponseHeader()
+    : fVersion( 1.1f ),
+      Status( InternalServerError )
   {
 
-    C2SHttpResponseHeader::C2SHttpResponseHeader()
-      : fVersion( 1.1f ),
-        Status( InternalServerError )
-    {
+  }
 
-    }
-
-    C2SHttpResponseHeader::C2SHttpResponseHeader( C2SHttpStatus status )
-      : fVersion( 1.1f ),
-        Status( status )
-    {
-    }
-
-    C2SHttpResponseHeader::C2SHttpResponseHeader( C2SHttpStatus status , const std::string &sReasonPhrase )
+  C2SHttpResponseHeader::C2SHttpResponseHeader( C2SHttpStatus status )
     : fVersion( 1.1f ),
-      Status( status ),
-      ReasonPhrase( sReasonPhrase )
-    {
+      Status( status )
+  {
+  }
 
-    }
+  C2SHttpResponseHeader::C2SHttpResponseHeader( C2SHttpStatus status , const std::string &sReasonPhrase )
+  : fVersion( 1.1f ),
+    Status( status ),
+    ReasonPhrase( sReasonPhrase )
+  {
 
-    C2SHttpResponseHeader::~C2SHttpResponseHeader()
-    {
-    }
+  }
 
-    std::string C2SHttpResponseHeader::toString() const
-    {
-      std::stringstream strs;
+  C2SHttpResponseHeader::~C2SHttpResponseHeader()
+  {
+  }
 
-      strs << "HTTP/1.1 " << Status;
-      if ( ReasonPhrase.size() )
-        strs << " " << ReasonPhrase;
+  std::string C2SHttpResponseHeader::toString() const
+  {
+    std::stringstream strs;
 
-      strs << "\r\n";
+    strs << "HTTP/1.1 " << Status;
+    if ( ReasonPhrase.size() )
+      strs << " " << ReasonPhrase;
 
-      C2SHttpHeaderFields::const_iterator fit = Fields.begin();
-      for ( ; fit != Fields.end(); ++fit )
-        strs << fit->first << ": " << fit->second << "\r\n";
+    strs << "\r\n";
 
-      strs << "\r\n";
+    C2SHttpHeaderFields::const_iterator fit = Fields.begin();
+    for ( ; fit != Fields.end(); ++fit )
+      strs << fit->first << ": " << fit->second << "\r\n";
 
-      return strs.str();
-    }
+    strs << "\r\n";
 
+    return strs.str();
   }
 
 }

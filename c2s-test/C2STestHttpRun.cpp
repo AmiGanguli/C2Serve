@@ -52,7 +52,7 @@ public:
 
 private:
 
-  g::c2s::test::C2STestServerRunner m_sr;
+  c2s::test::C2STestServerRunner m_sr;
 
 };
 
@@ -60,20 +60,20 @@ BOOST_GLOBAL_FIXTURE( C2STestHttpRun );
 
 BOOST_AUTO_TEST_CASE( HtmlDefault )
 {
-  g::c2s::C2SHttpRequestHeader requestHeader( g::c2s::GET , "/" );
-  requestHeader.Fields.addAccept( g::c2s::C2SHttpMediaType::wildcard );
-  requestHeader.Fields.addAccept( g::c2s::C2SHttpMediaType::text__html );
-  g::c2s::C2SHttpRequest request( requestHeader );
+  c2s::C2SHttpRequestHeader requestHeader( c2s::GET , "/" );
+  requestHeader.Fields.addAccept( c2s::C2SHttpMediaType::wildcard );
+  requestHeader.Fields.addAccept( c2s::C2SHttpMediaType::text__html );
+  c2s::C2SHttpRequest request( requestHeader );
 
-  g::c2s::C2SHttpClient client( "localhost" , USE_PORT );
-  g::c2s::C2SHttpResponse response = client.send( request );
+  c2s::C2SHttpClient client( "localhost" , USE_PORT );
+  c2s::C2SHttpResponse response = client.send( request );
 
-  BOOST_MESSAGE( "response status: " + g::util::toString( response.header().Status ) );
+  BOOST_MESSAGE( "response status: " + c2s::util::toString( response.header().Status ) );
 
   BOOST_CHECK( response.header().fVersion == 1.1f );
-  BOOST_CHECK( response.header().Status == g::c2s::OK );
+  BOOST_CHECK( response.header().Status == c2s::OK );
 
-  std::string sIndexFile = g::c2s::C2SGlobalSettings::Settings().C2SDocumentRoot + "index.html";
+  std::string sIndexFile = c2s::C2SGlobalSettings::Settings().C2SDocumentRoot + "index.html";
   BOOST_MESSAGE( "reading file " + sIndexFile );
   std::ifstream is( sIndexFile.c_str() );
   BOOST_REQUIRE( is.is_open() );
@@ -82,16 +82,16 @@ BOOST_AUTO_TEST_CASE( HtmlDefault )
   unsigned int size = static_cast<unsigned int>( is.tellg() );
   is.seekg( 0 , std::ios::beg );
 
-  BOOST_MESSAGE( "expected content length: " + g::util::toString( size ) );
-  BOOST_MESSAGE( "received content length: " + g::util::toString( response.header().Fields.getContentLength() ) );
+  BOOST_MESSAGE( "expected content length: " + c2s::util::toString( size ) );
+  BOOST_MESSAGE( "received content length: " + c2s::util::toString( response.header().Fields.getContentLength() ) );
 
   BOOST_REQUIRE( size == response.header().Fields.getContentLength() );
   char *refContent = new char[ size ];
   is.read( refContent , size );
 
-  const g::c2s::C2SHttpEntity *pEntity = response.getEntity();
+  const c2s::C2SHttpEntity *pEntity = response.getEntity();
   BOOST_REQUIRE( pEntity );
-  BOOST_MESSAGE( "received body length: " + g::util::toString( pEntity->size ) );
+  BOOST_MESSAGE( "received body length: " + c2s::util::toString( pEntity->size ) );
   BOOST_REQUIRE( pEntity->size == static_cast<unsigned int>( size ) );
 
   std::string sRefData( refContent , size );

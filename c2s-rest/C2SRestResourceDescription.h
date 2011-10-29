@@ -37,35 +37,30 @@
 
 #include <string>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SRestResourceDescription
   {
+  public:
 
-    class C2SRestResourceDescription
-    {
-    public:
+    C2SRestResourceDescription( const std::string sHostURL , const std::string &sContextRoot );
 
-      C2SRestResourceDescription( const std::string sHostURL , const std::string &sContextRoot );
+    virtual ~C2SRestResourceDescription();
 
-      virtual ~C2SRestResourceDescription();
+    C2SHttpResponse process( const C2SHttpRequest &request );
 
-      C2SHttpResponse process( const C2SHttpRequest &request );
+  private:
 
-    private:
+    std::string createHtmlHeader();
 
-      std::string createHtmlHeader();
+    std::string createHtmlBody();
 
-      std::string createHtmlBody();
+    std::string m_sHostURL;
 
-      std::string m_sHostURL;
+    std::string m_sContextRoot;
 
-      std::string m_sContextRoot;
-
-    };
-
-  }
+  };
 
 }
 

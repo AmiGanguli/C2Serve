@@ -34,86 +34,83 @@
 
 #include <sstream>
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  class C2SRestParameterBase
   {
+  public:
 
-    class C2SRestParameterBase
-    {
-    public:
+    C2SRestParameterBase() {};
 
-      C2SRestParameterBase() {};
+    virtual ~C2SRestParameterBase(){};
 
-      virtual ~C2SRestParameterBase(){};
+    virtual bool isValid( const std::string &sID ) const = 0;
 
-      virtual bool isValid( const std::string &sID ) const = 0;
+    virtual void handle( const std::string &sID ) = 0;
 
-      virtual void handle( const std::string &sID ) = 0;
+  private:
 
-    private:
+    C2SRestParameterBase( const C2SRestParameterBase & );
 
-      C2SRestParameterBase( const C2SRestParameterBase & );
+    C2SRestParameterBase &operator=( const C2SRestParameterBase & );
 
-      C2SRestParameterBase &operator=( const C2SRestParameterBase & );
+  };
 
-    };
+  template <class Type>
+  class C2SRestParameter : public C2SRestParameterBase
+  {
+  public:
 
-    template <class Type>
-    class C2SRestParameter : public C2SRestParameterBase
-    {
-    public:
+    C2SRestParameter( Type *pDest )
+      : m_pDest( pDest )
+    {};
 
-      C2SRestParameter( Type *pDest )
-        : m_pDest( pDest )
-      {};
+    virtual ~C2SRestParameter(){};
 
-      virtual ~C2SRestParameter(){};
+    virtual bool isValid( const std::string &sID ) const;
 
-      virtual bool isValid( const std::string &sID ) const;
+    virtual void handle( const std::string &sID );
 
-      virtual void handle( const std::string &sID );
+    void setValue( const Type &value ) { *m_pDest = value; }
 
-      void setValue( const Type &value ) { *m_pDest = value; }
+  protected:
 
-    protected:
+    Type *m_pDest;
 
-      Type *m_pDest;
+  };
 
-    };
-
-    template <class Type>
-    bool C2SRestParameter<Type>::isValid( const std::string &sID ) const
-    {
-      std::istringstream strs( sID );
-      Type dummy = Type( 0 );
-      return ( strs >> dummy ) != 0;
-    }
-
-    //specialized for strings
-    template <>
-    inline bool C2SRestParameter<std::string>::isValid( const std::string & ) const
-    {
-      //will always match
-      return true;
-    }
-
-    template <class Type>
-    void C2SRestParameter<Type>::handle( const std::string &sID )
-    {
-      std::istringstream strs( sID );
-      if( !( strs >> ( *m_pDest ) ) )
-        throw C2SRestException( "C2SRestPathParameter::handle: " , "Cannot cast parameter \"" + sID + "\"" , BadRequest );
-    }
-
-    //specialized for strings
-    template <>
-    void inline C2SRestParameter<std::string>::handle( const std::string &sID )
-    {
-      *m_pDest = sID;
-    }
-
+  template <class Type>
+  bool C2SRestParameter<Type>::isValid( const std::string &sID ) const
+  {
+    std::istringstream strs( sID );
+    Type dummy = Type( 0 );
+    return ( strs >> dummy ) != 0;
   }
+
+  //specialized for strings
+  template <>
+  inline bool C2SRestParameter<std::string>::isValid( const std::string & ) const
+  {
+    //will always match
+    return true;
+  }
+
+  template <class Type>
+  void C2SRestParameter<Type>::handle( const std::string &sID )
+  {
+    std::istringstream strs( sID );
+    if( !( strs >> ( *m_pDest ) ) )
+      throw C2SRestException( "C2SRestPathParameter::handle: " , "Cannot cast parameter \"" + sID + "\"" , BadRequest );
+  }
+
+  //specialized for strings
+  template <>
+  void inline C2SRestParameter<std::string>::handle( const std::string &sID )
+  {
+    *m_pDest = sID;
+  }
+
 }
 
 #endif /* C2SRESTPARAMETER_H_ */

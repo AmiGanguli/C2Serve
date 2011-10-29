@@ -35,45 +35,40 @@
 #include <map>
 #include <string>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SHttpQueryFields
   {
+  public:
 
-    class C2SHttpQueryFields
-    {
-    public:
+    C2SHttpQueryFields();
 
-      C2SHttpQueryFields();
+    virtual ~C2SHttpQueryFields();
 
-      virtual ~C2SHttpQueryFields();
+    typedef std::map<std::string,std::string>::const_iterator const_iterator;
 
-      typedef std::map<std::string,std::string>::const_iterator const_iterator;
+    void add( const std::string &name , const std::string &value );
 
-      void add( const std::string &name , const std::string &value );
+    const std::string &get( const std::string &name ) const;
 
-      const std::string &get( const std::string &name ) const;
-
-      const_iterator begin() const { return m_fields.begin(); }
-      const_iterator end() const { return m_fields.end(); }
-      const_iterator find( const std::string &name ) const { return m_fields.find( name ); }
+    const_iterator begin() const { return m_fields.begin(); }
+    const_iterator end() const { return m_fields.end(); }
+    const_iterator find( const std::string &name ) const { return m_fields.find( name ); }
 
 
-      std::size_t size() const { return m_fields.size(); }
+    std::size_t size() const { return m_fields.size(); }
 
-    private:
+  private:
 
-      //TODO: according to http standard, it is allowed to have multiple fields with the same name
-      typedef std::map<std::string,std::string> FieldContainer;
+    //TODO: according to http standard, it is allowed to have multiple fields with the same name
+    typedef std::map<std::string,std::string> FieldContainer;
 
-      FieldContainer m_fields;
+    FieldContainer m_fields;
 
-    };
+  };
 
-    std::ostream &operator<<( std::ostream &os , const C2SHttpQueryFields &fields );
-
-  }
+  std::ostream &operator<<( std::ostream &os , const C2SHttpQueryFields &fields );
 
 }
 

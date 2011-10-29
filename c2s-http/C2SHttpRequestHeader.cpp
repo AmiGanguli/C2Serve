@@ -33,37 +33,34 @@
 
 #include <sstream>
 
-namespace g
+namespace c2s
 {
-  namespace c2s
+
+  std::string C2SHttpRequestHeader::toString() const
   {
+    std::stringstream strs;
 
-    std::string C2SHttpRequestHeader::toString() const
-    {
-      std::stringstream strs;
+    if ( Method == GET )
+      strs << "GET ";
+    else if ( Method == POST )
+      strs << "POST ";
+    else if ( Method == PUT )
+      strs << "PUT ";
+    else if ( Method == DELETE )
+      strs << "DELETE ";
+    else throw C2SHttpException( "C2SHttpRequestHeader::toString: " , "Cannot stream method type" , BadRequest );
 
-      if ( Method == GET )
-        strs << "GET ";
-      else if ( Method == POST )
-        strs << "POST ";
-      else if ( Method == PUT )
-        strs << "PUT ";
-      else if ( Method == DELETE )
-        strs << "DELETE ";
-      else throw C2SHttpException( "C2SHttpRequestHeader::toString: " , "Cannot stream method type" , BadRequest );
+    strs << URI << QueryFields << " HTTP/" << Version;
 
-      strs << URI << QueryFields << " HTTP/" << Version;
+    strs << "\r\n";
 
-      strs << "\r\n";
+    C2SHttpHeaderFields::const_iterator fit = Fields.begin();
+    for ( ; fit != Fields.end(); ++fit )
+      strs << fit->first << ": " << fit->second << "\r\n";
 
-      C2SHttpHeaderFields::const_iterator fit = Fields.begin();
-      for ( ; fit != Fields.end(); ++fit )
-        strs << fit->first << ": " << fit->second << "\r\n";
+    strs << "\r\n";
 
-      strs << "\r\n";
-
-      return strs.str();
-    }
-
+    return strs.str();
   }
+
 }

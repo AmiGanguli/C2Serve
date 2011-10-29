@@ -38,62 +38,59 @@
 
 #include <sstream>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SHttpResponse
   {
+  public:
 
-    class C2SHttpResponse
-    {
-    public:
+    C2SHttpResponse( const C2SHttpResponseHeader &header );
 
-      C2SHttpResponse( const C2SHttpResponseHeader &header );
+    C2SHttpResponse();
 
-      C2SHttpResponse();
+    C2SHttpResponse( const C2SHttpResponse & );
 
-      C2SHttpResponse( const C2SHttpResponse & );
+    virtual ~C2SHttpResponse();
 
-      virtual ~C2SHttpResponse();
+    C2SHttpResponse &operator=( const C2SHttpResponse & );
 
-      C2SHttpResponse &operator=( const C2SHttpResponse & );
+    void push( char *data , unsigned int size );
 
-      void push( char *data , unsigned int size );
+    const C2SHttpResponseHeader &header() const { return m_header; }
 
-      const C2SHttpResponseHeader &header() const { return m_header; }
+    C2SHttpResponseHeader &header() { return m_header; }
 
-      C2SHttpResponseHeader &header() { return m_header; }
+    //entity is deleted
+    void setEntity( C2SHttpEntity *pEntity );
 
-      //entity is deleted
-      void setEntity( C2SHttpEntity *pEntity );
-
-      //data is not copied
+    //data is not copied
 //      void setEntity( const char *data , unsigned int size );
 
 //      template <class Streamable>
 //      void setEntity( const Streamable &o );
 
-      template <class Streamable>
-      void getEntity( Streamable *pO ) const;
+    template <class Streamable>
+    void getEntity( Streamable *pO ) const;
 
-      const C2SHttpEntity *getEntity() const { return m_pBody; }
+    const C2SHttpEntity *getEntity() const { return m_pBody; }
 
-      void finished();
+    void finished();
 
-      static C2SHttpResponse *build( C2SHttpStatus status );
+    static C2SHttpResponse *build( C2SHttpStatus status );
 
 //      template <class Streamable>
 //      static C2SHttpResponse *build( C2SHttpStatus status , const Streamable &entity );
 
-    private:
+  private:
 
-      C2SHttpParser m_parser;
+    C2SHttpParser m_parser;
 
-      C2SHttpResponseHeader m_header;
+    C2SHttpResponseHeader m_header;
 
-      C2SHttpEntity *m_pBody;
+    C2SHttpEntity *m_pBody;
 
-    };
+  };
 
 
 //    template <class Streamable>
@@ -122,30 +119,28 @@ namespace g
 //      m_pBody = new C2SHttpEntity( data , iContentLength , true );
 //    }
 
-    template <class Streamable>
-    void C2SHttpResponse::getEntity( Streamable *pO ) const
-    {
-      if ( !m_pBody )
-        //TODO: throw exception???
-        throw C2SHttpException( "C2SHttpResponse::getEntity: " , "Entity is NULL!" , InternalServerError );
+  template <class Streamable>
+  void C2SHttpResponse::getEntity( Streamable *pO ) const
+  {
+    if ( !m_pBody )
+      //TODO: throw exception???
+      throw C2SHttpException( "C2SHttpResponse::getEntity: " , "Entity is NULL!" , InternalServerError );
 
-      std::stringstream strs( std::string( m_pBody->data , m_pBody->size ) );
-      if ( !( strs >> ( *pO ) ) )
-        throw C2SHttpException( "C2SHttpResponse::getEntity: " , "Cannot stream entity to object!" , InternalServerError );
-    }
-
-    template <>
-    inline void C2SHttpResponse::getEntity( std::string *pO ) const
-    {
-      if ( !m_pBody )
-        //TODO: throw exception???
-        throw C2SHttpException( "C2SHttpResponse::getEntity: " , "Entity is NULL!" , InternalServerError );
-
-      *pO = std::string( m_pBody->data , m_pBody->size );
-    }
-
-
+    std::stringstream strs( std::string( m_pBody->data , m_pBody->size ) );
+    if ( !( strs >> ( *pO ) ) )
+      throw C2SHttpException( "C2SHttpResponse::getEntity: " , "Cannot stream entity to object!" , InternalServerError );
   }
+
+  template <>
+  inline void C2SHttpResponse::getEntity( std::string *pO ) const
+  {
+    if ( !m_pBody )
+      //TODO: throw exception???
+      throw C2SHttpException( "C2SHttpResponse::getEntity: " , "Entity is NULL!" , InternalServerError );
+
+    *pO = std::string( m_pBody->data , m_pBody->size );
+  }
+
 
 }
 

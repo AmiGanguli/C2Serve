@@ -34,60 +34,55 @@
 
 #include <string>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SHttpMediaType
   {
+  public:
 
-    class C2SHttpMediaType
-    {
-    public:
+    C2SHttpMediaType( const std::string &sType );
 
-      C2SHttpMediaType( const std::string &sType );
+    C2SHttpMediaType();
 
-      C2SHttpMediaType();
+    bool operator<( const C2SHttpMediaType &t ) const { return fQ < t.fQ; }
 
-      bool operator<( const C2SHttpMediaType &t ) const { return fQ < t.fQ; }
+    std::string Type;
 
-      std::string Type;
+    float fQ;
 
-      float fQ;
+    void detect( const char *data , unsigned int size );
 
-      void detect( const char *data , unsigned int size );
+    std::string toString() const;
 
-      std::string toString() const;
+    static const std::string wildcard;
 
-      static const std::string wildcard;
+    static const std::string text__css;
 
-      static const std::string text__css;
+    static const std::string text__html;
 
-      static const std::string text__html;
+    static const std::string application__xhtml_xml;
 
-      static const std::string application__xhtml_xml;
+    static const std::string application__xml;
 
-      static const std::string application__xml;
+    static const std::string application__json;
 
-      static const std::string application__json;
+    static const std::string application__x_www_form_urlencoded;
 
-      static const std::string application__x_www_form_urlencoded;
+  private:
 
-    private:
+    template <class Handler>
+    friend void splitNhandle( const char *data , unsigned int size , char separator , Handler *pHandler );
 
-      template <class Handler>
-      friend void splitNhandle( const char *data , unsigned int size , char separator , Handler *pHandler );
+    void operator()( const char *data , unsigned int size );
 
-      void operator()( const char *data , unsigned int size );
+    void detectMediaType( const char *data , unsigned int size );
 
-      void detectMediaType( const char *data , unsigned int size );
+    void detectQualityValue( const char *data , unsigned int size );
 
-      void detectQualityValue( const char *data , unsigned int size );
+    unsigned int iArgIdx;
 
-      unsigned int iArgIdx;
-
-    };
-
-  }
+  };
 
 }
 

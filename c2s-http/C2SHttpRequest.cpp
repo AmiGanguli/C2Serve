@@ -31,47 +31,42 @@
 
 #include "C2SHttpRequest.h"
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  C2SHttpRequest::C2SHttpRequest()
+    : m_pEntity( NULL )
   {
+  }
 
-    C2SHttpRequest::C2SHttpRequest()
-      : m_pEntity( NULL )
-    {
-    }
+  C2SHttpRequest::C2SHttpRequest( const C2SHttpRequestHeader &header )
+  : m_header( header ),
+    m_pEntity( NULL )
+  {
+  }
 
-    C2SHttpRequest::C2SHttpRequest( const C2SHttpRequestHeader &header )
-    : m_header( header ),
-      m_pEntity( NULL )
-    {
-    }
+  C2SHttpRequest::~C2SHttpRequest()
+  {
+    delete m_pEntity;
+  }
 
-    C2SHttpRequest::~C2SHttpRequest()
-    {
-      delete m_pEntity;
-    }
+  void C2SHttpRequest::push( char *data , unsigned int size )
+  {
+    m_parser.parse( data , size , &m_header );
+  }
 
-    void C2SHttpRequest::push( char *data , unsigned int size )
-    {
-      m_parser.parse( data , size , &m_header );
-    }
+  void C2SHttpRequest::finished()
+  {
+    if ( m_header.Fields.getContentLength() )
+      m_pEntity = new C2SHttpEntity( m_parser.entity( m_header.Fields.getContentLength() ) , m_header.Fields.getContentLength() );
+  }
 
-    void C2SHttpRequest::finished()
-    {
-      if ( m_header.Fields.getContentLength() )
-        m_pEntity = new C2SHttpEntity( m_parser.entity( m_header.Fields.getContentLength() ) , m_header.Fields.getContentLength() );
-    }
+  const C2SHttpEntity &C2SHttpRequest::entity() const
+  {
+    if ( !m_pEntity )
+      throw C2SHttpException( "C2SHttpRequest::entity: " , "No entity available!" , InternalServerError );
 
-    const C2SHttpEntity &C2SHttpRequest::entity() const
-    {
-      if ( !m_pEntity )
-        throw C2SHttpException( "C2SHttpRequest::entity: " , "No entity available!" , InternalServerError );
-
-      return *m_pEntity;
-    }
-
+    return *m_pEntity;
   }
 
 }

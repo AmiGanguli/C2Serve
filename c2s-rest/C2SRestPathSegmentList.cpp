@@ -34,78 +34,73 @@
 
 #include <iostream>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  C2SRestPathSegmentList::C2SRestPathSegmentList()
   {
+  }
 
-    C2SRestPathSegmentList::C2SRestPathSegmentList()
+  C2SRestPathSegmentList::~C2SRestPathSegmentList()
+  {
+    iterator it = m_segments.begin();
+    for ( ; it != m_segments.end(); ++it )
+      delete *it;
+  }
+
+  void C2SRestPathSegmentList::append( C2SRestPathSegment *pSegment )
+  {
+    m_segments.push_back( pSegment );
+  }
+
+  void C2SRestPathSegmentList::handle( const C2SRestPathIDList &pathList )
+  {
+    iterator it = m_segments.begin();
+    iterator end = m_segments.end();
+    for ( unsigned int iPathSegmentIdx = 0; it != end; ++it, ++iPathSegmentIdx )
     {
+      if ( iPathSegmentIdx == pathList.size() )
+        throw C2SRestException( "C2SRestPathSegmentList::handle: " , "URI is too short!" , InternalServerError );
+
+      const std::string &sPathID = pathList[ iPathSegmentIdx ];
+      C2SRestPathSegment &segment = *( *it );
+      segment.handle( sPathID );
     }
+  }
 
-    C2SRestPathSegmentList::~C2SRestPathSegmentList()
+  int C2SRestPathSegmentList::getDistance( const C2SRestPathIDList &pathList ) const
+  {
+    //URI is too long
+    if ( pathList.size() > m_segments.size() )
+      return -1;
+
+    const_iterator it = m_segments.begin();
+    const_iterator end = m_segments.end();
+
+    int iDistance = 0;
+    int iDistanceStatus = 0;
+
+    for ( unsigned int iPathSegmentIdx = 0; it != end; ++it, ++iPathSegmentIdx )
     {
-      iterator it = m_segments.begin();
-      for ( ; it != m_segments.end(); ++it )
-        delete *it;
-    }
-
-    void C2SRestPathSegmentList::append( C2SRestPathSegment *pSegment )
-    {
-      m_segments.push_back( pSegment );
-    }
-
-    void C2SRestPathSegmentList::handle( const C2SRestPathIDList &pathList )
-    {
-      iterator it = m_segments.begin();
-      iterator end = m_segments.end();
-      for ( unsigned int iPathSegmentIdx = 0; it != end; ++it, ++iPathSegmentIdx )
-      {
-        if ( iPathSegmentIdx == pathList.size() )
-          throw C2SRestException( "C2SRestPathSegmentList::handle: " , "URI is too short!" , InternalServerError );
-
-        const std::string &sPathID = pathList[ iPathSegmentIdx ];
-        C2SRestPathSegment &segment = *( *it );
-        segment.handle( sPathID );
-      }
-    }
-
-    int C2SRestPathSegmentList::getDistance( const C2SRestPathIDList &pathList ) const
-    {
-      //URI is too long
-      if ( pathList.size() > m_segments.size() )
+      //URI is too short
+      if ( iPathSegmentIdx == pathList.size() )
         return -1;
 
-      const_iterator it = m_segments.begin();
-      const_iterator end = m_segments.end();
+      const std::string &sPathID = pathList[ iPathSegmentIdx ];
+      const C2SRestPathSegment &segment = *( *it );
 
-      int iDistance = 0;
-      int iDistanceStatus = 0;
+      //segment missmatch
+      if ( !segment.isValid( sPathID ) )
+        return -1;
 
-      for ( unsigned int iPathSegmentIdx = 0; it != end; ++it, ++iPathSegmentIdx )
-      {
-        //URI is too short
-        if ( iPathSegmentIdx == pathList.size() )
-          return -1;
+      C2SRestPathSegment::EPathSegmentType segmentType = segment.type();
+      if ( segmentType == C2SRestPathSegment::Parameter )
+        iDistanceStatus += 1;
 
-        const std::string &sPathID = pathList[ iPathSegmentIdx ];
-        const C2SRestPathSegment &segment = *( *it );
-
-        //segment missmatch
-        if ( !segment.isValid( sPathID ) )
-          return -1;
-
-        C2SRestPathSegment::EPathSegmentType segmentType = segment.type();
-        if ( segmentType == C2SRestPathSegment::Parameter )
-          iDistanceStatus += 1;
-
-        iDistance += iDistanceStatus;
-      }
-
-      return iDistance;
+      iDistance += iDistanceStatus;
     }
 
+    return iDistance;
   }
 
 }

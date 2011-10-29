@@ -36,44 +36,39 @@
 
 #include <vector>
 
-namespace g
+namespace c2s
 {
 
-  namespace c2s
+  class C2SRestPathSegmentList
   {
+  public:
 
-    class C2SRestPathSegmentList
-    {
-    public:
+    C2SRestPathSegmentList();
 
-      C2SRestPathSegmentList();
+    virtual ~C2SRestPathSegmentList();
 
-      virtual ~C2SRestPathSegmentList();
+    typedef std::vector<C2SRestPathSegment*>::iterator iterator;
+    typedef std::vector<C2SRestPathSegment*>::const_iterator const_iterator;
 
-      typedef std::vector<C2SRestPathSegment*>::iterator iterator;
-      typedef std::vector<C2SRestPathSegment*>::const_iterator const_iterator;
+    void append( C2SRestPathSegment *pSegment );
 
-      void append( C2SRestPathSegment *pSegment );
+    int getDistance( const C2SRestPathIDList &pathList ) const;
 
-      int getDistance( const C2SRestPathIDList &pathList ) const;
+    void handle( const C2SRestPathIDList &pathList );
 
-      void handle( const C2SRestPathIDList &pathList );
+    iterator begin() { return m_segments.begin(); }
+    iterator end() { return m_segments.end(); }
 
-      iterator begin() { return m_segments.begin(); }
-      iterator end() { return m_segments.end(); }
+    const_iterator begin() const { return m_segments.begin(); }
+    const_iterator end() const { return m_segments.end(); }
 
-      const_iterator begin() const { return m_segments.begin(); }
-      const_iterator end() const { return m_segments.end(); }
+  private:
 
-    private:
+    typedef std::vector<C2SRestPathSegment*> SegmentListType;
 
-      typedef std::vector<C2SRestPathSegment*> SegmentListType;
+    SegmentListType m_segments;
 
-      SegmentListType m_segments;
-
-    };
-
-  }
+  };
 
 }
 
