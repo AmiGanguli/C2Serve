@@ -1,7 +1,6 @@
 /**
 
-  @brief  Url encoding and decoding of strings.
-          Thanks to http://www.geekhideout.com/.
+  Thanks to http://www.geekhideout.com/.
 
  */
 
@@ -11,42 +10,17 @@
 #include <cstdlib>
 #include <cctype>
 
-/**
- *
- * Converts a hex character to its integer value.
- *
- * @param   ch  Hex character to be converted.
- * @return  According integer value.
- *
- */
 char from_hex(char ch)
 {
   return std::isdigit(ch) ? ch - '0' : std::tolower(ch) - 'a' + 10;
 }
 
-/**
- *
- * Converts an integer value to its hex character.
- *
- * @param   ch  Integer to be converted.
- * @return  According hex value.
- *
- */
 char to_hex(char code)
 {
   static char hex[] = "0123456789abcdef";
   return hex[code & 15];
 }
 
-/**
- *
- * Returns a url-encoded version of str.
- * Make sure to free the returned string after use.
- *
- * @param   str   Original string.
- * @return  Url encoded string.
- *
- */
 char *url_encode( const char *str )
 {
   const char *pstr = str;
@@ -64,15 +38,6 @@ char *url_encode( const char *str )
   return buf;
 }
 
-/**
- *
- * Returns a url-decoded version of str.
- * Make sure to free the returned string after use.
- *
- * @param   str   Url encoded string.
- * @return  Decoded string.
- *
- */
 char *url_decode( const char *str )
 {
   const char *pstr = str;

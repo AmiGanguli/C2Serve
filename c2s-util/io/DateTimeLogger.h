@@ -1,12 +1,31 @@
 /**
 
- DateTimeLogger.h
- 
- Created on: 	  02.10.2010
- Author: 			  Kay Wolter
- E-Mail:				wolter.kay@freenet.de
+  Copyright (c) 2011, C2Serve (http://www.c2serve.eu)
+  All rights reserved.
 
- @brief Logger that prints time and date information in addition to the prefix created by g::io::Logger.
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+  1. Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+  2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+  3. All advertising materials mentioning features or use of this software
+     must display the following acknowledgement: "This product includes software of the C2Serve project".
+  4. Neither the name of the C2Serve project nor the
+     names of its contributors may be used to endorse or promote products
+     derived from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY C2SERVE ''AS IS'' AND ANY
+  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  DISCLAIMED. IN NO EVENT SHALL C2SERVE BE LIABLE FOR ANY
+  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
@@ -20,55 +39,24 @@ namespace g
   namespace io
   {
 
-    /**
-     * Logger that prints date and time information in addition to the prefix created by g::io::Logger.
-     * @see g::io::Logger
-     */
     class DateTimeLogger: public g::io::Logger
     {
     public:
 
-      /**
-       * Constructor.
-       * @param   id  String that describes the context of the logger instance.
-       */
       DateTimeLogger( const std::string &id );
 
-      /**
-       * Destructor.
-       */
       virtual ~DateTimeLogger();
 
-      /**
-       * Enable/disable logging of milliseconds in the prefix for ALL date/time logger instances.
-       * @param bShowMilliSeconds   If true, milliseconds will be displayed.
-       */
       static void setShowMilliSeconds( bool bShowMilliSeconds );
 
     protected:
 
-      /**
-       * Log a message.
-       * @param   level       Level id.
-       * @param   message     Message to log.
-       * @param   bLineBreak  Tell the logger if a line break should be added to the end of the message.
-       *                      If this value is false, the message is flushed without line break and the cursor is sought back to beginning of the line.
-       *                      The following messages with bLineBreak = false are all printed to the same line and will thus overwrite the previous message.
-       *                      The first message with bLineBreak = true is printed on the next line with line break afterwards.
-       */
       virtual void print( const std::string &level , const std::string &message , bool bLineBreak ) const;
 
     private:
 
-      /**
-       * Get the current system date and time represented as string.
-       * @return  System time.
-       */
       static std::string getCurrentDateAndTimeAsString();
 
-      /**
-       * Indicates if milliseconds will be displayed in the logging prefix.
-       */
       static bool m_bShowMilliSec;
 
     };
