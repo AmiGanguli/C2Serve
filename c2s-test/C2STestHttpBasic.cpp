@@ -62,22 +62,22 @@
 //TODO: move test to core/util
 BOOST_AUTO_TEST_CASE( URLCoding )
 {
-  std::string s1 = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"�$%&/()=?�*'-_.:;,<>";
-  //same as s1 but without '%'
-  std::string s1_2 = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"�$&/()=?�*'-_.:;,<>";
-  std::string sURLEncoded = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ%21%22%a4%24%25%26%2f%28%29%3d%3f%a7%2a%27-_.%3a%3b%2c%3c%3e";
+  std::string sTestCharacterSequence = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"�$%&/()=?�*'-_.:;,<>";
+  std::string sTestCharacterSequenceWithoutPercent = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"�$&/()=?�*'-_.:;,<>";
+  std::string sTestCharacterSequenceEncodedExpected = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ%21%22%ef%bf%bd%24%25%26%2f%28%29%3d%3f%ef%bf%bd%2a%27-_.%3a%3b%2c%3c%3e";
 
-  std::string s2 = c2s::util::urlEncode( s1 );
-  BOOST_MESSAGE( "url encoded: " << s2 );
-  BOOST_CHECK( s2 == sURLEncoded );
+  std::string sTestCharacterSequenceEncoded = c2s::util::urlEncode( sTestCharacterSequence );
+  BOOST_MESSAGE( "url encoded: " << sTestCharacterSequenceEncoded );
+  BOOST_MESSAGE( "must match:  " << sTestCharacterSequenceEncodedExpected );
+  BOOST_CHECK( sTestCharacterSequenceEncoded == sTestCharacterSequenceEncodedExpected );
 
-  std::string s3 = c2s::util::urlDecode( s2 );
-  BOOST_MESSAGE( "url decoded: " << s3 );
-  BOOST_CHECK( s1 == s3 );
+  std::string sTestCharacterSequenceDecoded = c2s::util::urlDecode( sTestCharacterSequenceEncoded );
+  BOOST_MESSAGE( "url decoded: " << sTestCharacterSequenceDecoded );
+  BOOST_CHECK( sTestCharacterSequence == sTestCharacterSequenceDecoded );
 
-  std::string s4 = c2s::util::urlDecode( s1_2 );
-  BOOST_MESSAGE( "url decoded without url encoding: " << s4 );
-  BOOST_CHECK( s1_2 == s4 );
+  std::string sTestCharacterSequenceWithoutPercentDecodedWithoutEncoding = c2s::util::urlDecode( sTestCharacterSequenceWithoutPercent );
+  BOOST_MESSAGE( "url decoded without url encoding: " << sTestCharacterSequenceWithoutPercentDecodedWithoutEncoding );
+  BOOST_CHECK( sTestCharacterSequenceWithoutPercent == sTestCharacterSequenceWithoutPercentDecodedWithoutEncoding );
 }
 
 BOOST_AUTO_TEST_CASE( HttpResponseOK )
