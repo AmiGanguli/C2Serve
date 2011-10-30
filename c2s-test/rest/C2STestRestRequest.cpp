@@ -29,46 +29,48 @@
 
  */
 
-#ifndef C2STESTRESTRESPONSE_H_
-#define C2STESTRESTRESPONSE_H_
+#include "C2STestRestRequest.h"
+#include "C2STestRestFixture.h"
 
-#include "C2SHttpRequest.h"
-#include "C2SHttpResponse.h"
-
-#include <string>
+#include "C2SHttpClient.h"
 
 namespace c2s
 {
-
   namespace test
   {
 
-    class C2STestRestResponse
+    C2STestRestRequest::C2STestRestRequest( C2SHttpMethod method , const std::string &sURI )
+      : m_request( C2SHttpRequestHeader( method , sURI ) )
     {
-    public:
+    }
 
-      virtual ~C2STestRestResponse();
+    C2STestRestRequest::~C2STestRestRequest()
+    {
+    }
 
-      void check( const C2SHttpResponse &response ) const;
+    C2STestRestRequest C2STestRestRequest::build( C2SHttpMethod method , const std::string &sURI )
+    {
+      return C2STestRestRequest( method , sURI );
+    }
 
-      static C2STestRestResponse build( C2SHttpStatus status );
+    C2STestRestRequest &C2STestRestRequest::query_field( const std::string &name , const std::string &value )
+    {
+      m_request.header().QueryFields.add( name , value );
+      return *this;
+    }
 
-      C2STestRestResponse &entity( const C2SHttpMediaType &mediatype , const std::string &entity );
+    C2STestRestRequest &C2STestRestRequest::accept( const C2SHttpMediaType &mediatype )
+    {
+      m_request.header().Fields.addAccept( mediatype );
+      return *this;
+    }
 
-    private:
-
-      C2STestRestResponse( C2SHttpStatus status );
-
-      C2SHttpStatus m_status;
-
-      C2SHttpMediaType m_mediatype;
-
-      std::string m_entity;
-
-    };
+    C2SHttpResponse C2STestRestRequest::process() const
+    {
+      C2SHttpClient client( "localhost" , C2STestRestFixture::iPortOfTestServer );
+      return client.send( m_request );
+    }
 
   }
-
 }
 
-#endif /* C2STESTRESTRESPONSE_H_ */

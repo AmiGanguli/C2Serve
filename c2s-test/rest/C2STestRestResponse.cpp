@@ -42,38 +42,6 @@ namespace c2s
   namespace test
   {
 
-    C2STestRestRequest::C2STestRestRequest( C2SHttpMethod method , const std::string &sURI )
-      : m_request( C2SHttpRequestHeader( method , sURI ) )
-    {
-    }
-
-    C2STestRestRequest::~C2STestRestRequest()
-    {
-    }
-
-    C2STestRestRequest C2STestRestRequest::build( C2SHttpMethod method , const std::string &sURI )
-    {
-      return C2STestRestRequest( method , sURI );
-    }
-
-    C2STestRestRequest &C2STestRestRequest::query_field( const std::string &name , const std::string &value )
-    {
-      m_request.header().QueryFields.add( name , value );
-      return *this;
-    }
-
-    C2STestRestRequest &C2STestRestRequest::accept( const C2SHttpMediaType &mediatype )
-    {
-      m_request.header().Fields.addAccept( mediatype );
-      return *this;
-    }
-
-    C2SHttpResponse C2STestRestRequest::process() const
-    {
-      C2SHttpClient client( "localhost" , C2STestRestFixture::iPortOfTestServer );
-      return client.send( m_request );
-    }
-
     C2STestRestResponse::C2STestRestResponse( C2SHttpStatus status )
       : m_status( status )
     {

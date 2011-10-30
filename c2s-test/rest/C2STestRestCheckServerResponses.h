@@ -29,13 +29,8 @@
 
  */
 
-#ifndef C2STESTRESTCHECKMULTITHREADING_H_
-#define C2STESTRESTCHECKMULTITHREADING_H_
-
-#include "TaskQueue.h"
-
-#include "C2STestRestRequest.h"
-#include "C2STestRestResponse.h"
+#ifndef C2STESTRESTCHECKSERVERRESPONSES_H_
+#define C2STESTRESTCHECKSERVERRESPONSES_H_
 
 namespace c2s
 {
@@ -43,25 +38,22 @@ namespace c2s
   namespace test
   {
 
-    class C2STestRestCheckMultiThreading : public c2s::thread::TaskBase
+    class C2STestRestRequest;
+    class C2STestRestResponse;
+
+    class C2STestRestCheckServerResponses
     {
     public:
 
       static void runTest();
 
-    protected:
-
-      void run();
-
     private:
 
-      C2STestRestCheckMultiThreading( const c2s::test::C2STestRestRequest &request , const c2s::test::C2STestRestResponse &response_check );
+      static void checkResponse( const c2s::test::C2STestRestRequest &request , const c2s::test::C2STestRestResponse &response_check );
 
-      static C2STestRestCheckMultiThreading *create( unsigned int iSleepMS );
+      C2STestRestCheckServerResponses();
 
-      c2s::test::C2STestRestRequest m_request;
-
-      c2s::test::C2STestRestResponse response_check;
+      virtual ~C2STestRestCheckServerResponses();
 
     };
 
@@ -69,4 +61,4 @@ namespace c2s
 
 }
 
-#endif /* C2STESTRESTCHECKMULTITHREADING_H_ */
+#endif /* C2STESTRESTCHECKSERVERRESPONSES_H_ */

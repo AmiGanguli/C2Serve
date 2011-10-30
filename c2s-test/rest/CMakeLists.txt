@@ -5,8 +5,10 @@ add_executable( c2s_test_rest
   C2STestRestMethodAdd
   C2STestRestMethodQueryFields
   C2STestRestMethodThreading
+  C2STestRestRequest
 	C2STestRestResponse
 	C2STestRestFixture
+	C2STestRestCheckServerResponses
 	C2STestRestCheckMultiThreading
   C2STestRest )
 

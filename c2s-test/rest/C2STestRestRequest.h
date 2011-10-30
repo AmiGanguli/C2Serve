@@ -29,46 +29,41 @@
 
  */
 
-#ifndef C2STESTRESTRESPONSE_H_
-#define C2STESTRESTRESPONSE_H_
+
+#ifndef C2STESTRESTREQUEST_H_
+#define C2STESTRESTREQUEST_H_
 
 #include "C2SHttpRequest.h"
 #include "C2SHttpResponse.h"
 
-#include <string>
-
 namespace c2s
 {
-
   namespace test
   {
 
-    class C2STestRestResponse
+    class C2STestRestRequest
     {
     public:
 
-      virtual ~C2STestRestResponse();
+      virtual ~C2STestRestRequest();
 
-      void check( const C2SHttpResponse &response ) const;
+      static C2STestRestRequest build( C2SHttpMethod method , const std::string &sURI );
 
-      static C2STestRestResponse build( C2SHttpStatus status );
+      C2STestRestRequest &query_field( const std::string &name , const std::string &value );
 
-      C2STestRestResponse &entity( const C2SHttpMediaType &mediatype , const std::string &entity );
+      C2STestRestRequest &accept( const C2SHttpMediaType &mediatype );
+
+      C2SHttpResponse process() const;
 
     private:
 
-      C2STestRestResponse( C2SHttpStatus status );
+      C2STestRestRequest( C2SHttpMethod method , const std::string &sURI );
 
-      C2SHttpStatus m_status;
-
-      C2SHttpMediaType m_mediatype;
-
-      std::string m_entity;
+      C2SHttpRequest m_request;
 
     };
 
   }
-
 }
 
-#endif /* C2STESTRESTRESPONSE_H_ */
+#endif /* C2STESTRESTREQUEST_H_ */
