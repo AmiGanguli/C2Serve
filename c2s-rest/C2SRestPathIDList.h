@@ -29,53 +29,18 @@
 
  */
 
-#ifndef C2SRESTRESOURCE_H_
-#define C2SRESTRESOURCE_H_
 
-#include "C2SHttpResource.h"
+#ifndef C2SRESTPATHIDLIST_H_
+#define C2SRESTPATHIDLIST_H_
 
-#include "C2SRestMethodPrototype.h"
-#include "C2SRestMethodPrototypeList.h"
-#include "C2SRestResourceDescription.h"
-
-#include <list>
+#include <vector>
+#include <string>
 
 namespace c2s
 {
 
-  class C2SRestResource: public C2SHttpResource
-  {
-  public:
-
-    virtual ~C2SRestResource();
-
-    static C2SRestResource *createRestResourceWithContextRoot( const std::string &sContextRootOfRestResource );
-
-    void processRequest( const C2SHttpRequest &request );
-
-    C2SHttpResource *clone() const;
-
-    void registerMethodPrototype( C2SRestMethodPrototype *pMethod );
-
-    //TODO: implement
-    bool existsMethodPrototype( const C2SRestMethodPrototype *pMethod ) const;
-
-  protected:
-
-    C2SRestMethodPrototype *getPrototypeWithBestMatchForRequest( const C2SHttpRequest &request );
-
-    C2SRestMethodPrototypeList m_registeredMethodPrototypes;
-
-    C2SRestResourceDescription m_resourceDescription;
-
-  private:
-
-    C2SRestResource( const std::string &sHostName , const std::string &sContextRoot );
-
-    C2SRestResource( const C2SRestResource &r );
-
-  };
+  typedef std::vector<std::string> C2SRestPathIDList;
 
 }
 
-#endif /* C2SRESTRESOURCE_H_ */
+#endif /* C2SRESTPATHIDLIST_H_ */

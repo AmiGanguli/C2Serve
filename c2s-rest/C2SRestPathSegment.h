@@ -40,8 +40,6 @@
 namespace c2s
 {
 
-  typedef std::vector<std::string> C2SRestPathIDList;
-
   class C2SRestPathSegment
   {
   public:

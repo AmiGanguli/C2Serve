@@ -33,6 +33,7 @@
 #define C2SRESTPATHSEGMENTLIST_H_
 
 #include "C2SRestPathSegment.h"
+#include "C2SRestPathIDList.h"
 
 #include <vector>
 

@@ -65,7 +65,7 @@ namespace c2s
 
     virtual ~C2SHttpResource(){};
 
-    virtual void process(  const C2SHttpRequest &request ) = 0;
+    virtual void processRequest(  const C2SHttpRequest &request ) = 0;
 
     virtual C2SHttpResource *clone() const = 0;
 

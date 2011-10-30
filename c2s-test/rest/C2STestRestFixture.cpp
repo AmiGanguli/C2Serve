@@ -69,13 +69,13 @@ namespace c2s
     {
       std::list<c2s::C2SHttpResource*> resources;
 
-      c2s::C2SRestResource *pRestResource1 = c2s::C2SRestResource::createRestResource( sContextRootOfTestResource );
-      pRestResource1->addMethod( new c2s::test::C2STestRestMethodAdd() );
-      pRestResource1->addMethod( new c2s::test::C2STestRestMethodQueryFields() );
-      pRestResource1->addMethod( new c2s::test::C2STestRestMethodThreading( pGlobalMutex ) );
+      c2s::C2SRestResource *pRestResource1 = c2s::C2SRestResource::createRestResourceWithContextRoot( sContextRootOfTestResource );
+      pRestResource1->registerMethodPrototype( new c2s::test::C2STestRestMethodAdd() );
+      pRestResource1->registerMethodPrototype( new c2s::test::C2STestRestMethodQueryFields() );
+      pRestResource1->registerMethodPrototype( new c2s::test::C2STestRestMethodThreading( pGlobalMutex ) );
       resources.push_back( pRestResource1 );
 
-      resources.push_back( c2s::C2SRestResource::createRestResource( "/" + sContextRootOfEmptyResource ) );
+      resources.push_back( c2s::C2SRestResource::createRestResourceWithContextRoot( "/" + sContextRootOfEmptyResource ) );
 
       return resources;
     }

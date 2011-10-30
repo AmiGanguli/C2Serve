@@ -123,7 +123,7 @@ namespace c2s
         C2SHttpRequestHeader header( request.header() );
         header.URI = "index.html";
         C2SHttpRequest redirected( header );
-        it->second->process( redirected );
+        it->second->processRequest( redirected );
       }
       else
       {
@@ -131,7 +131,7 @@ namespace c2s
         if ( !pBestMatch )
           throw C2SHttpException( "C2SHttpResourceManager::handleRequest:" , "Not found: '" + request.header().URI + "'" , NotFound );
 
-        pBestMatch->process( request );
+        pBestMatch->processRequest( request );
       }
     }
     catch ( const C2SHttpException &e )

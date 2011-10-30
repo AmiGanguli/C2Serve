@@ -5,7 +5,8 @@ add_library( c2s_rest
     C2SRestResource
     C2SRestMethodPrototype
     C2SRestPathSegmentList
-    C2SRestResourceDescription )
+    C2SRestResourceDescription
+    C2SRestMatchMethodToRequest )
 
 install( TARGETS 
 	c2s_rest
