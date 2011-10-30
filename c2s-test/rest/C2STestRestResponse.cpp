@@ -30,6 +30,7 @@
  */
 
 #include "C2STestRestResponse.h"
+#include "C2STestRestFixture.h"
 
 #include "C2SHttpClient.h"
 
@@ -69,7 +70,7 @@ namespace c2s
 
     C2SHttpResponse C2STestRestRequest::process() const
     {
-      C2SHttpClient client( "localhost" , USE_PORT );
+      C2SHttpClient client( "localhost" , C2STestRestFixture::iPortOfTestServer );
       return client.send( m_request );
     }
 

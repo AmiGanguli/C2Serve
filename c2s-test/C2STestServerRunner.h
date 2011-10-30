@@ -38,6 +38,8 @@
 
 #include "Thread.h"
 
+#include <boost/test/unit_test.hpp>
+
 namespace c2s
 {
   namespace test

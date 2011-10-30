@@ -37,8 +37,6 @@
 
 #include <string>
 
-#define USE_PORT 8183
-
 namespace c2s
 {
 

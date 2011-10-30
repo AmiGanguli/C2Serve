@@ -36,6 +36,7 @@
 
 #include "C2STestServerRunner.h"
 #include "C2SRestResource.h"
+#include "C2STestRestFixture.h"
 
 #include "C2STestRestMethodAdd.h"
 #include "C2STestRestMethodThreading.h"
@@ -47,41 +48,8 @@
 
 using namespace boost::unit_test;
 
-//#define USE_PORT 8184
-#define RESOURCE_CONTEXT_ROOT_1 std::string( "g/forrest/test/rest-check/resource-1" )
-#define RESOURCE_CONTEXT_ROOT_2 std::string( "g/forrest/test/rest-check/resource-2" )
-
-std::list<c2s::C2SHttpResource*> createResources( c2s::thread::Mutex *pGlobalMutex );
-
-class ForRestTestRestful
-{
-public:
-
-  ForRestTestRestful() : m_sr( NULL )
-  {
-    if ( !pGlobalMutex )
-      pGlobalMutex = new c2s::thread::Mutex();
-
-    m_sr = new c2s::test::C2STestServerRunner( createResources( pGlobalMutex ) , USE_PORT );
-  };
-
-  virtual ~ForRestTestRestful()
-  {
-    delete m_sr;
-    delete pGlobalMutex;
-  }
-
-  static c2s::thread::Mutex *pGlobalMutex;
-
-private:
-
-  c2s::test::C2STestServerRunner *m_sr;
-
-};
-
-c2s::thread::Mutex *ForRestTestRestful::pGlobalMutex = NULL;
-
-BOOST_GLOBAL_FIXTURE( ForRestTestRestful );
+typedef c2s::test::C2STestRestFixture C2STestRestGlobalFixture;
+BOOST_GLOBAL_FIXTURE( C2STestRestGlobalFixture );
 
 void checkThreading();
 
@@ -100,7 +68,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , RESOURCE_CONTEXT_ROOT_1 )
+      build( c2s::GET , c2s::test::C2STestRestFixture::sContextRootOfTestResource )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::OK )
@@ -111,7 +79,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 )
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::OK )
@@ -122,7 +90,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::POST , "/" + RESOURCE_CONTEXT_ROOT_1 )
+      build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::MethodNotAllowed )
@@ -133,7 +101,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::PUT , "/" + RESOURCE_CONTEXT_ROOT_1 )
+      build( c2s::PUT , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::MethodNotAllowed )
@@ -144,7 +112,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::DELETE , "/" + RESOURCE_CONTEXT_ROOT_1 )
+      build( c2s::DELETE , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::MethodNotAllowed )
@@ -156,7 +124,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/not-a-method" )
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/not-a-method" )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::NotFound )
@@ -167,7 +135,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + c2s::test::C2STestRestMethodQueryFields::sPath )
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + c2s::test::C2STestRestMethodQueryFields::sPath )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::NotFound )
@@ -179,7 +147,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodQueryFields::sPath )
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodQueryFields::sPath )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::BadRequest )
@@ -190,7 +158,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodQueryFields::sPath ).
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodQueryFields::sPath ).
       query_field( "test_uri" , c2s::test::C2STestRestMethodQueryFields::sQueryFieldValueExpected )
       ,
       c2s::test::C2STestRestResponse::
@@ -203,7 +171,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath )
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::NotFound )
@@ -214,7 +182,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4/invalid" )
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4/invalid" )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::NotFound )
@@ -226,7 +194,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
       accept( c2s::C2SHttpMediaType::application__xml )
       ,
       c2s::test::C2STestRestResponse::build( c2s::OK ).
@@ -238,7 +206,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
       accept( c2s::C2SHttpMediaType::application__json )
       ,
       c2s::test::C2STestRestResponse::build( c2s::OK ).
@@ -250,7 +218,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
       accept( c2s::C2SHttpMediaType::wildcard )
       ,
       c2s::test::C2STestRestResponse::build( c2s::OK ).
@@ -262,7 +230,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" )
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" )
       ,
       c2s::test::C2STestRestResponse::build( c2s::NotAcceptable )
 
@@ -272,7 +240,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
       accept( c2s::C2SHttpMediaType::application__xhtml_xml )
       ,
       c2s::test::C2STestRestResponse::build( c2s::NotAcceptable )
@@ -283,7 +251,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::POST , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+      build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
       accept( c2s::C2SHttpMediaType::application__xml )
       ,
       c2s::test::C2STestRestResponse::build( c2s::MethodNotAllowed )
@@ -294,7 +262,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::PUT , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+      build( c2s::PUT , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
       accept( c2s::C2SHttpMediaType::application__xml )
       ,
       c2s::test::C2STestRestResponse::build( c2s::MethodNotAllowed )
@@ -305,7 +273,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::DELETE , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+      build( c2s::DELETE , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
       accept( c2s::C2SHttpMediaType::application__xml )
       ,
       c2s::test::C2STestRestResponse::build( c2s::MethodNotAllowed )
@@ -316,7 +284,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
       accept( c2s::C2SHttpMediaType::application__xml ).
       query_field( "multiplier" , "2" )
       ,
@@ -329,7 +297,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
       accept( c2s::C2SHttpMediaType::application__json ).
       query_field( "multiplier" , "2" )
       ,
@@ -343,7 +311,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
       accept( c2s::C2SHttpMediaType::application__json ).
       query_field( "multiplier" , "k2" )
       ,
@@ -355,7 +323,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/string/4" ).
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/string/4" ).
       accept( c2s::C2SHttpMediaType::application__json ).
       query_field( "multiplier" , "2" )
       ,
@@ -368,7 +336,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , RESOURCE_CONTEXT_ROOT_2 )
+      build( c2s::GET , c2s::test::C2STestRestFixture::sContextRootOfEmptyResource )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::OK )
@@ -378,7 +346,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_2 )
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfEmptyResource )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::OK )
@@ -388,7 +356,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_2 + "/not-a-method" )
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfEmptyResource + "/not-a-method" )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::NotFound )
@@ -398,7 +366,7 @@ test_suite *init_unit_test_suite( int , char ** const )
   requests->add( BOOST_TEST_CASE( boost::bind( &checkResponse ,
 
       c2s::test::C2STestRestRequest::
-      build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_2 + "not-a-method" )
+      build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfEmptyResource + "not-a-method" )
       ,
       c2s::test::C2STestRestResponse::
       build( c2s::NotFound )
@@ -413,21 +381,6 @@ test_suite *init_unit_test_suite( int , char ** const )
   return 0;
 }
 
-std::list<c2s::C2SHttpResource*> createResources( c2s::thread::Mutex *pGlobalMutex )
-{
-  std::list<c2s::C2SHttpResource*> resources;
-
-  c2s::C2SRestResource *pRestResource1 = c2s::C2SRestResource::createRestResource( RESOURCE_CONTEXT_ROOT_1 );
-  pRestResource1->addMethod( new c2s::test::C2STestRestMethodAdd() );
-  pRestResource1->addMethod( new c2s::test::C2STestRestMethodQueryFields() );
-  pRestResource1->addMethod( new c2s::test::C2STestRestMethodThreading( pGlobalMutex ) );
-  resources.push_back( pRestResource1 );
-
-  resources.push_back( c2s::C2SRestResource::createRestResource( "/" + RESOURCE_CONTEXT_ROOT_2 ) );
-
-  return resources;
-}
-
 class CheckThreading : public c2s::thread::TaskBase
 {
 public:
@@ -440,7 +393,7 @@ public:
   void run()
   {
     c2s::C2SHttpResponse response = m_request.process();
-    c2s::thread::Lock lock( ForRestTestRestful::pGlobalMutex );
+    c2s::thread::Lock lock( c2s::test::C2STestRestFixture::pGlobalMutex );
     response_check.check( response );
   }
 
@@ -449,7 +402,7 @@ public:
     return new CheckThreading(
 
         c2s::test::C2STestRestRequest::
-        build( c2s::GET , "/" + RESOURCE_CONTEXT_ROOT_1 + "/" + c2s::test::C2STestRestMethodThreading::sPath + "/" + c2s::util::toString( iSleepMS ) )
+        build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodThreading::sPath + "/" + c2s::util::toString( iSleepMS ) )
         ,
         c2s::test::C2STestRestResponse::
         build( c2s::OK )
