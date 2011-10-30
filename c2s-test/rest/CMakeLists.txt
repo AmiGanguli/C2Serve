@@ -12,7 +12,16 @@ add_executable( c2s_test_rest
 	C2STestRestCheckMultiThreading
   C2STestRest )
 
-target_link_libraries( c2s_test_rest c2s_rest c2s_httpclient c2s_http c2s_core c2s_util_io c2s_util ${Boost_LIBRARIES} ${C2S_SYSLIBS} )
+target_link_libraries( c2s_test_rest
+  c2s_rest
+  c2s_httpclient
+  c2s_http
+  c2s_core
+  c2s_util_io
+  c2s_util
+  ${Boost_LIBRARIES}
+  ${C2S_SYSLIBS}
+)
 
 install( TARGETS
 	c2s_test_rest
