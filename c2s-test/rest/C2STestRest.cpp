@@ -38,8 +38,9 @@
 #include "C2SRestResource.h"
 #include "C2STestRestFixture.h"
 
+#include "C2STestRestCheckMultiThreading.h"
+
 #include "C2STestRestMethodAdd.h"
-#include "C2STestRestMethodThreading.h"
 #include "C2STestRestMethodQueryFields.h"
 #include "C2STestRestResponse.h"
 
@@ -50,8 +51,6 @@ using namespace boost::unit_test;
 
 typedef c2s::test::C2STestRestFixture C2STestRestGlobalFixture;
 BOOST_GLOBAL_FIXTURE( C2STestRestGlobalFixture );
-
-void checkThreading();
 
 void checkResponse( const c2s::test::C2STestRestRequest &request , const c2s::test::C2STestRestResponse &response_check )
 {
@@ -375,68 +374,8 @@ test_suite *init_unit_test_suite( int , char ** const )
     );
 
   test_suite* threading_test = BOOST_TEST_SUITE( "threading" );
-  threading_test->add( BOOST_TEST_CASE( &checkThreading ) );
+  threading_test->add( BOOST_TEST_CASE( &c2s::test::C2STestRestCheckMultiThreading::runTest ) );
   framework::master_test_suite().add( threading_test );
 
   return 0;
-}
-
-class CheckThreading : public c2s::thread::TaskBase
-{
-public:
-
-  CheckThreading( const c2s::test::C2STestRestRequest &request , const c2s::test::C2STestRestResponse &response_check )
-    : m_request( request ),
-      response_check( response_check )
-  {}
-
-  void run()
-  {
-    c2s::C2SHttpResponse response = m_request.process();
-    c2s::thread::Lock lock( c2s::test::C2STestRestFixture::pGlobalMutex );
-    response_check.check( response );
-  }
-
-  static CheckThreading *create( unsigned int iSleepMS )
-  {
-    return new CheckThreading(
-
-        c2s::test::C2STestRestRequest::
-        build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodThreading::sPath + "/" + c2s::util::toString( iSleepMS ) )
-        ,
-        c2s::test::C2STestRestResponse::
-        build( c2s::OK )
-
-    );
-  }
-
-private:
-
-  c2s::test::C2STestRestRequest m_request;
-
-  c2s::test::C2STestRestResponse response_check;
-
-};
-
-void checkThreading()
-{
-  unsigned int iNumRequests = 1000;
-  unsigned int iNumThreads = 5;
-  unsigned int iSleepMS = 5;
-
-  c2s::thread::TaskQueue tq( iNumThreads );
-  std::list<CheckThreading*> checks;
-
-  for ( unsigned int i = 0; i < iNumRequests; ++i )
-    checks.push_back( CheckThreading::create( iSleepMS ) );
-
-  std::list<CheckThreading*>::iterator it = checks.begin();
-  for ( ; it != checks.end(); ++it )
-    tq.queue( *it );
-
-  tq.join();
-
-  it = checks.begin();
-  for ( ; it != checks.end(); ++it )
-    delete *it;
 }
