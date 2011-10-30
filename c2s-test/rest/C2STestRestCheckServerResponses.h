@@ -51,6 +51,33 @@ namespace c2s
 
       static void checkResponse( const c2s::test::C2STestRestRequest &request , const c2s::test::C2STestRestResponse &response_check );
 
+      static void checkContextRootForGET();
+      static void checkContextRootForGETWithLeadingSlash();
+      static void checkContextRootForPOST();
+      static void checkContextRootForPUT();
+      static void checkContextRootForDELETE();
+      static void checkResourceNotFound();
+      static void checkResourceNotFoundDueToMissingSlash();
+      static void checkResourceNotFoundDueToMissingPathParameters();
+      static void checkResourceNotFoundDueToForbiddenPathParameters();
+      static void checkEncodingAndDecodingOfQueryFields();
+      static void checkEncodingAndDecodingOfQueryFieldsMissingQueryParameter();
+      static void checkPathParametersWithXMLResponseEntity();
+      static void checkPathParametersWithJSONResponseEntity();
+      static void checkPathParametersWithXMLResponseEntityAsDefault();
+      static void checkForUndefinedContentType();
+      static void checkForWrongContentType();
+      static void checkForWrongMethodTypePOST();
+      static void checkForWrongMethodTypePUT();
+      static void checkForWrongMethodTypeDELETE();
+      static void checkPathParametersAndQueryParametersWithXMLResponseEntity();
+      static void checkPathParametersAndQueryParametersWithJSONResponseEntity();
+      static void checkPathParametersAndQueryParametersWithWrongQueryParameterType();
+      static void checkPathParametersAndQueryParametersWithWrongPathParameterType();
+      static void checkEmptyResourceContextRoot();
+      static void checkEmptyResourceContextRootWithLeadingSlash();
+      static void checkEmptyResourceMethodNotFound();
+
       C2STestRestCheckServerResponses();
 
       virtual ~C2STestRestCheckServerResponses();

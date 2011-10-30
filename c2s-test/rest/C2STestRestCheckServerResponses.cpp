@@ -57,8 +57,42 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::runTest()
     {
+      checkContextRootForGET();
+      checkContextRootForGETWithLeadingSlash();
+      checkContextRootForPOST();
+      checkContextRootForPUT();
+      checkContextRootForDELETE();
+      checkResourceNotFound();
+      checkResourceNotFoundDueToMissingSlash();
+      checkResourceNotFoundDueToMissingPathParameters();
+      checkResourceNotFoundDueToForbiddenPathParameters();
+      checkEncodingAndDecodingOfQueryFields();
+      checkEncodingAndDecodingOfQueryFieldsMissingQueryParameter();
+      checkPathParametersWithXMLResponseEntity();
+      checkPathParametersWithJSONResponseEntity();
+      checkPathParametersWithXMLResponseEntityAsDefault();
+      checkForUndefinedContentType();
+      checkForWrongContentType();
+      checkForWrongMethodTypePOST();
+      checkForWrongMethodTypePUT();
+      checkForWrongMethodTypeDELETE();
+      checkPathParametersAndQueryParametersWithXMLResponseEntity();
+      checkPathParametersAndQueryParametersWithJSONResponseEntity();
+      checkPathParametersAndQueryParametersWithWrongQueryParameterType();
+      checkPathParametersAndQueryParametersWithWrongPathParameterType();
+      checkEmptyResourceContextRoot();
+      checkEmptyResourceContextRootWithLeadingSlash();
+      checkEmptyResourceMethodNotFound();
+    }
 
-      //check response of resource context root
+    void C2STestRestCheckServerResponses::checkResponse( const c2s::test::C2STestRestRequest &request , const c2s::test::C2STestRestResponse &response_check )
+    {
+      c2s::C2SHttpResponse response = request.process();
+      response_check.check( response );
+    }
+
+    void C2STestRestCheckServerResponses::checkContextRootForGET()
+    {
       checkResponse(
 
           c2s::test::C2STestRestRequest::
@@ -68,7 +102,10 @@ namespace c2s
           build( c2s::OK )
 
         );
-      //check response of resource context root (leading '/')
+    }
+
+    void C2STestRestCheckServerResponses::checkContextRootForGETWithLeadingSlash()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -78,7 +115,10 @@ namespace c2s
           build( c2s::OK )
 
         );
-      //check response of resource context root (POST method (not allowed))
+    }
+
+    void C2STestRestCheckServerResponses::checkContextRootForPOST()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -88,7 +128,10 @@ namespace c2s
           build( c2s::MethodNotAllowed )
 
         );
-      //check response of resource context root (PUT method (not allowed))
+    }
+
+    void C2STestRestCheckServerResponses::checkContextRootForPUT()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -98,7 +141,10 @@ namespace c2s
           build( c2s::MethodNotAllowed )
 
         );
-      //check response of resource context root (DELETE method (not allowed))
+    }
+
+    void C2STestRestCheckServerResponses::checkContextRootForDELETE()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -108,8 +154,10 @@ namespace c2s
           build( c2s::MethodNotAllowed )
 
         );
+    }
 
-      //check response of resource that cannot be found
+    void C2STestRestCheckServerResponses::checkResourceNotFound()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -119,7 +167,10 @@ namespace c2s
           build( c2s::NotFound )
 
         );
-      //check response of resource that cannot be found due to forgotten '/'
+    }
+
+    void C2STestRestCheckServerResponses::checkResourceNotFoundDueToMissingSlash()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -129,18 +180,36 @@ namespace c2s
           build( c2s::NotFound )
 
         );
+    }
 
-      //check encoding and decoding of http query fields (missing query parameter)
+    void C2STestRestCheckServerResponses::checkResourceNotFoundDueToMissingPathParameters()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodQueryFields::sPath )
+          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath )
           ,
           c2s::test::C2STestRestResponse::
-          build( c2s::BadRequest )
+          build( c2s::NotFound )
 
         );
-      //check encoding and decoding of http query fields
+    }
+
+    void C2STestRestCheckServerResponses::checkResourceNotFoundDueToForbiddenPathParameters()
+    {
+      checkResponse (
+
+          c2s::test::C2STestRestRequest::
+          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4/invalid" )
+          ,
+          c2s::test::C2STestRestResponse::
+          build( c2s::NotFound )
+
+        );
+    }
+
+    void C2STestRestCheckServerResponses::checkEncodingAndDecodingOfQueryFields()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -151,29 +220,23 @@ namespace c2s
           build( c2s::OK )
 
         );
+    }
 
-      //check functionality of path parameters (no path parameters specified)
+    void C2STestRestCheckServerResponses::checkEncodingAndDecodingOfQueryFieldsMissingQueryParameter()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath )
+          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodQueryFields::sPath )
           ,
           c2s::test::C2STestRestResponse::
-          build( c2s::NotFound )
+          build( c2s::BadRequest )
 
         );
-      //check functionality of path parameters (one parameter too much specified)
-      checkResponse (
+    }
 
-          c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4/invalid" )
-          ,
-          c2s::test::C2STestRestResponse::
-          build( c2s::NotFound )
-
-        );
-
-      //check functionality of path parameters (check XML response entity)
+    void C2STestRestCheckServerResponses::checkPathParametersWithXMLResponseEntity()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -184,7 +247,10 @@ namespace c2s
           entity( c2s::C2SHttpMediaType::application__xml , "<result>0</result>" )
 
         );
-      //check functionality of path parameters (check JSON response entity)
+    }
+
+    void C2STestRestCheckServerResponses::checkPathParametersWithJSONResponseEntity()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -195,7 +261,10 @@ namespace c2s
           entity( c2s::C2SHttpMediaType::application__json , "{ \"result\" : 0 }" )
 
         );
-      //check functionality of path parameters (check XML response entity as default)
+    }
+
+    void C2STestRestCheckServerResponses::checkPathParametersWithXMLResponseEntityAsDefault()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -206,7 +275,10 @@ namespace c2s
           entity( c2s::C2SHttpMediaType::application__xml , "<result>0</result>" )
 
         );
-      //check functionality of path parameters (no content type defined)
+    }
+
+    void C2STestRestCheckServerResponses::checkForUndefinedContentType()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -215,7 +287,10 @@ namespace c2s
           c2s::test::C2STestRestResponse::build( c2s::NotAcceptable )
 
         );
-      //check functionality of path parameters (wrong content type defined)
+    }
+
+    void C2STestRestCheckServerResponses::checkForWrongContentType()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -225,7 +300,10 @@ namespace c2s
           c2s::test::C2STestRestResponse::build( c2s::NotAcceptable )
 
         );
-      //check functionality of path parameters (wrong method type)
+    }
+
+    void C2STestRestCheckServerResponses::checkForWrongMethodTypePOST()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -235,7 +313,10 @@ namespace c2s
           c2s::test::C2STestRestResponse::build( c2s::MethodNotAllowed )
 
         );
-      //check functionality of path parameters (wrong method type)
+    }
+
+    void C2STestRestCheckServerResponses::checkForWrongMethodTypePUT()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -245,7 +326,10 @@ namespace c2s
           c2s::test::C2STestRestResponse::build( c2s::MethodNotAllowed )
 
         );
-      //check functionality of path parameters (wrong method type)
+    }
+
+    void C2STestRestCheckServerResponses::checkForWrongMethodTypeDELETE()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -255,7 +339,10 @@ namespace c2s
           c2s::test::C2STestRestResponse::build( c2s::MethodNotAllowed )
 
         );
-      //check functionality of path parameters and query field parameters
+    }
+
+    void C2STestRestCheckServerResponses::checkPathParametersAndQueryParametersWithXMLResponseEntity()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -267,7 +354,10 @@ namespace c2s
           entity( c2s::C2SHttpMediaType::application__xml , "<result>12</result>" )
 
         );
-      //check functionality of path parameters and query field parameters
+    }
+
+    void C2STestRestCheckServerResponses::checkPathParametersAndQueryParametersWithJSONResponseEntity()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -279,7 +369,10 @@ namespace c2s
           entity( c2s::C2SHttpMediaType::application__json , "{ \"result\" : 12 }" )
 
         );
-      //check functionality of path parameters and query field parameters (string specified)
+    }
+
+    void C2STestRestCheckServerResponses::checkPathParametersAndQueryParametersWithWrongQueryParameterType()
+    {
       //TODO: check '2k' (???)
       checkResponse (
 
@@ -291,7 +384,10 @@ namespace c2s
           c2s::test::C2STestRestResponse::build( c2s::BadRequest )
 
         );
-      //check functionality of path parameters and query field parameters (string specified)
+    }
+
+    void C2STestRestCheckServerResponses::checkPathParametersAndQueryParametersWithWrongPathParameterType()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -302,8 +398,10 @@ namespace c2s
           c2s::test::C2STestRestResponse::build( c2s::NotFound )
 
         );
+    }
 
-      //check second resource
+    void C2STestRestCheckServerResponses::checkEmptyResourceContextRoot()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -313,6 +411,10 @@ namespace c2s
           build( c2s::OK )
 
         );
+    }
+
+    void C2STestRestCheckServerResponses::checkEmptyResourceContextRootWithLeadingSlash()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -322,6 +424,10 @@ namespace c2s
           build( c2s::OK )
 
         );
+    }
+
+    void C2STestRestCheckServerResponses::checkEmptyResourceMethodNotFound()
+    {
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -331,22 +437,6 @@ namespace c2s
           build( c2s::NotFound )
 
         );
-      checkResponse (
-
-          c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfEmptyResource + "not-a-method" )
-          ,
-          c2s::test::C2STestRestResponse::
-          build( c2s::NotFound )
-
-        );
-
-    }
-
-    void C2STestRestCheckServerResponses::checkResponse( const c2s::test::C2STestRestRequest &request , const c2s::test::C2STestRestResponse &response_check )
-    {
-      c2s::C2SHttpResponse response = request.process();
-      response_check.check( response );
     }
 
   }
