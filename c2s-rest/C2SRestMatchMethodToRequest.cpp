@@ -90,7 +90,7 @@ namespace c2s
     for ( ; cit != cend; ++cit )
     {
       C2SRestMethodPrototype *pCurrenMethodPrototypeObserved = cit->second;
-      if ( pCurrenMethodPrototypeObserved->isMethodType( m_requestToMatch.header().Method ) )
+      if ( !pCurrenMethodPrototypeObserved->isMethodType( m_requestToMatch.header().Method ) )
         continue;
 
       return pCurrenMethodPrototypeObserved;
