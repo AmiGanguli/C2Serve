@@ -29,53 +29,35 @@
 
  */
 
-#ifndef C2SRESTPATHSEGMENT_H_
-#define C2SRESTPATHSEGMENT_H_
+
+#ifndef C2SRESTPARAMETERBASE_H_
+#define C2SRESTPARAMETERBASE_H_
 
 #include <string>
-#include <vector>
 
 namespace c2s
 {
 
-  class C2SRestPathSegment
+  class C2SRestParameterBase
   {
   public:
 
-    typedef enum
-    {
+    C2SRestParameterBase() {};
 
-      ID = 0,
-      Parameter = 1
+    virtual ~C2SRestParameterBase(){};
 
-    } EPathSegmentType;
+    virtual bool isPossibleToConvert( const std::string &sParameterValueAsString ) const = 0;
 
-    C2SRestPathSegment( const std::string &sPathSegmentID );
-
-    C2SRestPathSegment( const std::string &sPathSegmentID , EPathSegmentType pathSegmentType );
-
-    virtual ~C2SRestPathSegment();
-
-    virtual void processPathID( const std::string &sPathSegmentID );
-
-    virtual bool isValidPathID( const std::string &sPathSegmentID ) const;
-
-    const std::string &getPathID() const;
-
-    EPathSegmentType getPathSegmentType() const;
+    virtual void convertAndSetParameterValue( const std::string &sParameterValueAsString ) = 0;
 
   private:
 
-    C2SRestPathSegment( const C2SRestPathSegment & );
+    C2SRestParameterBase( const C2SRestParameterBase & );
 
-    C2SRestPathSegment &operator=( const C2SRestPathSegment & );
-
-    std::string m_sPathSegmentID;
-
-    EPathSegmentType m_pathSegmentType;
+    C2SRestParameterBase &operator=( const C2SRestParameterBase & );
 
   };
 
 }
 
-#endif /* C2SRESTPATHSEGMENT_H_ */
+#endif /* C2SRESTPARAMETERBASE_H_ */

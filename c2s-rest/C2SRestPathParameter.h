@@ -33,28 +33,23 @@
 #define C2SRESTPATHPARAMETER_H_
 
 #include "C2SRestPathSegment.h"
-#include "C2SRestParameter.h"
 
 namespace c2s
 {
+
+  class C2SRestParameterBase;
 
   class C2SRestPathParameter : public C2SRestPathSegment
   {
   public:
 
-    C2SRestPathParameter( const std::string &sID , C2SRestParameterBase *pParameter )
-      : C2SRestPathSegment( "{" + sID + "}" , Parameter ),
-        m_pParameter( pParameter )
-    {};
+    C2SRestPathParameter( const std::string &sPathParameterID , C2SRestParameterBase *pParameter );
 
-    virtual ~C2SRestPathParameter()
-    {
-      delete m_pParameter;
-    };
+    virtual ~C2SRestPathParameter();
 
-    virtual bool isValidPathID( const std::string &sPathParameterValueAsString ) const { return m_pParameter->isPossibleToConvert( sPathParameterValueAsString ); }
+    virtual bool isValidPathID( const std::string &sPathParameterValueAsString ) const;
 
-    virtual void processPathID( const std::string &sPathParameterValueAsString ) { return m_pParameter->convertAndSetParameterValue( sPathParameterValueAsString ); };
+    virtual void processPathID( const std::string &sPathParameterValueAsString );
 
   private:
 

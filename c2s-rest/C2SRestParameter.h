@@ -32,30 +32,13 @@
 #ifndef C2SRESTPARAMETER_H_
 #define C2SRESTPARAMETER_H_
 
+#include "C2SRestParameterBase.h"
+#include "C2SRestException.h"
+
 #include <sstream>
 
 namespace c2s
 {
-
-  class C2SRestParameterBase
-  {
-  public:
-
-    C2SRestParameterBase() {};
-
-    virtual ~C2SRestParameterBase(){};
-
-    virtual bool isPossibleToConvert( const std::string &sParameterValueAsString ) const = 0;
-
-    virtual void convertAndSetParameterValue( const std::string &sParameterValueAsString ) = 0;
-
-  private:
-
-    C2SRestParameterBase( const C2SRestParameterBase & );
-
-    C2SRestParameterBase &operator=( const C2SRestParameterBase & );
-
-  };
 
   template <class Type>
   class C2SRestParameter : public C2SRestParameterBase
@@ -72,7 +55,7 @@ namespace c2s
 
     virtual void convertAndSetParameterValue( const std::string &sParameterValueAsString );
 
-    void setParameterValue( const Type &parameterValueToSet ) { *m_pObjectToWriteParameterValue = parameterValueToSet; }
+    void setParameterValue( const Type &parameterValueToSet );
 
   protected:
 
@@ -109,6 +92,12 @@ namespace c2s
   void inline C2SRestParameter<std::string>::convertAndSetParameterValue( const std::string &sParameterValueAsString )
   {
     *m_pObjectToWriteParameterValue = sParameterValueAsString;
+  }
+
+  template <class Type>
+  void C2SRestParameter<Type>::setParameterValue( const Type &parameterValueToSet )
+  {
+    *m_pObjectToWriteParameterValue = parameterValueToSet;
   }
 
 }

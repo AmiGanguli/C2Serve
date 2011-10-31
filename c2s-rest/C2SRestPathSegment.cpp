@@ -29,53 +29,35 @@
 
  */
 
-#ifndef C2SRESTPATHSEGMENT_H_
-#define C2SRESTPATHSEGMENT_H_
-
-#include <string>
-#include <vector>
+#include "C2SRestPathSegment.h"
+#include "C2SRestException.h"
 
 namespace c2s
 {
 
-  class C2SRestPathSegment
+  C2SRestPathSegment::C2SRestPathSegment( const std::string &sPathSegmentID )
+    : m_sPathSegmentID( sPathSegmentID ),
+      m_pathSegmentType( ID )
+  {};
+
+  C2SRestPathSegment::C2SRestPathSegment( const std::string &sPathSegmentID , EPathSegmentType pathSegmentType )
+    : m_sPathSegmentID( sPathSegmentID ),
+      m_pathSegmentType( pathSegmentType )
+  {};
+
+  C2SRestPathSegment::~C2SRestPathSegment(){};
+
+  void C2SRestPathSegment::processPathID( const std::string &sPathSegmentID )
   {
-  public:
+    if ( m_sPathSegmentID != sPathSegmentID )
+      throw C2SRestException( "C2SRestPathSegment::handle: " , "Mismatch: \"" + m_sPathSegmentID + "\" != " + "\"" + sPathSegmentID + "\"" , InternalServerError );
+  }
 
-    typedef enum
-    {
+  bool C2SRestPathSegment::isValidPathID( const std::string &sPathSegmentID ) const { return m_sPathSegmentID == sPathSegmentID; }
 
-      ID = 0,
-      Parameter = 1
+  const std::string &C2SRestPathSegment::getPathID() const { return m_sPathSegmentID; }
 
-    } EPathSegmentType;
-
-    C2SRestPathSegment( const std::string &sPathSegmentID );
-
-    C2SRestPathSegment( const std::string &sPathSegmentID , EPathSegmentType pathSegmentType );
-
-    virtual ~C2SRestPathSegment();
-
-    virtual void processPathID( const std::string &sPathSegmentID );
-
-    virtual bool isValidPathID( const std::string &sPathSegmentID ) const;
-
-    const std::string &getPathID() const;
-
-    EPathSegmentType getPathSegmentType() const;
-
-  private:
-
-    C2SRestPathSegment( const C2SRestPathSegment & );
-
-    C2SRestPathSegment &operator=( const C2SRestPathSegment & );
-
-    std::string m_sPathSegmentID;
-
-    EPathSegmentType m_pathSegmentType;
-
-  };
+  C2SRestPathSegment::EPathSegmentType C2SRestPathSegment::getPathSegmentType() const { return m_pathSegmentType; }
 
 }
 
-#endif /* C2SRESTPATHSEGMENT_H_ */
