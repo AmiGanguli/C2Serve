@@ -56,6 +56,18 @@ namespace c2s
 
     virtual C2SRestMethodPrototype *clone() const = 0;
 
+    int getDistanceToPathIDs( const C2SRestPathIDList &pathList ) const;
+
+    void processPathIDs( const C2SRestPathIDList &pathList );
+
+    bool isMethodType( C2SHttpMethod methodType ) const { return methodType == m_methodType; }
+
+  protected:
+
+    C2SRestMethodPrototype( C2SHttpMethod methodType , const std::string &sPath );
+
+    virtual C2SHttpResponse *process() = 0;
+
     template <class Type>
     void addPathParameter( const std::string &sParameterID , Type *pParameterObjectToWrite );
 
@@ -65,19 +77,7 @@ namespace c2s
     template <class Type>
     void addQueryParameter( const std::string &sParameterID , Type *pParameterObjectToWrite );
 
-    int getDistanceToPathIDs( const C2SRestPathIDList &pathList ) const;
-
-    void processPathIDs( const C2SRestPathIDList &pathList );
-
-    bool isMethodType( C2SHttpMethod methodType ) const { return methodType == m_methodType; }
-
     C2SHttpResponse *buildResponse( C2SHttpStatus status ) const { return C2SHttpResponse::build( status ); }
-
-  protected:
-
-    C2SRestMethodPrototype( C2SHttpMethod methodType , const std::string &sPath );
-
-    virtual C2SHttpResponse *process() = 0;
 
   private:
 
