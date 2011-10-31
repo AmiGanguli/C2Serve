@@ -29,48 +29,31 @@
 
  */
 
-#ifndef C2SRESTPATHSEGMENTLIST_H_
-#define C2SRESTPATHSEGMENTLIST_H_
 
-#include "C2SRestPathSegment.h"
-#include "C2SRestPathIDList.h"
+#ifndef C2SRESTQUERYPARAMETERBASE_H_
+#define C2SRESTQUERYPARAMETERBASE_H_
 
-#include <vector>
+#include <string>
 
 namespace c2s
 {
 
-  class C2SRestPathSegmentList
+  class C2SRestQueryParameterBase
   {
   public:
 
-    C2SRestPathSegmentList();
+    C2SRestQueryParameterBase( const std::string &sParameterID ) : m_sParameterID( sParameterID ) {};
 
-    virtual ~C2SRestPathSegmentList();
+    virtual void setDefaultValue() = 0;
 
-    typedef std::vector<C2SRestPathSegment*>::iterator iterator;
-    typedef std::vector<C2SRestPathSegment*>::const_iterator const_iterator;
+    virtual void setParameterFromString( const std::string &sValue ) = 0;
 
-    void appendPathSegment( C2SRestPathSegment *pSegment );
+  protected:
 
-    int getDistanceToPathIDs( const C2SRestPathIDList &listOfPathIDs ) const;
-
-    void processPathIDs( const C2SRestPathIDList &pathList );
-
-    iterator begin() { return m_pathSegments.begin(); }
-    iterator end() { return m_pathSegments.end(); }
-
-    const_iterator begin() const { return m_pathSegments.begin(); }
-    const_iterator end() const { return m_pathSegments.end(); }
-
-  private:
-
-    typedef std::vector<C2SRestPathSegment*> SegmentListType;
-
-    SegmentListType m_pathSegments;
+    std::string m_sParameterID;
 
   };
 
 }
 
-#endif /* C2SRESTPATHSEGMENTLIST_H_ */
+#endif /* C2SRESTQUERYPARAMETERBASE_H_ */

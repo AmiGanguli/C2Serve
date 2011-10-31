@@ -32,70 +32,64 @@
 #ifndef C2SRESTQUERYPARAMETER_H_
 #define C2SRESTQUERYPARAMETER_H_
 
+#include "C2SRestQueryParameterBase.h"
 #include "C2SRestParameter.h"
 
 namespace c2s
 {
 
-  class C2SRestQueryParameterBase
-  {
-  public:
-
-    C2SRestQueryParameterBase( const std::string &sID )
-      : m_sID( sID )
-    {};
-
-    virtual void setDefault() = 0;
-
-    virtual void handle( const std::string &sValue ) = 0;
-
-  protected:
-
-    std::string m_sID;
-
-  };
-
-  template <class Type>
+  template <class ParameterType>
   class C2SRestQueryParameter : public C2SRestQueryParameterBase
   {
   public:
 
-    C2SRestQueryParameter( const std::string &sID , Type *pDest , const Type &defaultv )
-      : C2SRestQueryParameterBase( sID ),
-        m_parameter( pDest ),
-        m_default( defaultv ),
-        m_bIsDefaultAllowed( true )
-    {};
+    C2SRestQueryParameter( const std::string &sParameterID , ParameterType *pParameterObjectToWrite , const ParameterType &defaultValue );
 
+    C2SRestQueryParameter( const std::string &sParameterID , ParameterType *pParameterObjectToWrite );
 
-    C2SRestQueryParameter( const std::string &sID , Type *pDest )
-      : C2SRestQueryParameterBase( sID ),
-        m_parameter( pDest ),
-        m_bIsDefaultAllowed( false )
-    {};
+    void setDefaultValue();
 
-    void setDefault()
-    {
-      if ( m_bIsDefaultAllowed )
-        m_parameter.setValue( m_default );
-      else
-        throw C2SRestException( "C2SRestQueryParameter::setDefault: " , "Query parameter missing: " + m_sID , BadRequest );
-    }
-
-    void handle( const std::string &sValue )
-    {
-      m_parameter.handle( sValue );
-    }
+    void setParameterFromString( const std::string &sParameterValueAsString );
 
   private:
 
-    C2SRestParameter<Type> m_parameter;
+    C2SRestParameter<ParameterType> m_parameterObjectToWrite;
 
-    Type m_default;
+    ParameterType m_defaultValue;
 
     bool m_bIsDefaultAllowed;
 
   };
+
+  template <class ParameterType>
+  C2SRestQueryParameter<ParameterType>::C2SRestQueryParameter( const std::string &sParameterID , ParameterType *pParameterObjectToWrite , const ParameterType &defaultValue )
+    : C2SRestQueryParameterBase( sParameterID ),
+      m_parameterObjectToWrite( pParameterObjectToWrite ),
+      m_defaultValue( defaultValue ),
+      m_bIsDefaultAllowed( true )
+  {};
+
+  template <class ParameterType>
+  C2SRestQueryParameter<ParameterType>::C2SRestQueryParameter( const std::string &sParameterID , ParameterType *pParameterObjectToWrite )
+    : C2SRestQueryParameterBase( sParameterID ),
+      m_parameterObjectToWrite( pParameterObjectToWrite ),
+      m_bIsDefaultAllowed( false )
+  {};
+
+  template <class ParameterType>
+  void C2SRestQueryParameter<ParameterType>::setDefaultValue()
+  {
+    if ( m_bIsDefaultAllowed )
+      m_parameterObjectToWrite.setValue( m_defaultValue );
+    else
+      throw C2SRestException( "C2SRestQueryParameter::setDefaultValue: " , "Query parameter missing: " + m_sParameterID , BadRequest );
+  }
+
+  template <class ParameterType>
+  void C2SRestQueryParameter<ParameterType>::setParameterFromString( const std::string &sParameterValueAsString )
+  {
+    m_parameterObjectToWrite.handle( sParameterValueAsString );
+  }
 
 }
 

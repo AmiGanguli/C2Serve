@@ -36,19 +36,25 @@
 namespace c2s
 {
 
-  C2SRestMethodPrototype::C2SRestMethodPrototype( C2SHttpMethod method , const std::string &sPath )
-    : m_method( method ),
-      m_sPath( sPath )
+  C2SRestMethodPrototype::C2SRestMethodPrototype( C2SHttpMethod methodType , const std::string &sPath )
+    : m_methodType( methodType )
   {
     std::vector<std::string> vPathSegments = c2s::util::splitString( sPath , '/' );
     for ( unsigned int i = 0; i < vPathSegments.size(); ++i )
     {
       if ( vPathSegments[ i ].size() )
-        m_pathSegments.append( new C2SRestPathSegment( vPathSegments[ i ] ) );
+        m_pathSegments.appendPathSegment( new C2SRestPathSegment( vPathSegments[ i ] ) );
     }
   };
 
-  C2SHttpResponse *C2SRestMethodPrototype::process( const C2SHttpRequest &request )
+  C2SRestMethodPrototype::~C2SRestMethodPrototype()
+  {
+    QueryParameterList::iterator qpIt = m_queryParameters.begin();
+    for ( ; qpIt != m_queryParameters.end(); ++qpIt )
+      delete qpIt->second;
+  };
+
+  C2SHttpResponse *C2SRestMethodPrototype::processRequest( const C2SHttpRequest &request )
   {
     const C2SHttpQueryFields &queryFields = request.header().QueryFields;
 
@@ -63,25 +69,25 @@ namespace c2s
       C2SHttpQueryFields::const_iterator qfit = queryFields.find( sParameterID );
 
       if ( qfit == queryFields.end() )
-        pParameter->setDefault();
+        pParameter->setDefaultValue();
       else
       {
         const std::string &sFieldValue = qfit->second;
-        pParameter->handle( sFieldValue );
+        pParameter->setParameterFromString( sFieldValue );
       }
     }
 
     return this->process();
   }
 
-  int C2SRestMethodPrototype::getDistance( const C2SRestPathIDList &pathList ) const
+  int C2SRestMethodPrototype::getDistanceToPathIDs( const C2SRestPathIDList &pathList ) const
   {
-    return m_pathSegments.getDistance( pathList );
+    return m_pathSegments.getDistanceToPathIDs( pathList );
   }
 
-  void C2SRestMethodPrototype::handle( const C2SRestPathIDList &pathList )
+  void C2SRestMethodPrototype::processPathIDs( const C2SRestPathIDList &pathList )
   {
-    m_pathSegments.handle( pathList );
+    m_pathSegments.processPathIDs( pathList );
   }
 
 }

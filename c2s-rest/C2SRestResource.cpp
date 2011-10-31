@@ -127,7 +127,7 @@ namespace c2s
 
     if ( pMethod )
     {
-      C2SHttpResponse *pResponse = pMethod->process( request );
+      C2SHttpResponse *pResponse = pMethod->processRequest( request );
       m_pResponseHandler->sendResponse( *pResponse );
       delete pResponse;
     }

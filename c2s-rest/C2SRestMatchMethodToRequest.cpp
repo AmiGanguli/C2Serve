@@ -68,7 +68,7 @@ namespace c2s
     for ( ; methodPrototypeIt != methodPrototypeEnd; ++methodPrototypeIt )
     {
       C2SRestMethodPrototype *pCurrenMethodPrototypeObserved = *methodPrototypeIt;
-      int iDistanceToListOfPathIDs = pCurrenMethodPrototypeObserved->getDistance( listOfRequestPathIDs );
+      int iDistanceToListOfPathIDs = pCurrenMethodPrototypeObserved->getDistanceToPathIDs( listOfRequestPathIDs );
 
       if ( iDistanceToListOfPathIDs < 0 ) //mismatch
         continue;
@@ -90,7 +90,7 @@ namespace c2s
     for ( ; cit != cend; ++cit )
     {
       C2SRestMethodPrototype *pCurrenMethodPrototypeObserved = cit->second;
-      if ( pCurrenMethodPrototypeObserved->getMethod() != m_requestToMatch.header().Method )
+      if ( pCurrenMethodPrototypeObserved->isMethodType( m_requestToMatch.header().Method ) )
         continue;
 
       return pCurrenMethodPrototypeObserved;
@@ -111,7 +111,7 @@ namespace c2s
       return NULL;
 
     C2SRestMethodPrototype *pPrototypeWithBestMatch = this->getPrototypeClosestToRequestByConsideringMediaType( listOfMethodCandidatesSortedByDistanceToPathIDs );
-    pPrototypeWithBestMatch->handle( pathList );
+    pPrototypeWithBestMatch->processPathIDs( pathList );
     return pPrototypeWithBestMatch;
   }
 

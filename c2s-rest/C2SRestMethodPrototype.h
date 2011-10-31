@@ -50,39 +50,32 @@ namespace c2s
   {
   public:
 
-    virtual ~C2SRestMethodPrototype()
-    {
-      QueryParameterList::iterator qpIt = m_queryParameters.begin();
-      for ( ; qpIt != m_queryParameters.end(); ++qpIt )
-        delete qpIt->second;
-    };
+    virtual ~C2SRestMethodPrototype();
 
-    virtual C2SHttpResponse *process( const C2SHttpRequest &request );
+    virtual C2SHttpResponse *processRequest( const C2SHttpRequest &request );
 
     virtual C2SRestMethodPrototype *clone() const = 0;
 
     template <class Type>
-    void addPathParameter( const std::string &sID , Type *pDest );
+    void addPathParameter( const std::string &sParameterID , Type *pParameterObjectToWrite );
 
     template <class Type>
-    void addQueryParameter( const std::string &sID , Type *pDest , const Type &defaultv );
+    void addQueryParameter( const std::string &sParameterID , Type *pParameterObjectToWrite , const Type &parameterDefaultValue );
 
     template <class Type>
-    void addQueryParameter( const std::string &sID , Type *pDest );
+    void addQueryParameter( const std::string &sParameterID , Type *pParameterObjectToWrite );
 
-    int getDistance( const C2SRestPathIDList &pathList ) const;
+    int getDistanceToPathIDs( const C2SRestPathIDList &pathList ) const;
 
-    C2SHttpMethod getMethod() const { return m_method; }
+    void processPathIDs( const C2SRestPathIDList &pathList );
 
-    void handle( const C2SRestPathIDList &pathList );
-
-    const std::string &getPath() const { return m_sPath; }
+    bool isMethodType( C2SHttpMethod methodType ) const { return methodType == m_methodType; }
 
     C2SHttpResponse *buildResponse( C2SHttpStatus status ) const { return C2SHttpResponse::build( status ); }
 
   protected:
 
-    C2SRestMethodPrototype( C2SHttpMethod method , const std::string &sPath );
+    C2SRestMethodPrototype( C2SHttpMethod methodType , const std::string &sPath );
 
     virtual C2SHttpResponse *process() = 0;
 
@@ -90,21 +83,18 @@ namespace c2s
 
     typedef std::map<std::string,C2SRestQueryParameterBase*> QueryParameterList;
 
-    C2SHttpMethod m_method;
+    C2SHttpMethod m_methodType;
 
     C2SRestPathSegmentList m_pathSegments;
 
     QueryParameterList m_queryParameters;
-
-    std::string m_sPath;
 
   };
 
   template <class Type>
   void C2SRestMethodPrototype::addPathParameter( const std::string &sID , Type *pDest )
   {
-//      m_pathSegments.append( new C2SRestPathParameterBase( sID ) );
-    m_pathSegments.append( new C2SRestPathParameter( sID , new C2SRestParameter<Type>( pDest ) ) );
+    m_pathSegments.appendPathSegment( new C2SRestPathParameter( sID , new C2SRestParameter<Type>( pDest ) ) );
   }
 
   template <class Type>
