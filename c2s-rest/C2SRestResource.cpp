@@ -98,21 +98,29 @@ namespace c2s
 
   void C2SRestResource::processRequest( const C2SHttpRequest &request )
   {
-    const std::string &sResource = request.header().URI;
+    if ( this->isAccessToContextRoot( request.header().URI ) )
+      this->createAndSendResponseFromResourceDescription( request );
+    else
+      this->createAndSendResponseFromMethodWithBestMatchForRequest( request );
+  }
 
-    //TODO: is it correct to ignore leading slash when comparing URI strings??
-    if ( uriEquals( sResource.c_str() , sResource.size() , m_sContextRoot.c_str() , m_sContextRoot.size() , false ) )
-    {
-      if ( request.header().Method != GET )
-        throw C2SRestException( "C2SRestResource::processRequest: " , "Access to context root of RESTful resource only allowed as GET request" , MethodNotAllowed );
+  bool C2SRestResource::isAccessToContextRoot( const std::string &sResourceContext ) const
+  {
+    return uriEquals( sResourceContext.c_str() , sResourceContext.size() , m_sContextRoot.c_str() , m_sContextRoot.size() , false );
+  }
 
-      C2SHttpResponse response = m_resourceDescription.process( request );
-      m_pResponseHandler->sendResponse( response );
-      return;
-      //throw C2SRestException( "C2SRestResource::process: " , "Access to context root of RESTful resource not allowed (yet)" , Forbidden );
-    }
+  void C2SRestResource::createAndSendResponseFromResourceDescription( const C2SHttpRequest &request )
+  {
+    if ( request.header().Method != GET )
+      throw C2SRestException( "C2SRestResource::processRequest: " , "Access to context root of RESTful resource only allowed as GET request" , MethodNotAllowed );
 
-    C2SRestMethodPrototype *pMethod = this->getPrototypeWithBestMatchForRequest( request );
+    C2SHttpResponse response = m_resourceDescription.process( request );
+    m_pResponseHandler->sendResponse( response );
+  }
+
+  void C2SRestResource::createAndSendResponseFromMethodWithBestMatchForRequest( const C2SHttpRequest &request )
+  {
+    C2SRestMethodPrototype *pMethod = this->getMethodWithBestMatchForRequest( request );
 
     if ( !pMethod )
       throw C2SRestException( "C2SRestResource::processRequest: " , "Resource not found" , NotFound );
@@ -125,7 +133,7 @@ namespace c2s
     }
   }
 
-  C2SRestMethodPrototype *C2SRestResource::getPrototypeWithBestMatchForRequest( const C2SHttpRequest &requestToMatch )
+  C2SRestMethodPrototype *C2SRestResource::getMethodWithBestMatchForRequest( const C2SHttpRequest &requestToMatch )
   {
     C2SRestMatchMethodToRequest methodToRequestMatching( m_sContextRoot , m_registeredMethodPrototypes , requestToMatch );
     return methodToRequestMatching.getPrototypeWithBestMatchAndPrepareFromURI();

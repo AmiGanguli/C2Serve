@@ -57,22 +57,26 @@ namespace c2s
 
     void registerMethodPrototype( C2SRestMethodPrototype *pMethod );
 
-    //TODO: implement
-    bool existsMethodPrototype( const C2SRestMethodPrototype *pMethod ) const;
-
-  protected:
-
-    C2SRestMethodPrototype *getPrototypeWithBestMatchForRequest( const C2SHttpRequest &request );
-
-    C2SRestMethodPrototypeList m_registeredMethodPrototypes;
-
-    C2SRestResourceDescription m_resourceDescription;
-
   private:
 
     C2SRestResource( const std::string &sHostName , const std::string &sContextRoot );
 
     C2SRestResource( const C2SRestResource &r );
+
+    //TODO: implement
+    bool existsMethodPrototype( const C2SRestMethodPrototype *pMethod ) const;
+
+    bool isAccessToContextRoot( const std::string &sResourceContext ) const;
+
+    void createAndSendResponseFromResourceDescription( const C2SHttpRequest &request );
+
+    void createAndSendResponseFromMethodWithBestMatchForRequest( const C2SHttpRequest &request );
+
+    C2SRestMethodPrototype *getMethodWithBestMatchForRequest( const C2SHttpRequest &request );
+
+    C2SRestMethodPrototypeList m_registeredMethodPrototypes;
+
+    C2SRestResourceDescription m_resourceDescription;
 
   };
 
