@@ -46,7 +46,7 @@ namespace c2s
 
     virtual void setDefaultValue() = 0;
 
-    virtual void setParameterFromString( const std::string &sValue ) = 0;
+    virtual void setParameterFromString( const std::string &sParameterValueAsString ) = 0;
 
   protected:
 

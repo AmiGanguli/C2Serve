@@ -59,9 +59,13 @@ namespace c2s
 
   private:
 
+    const C2SRestEntityStreamer<EntityType> *detectEntityStreamerToUseForRequest( const C2SHttpRequest &request ) const;
+
+    const C2SRestEntityStreamer<EntityType> *getFirstEntityStreamerAsDefault() const;
+
     typedef std::list<C2SRestEntityStreamer<EntityType>*> EntityStreamerList;
 
-    const C2SRestEntityStreamer<EntityType> *m_pCurrentEntityStreamer;
+    const C2SRestEntityStreamer<EntityType> *m_pEntityStreamerToUseForNextResponse;
 
     std::map<std::string,C2SHttpMediaType> m_allowedEntityMediaTypes;
 
@@ -72,7 +76,7 @@ namespace c2s
   template <class EntityType>
   C2SRestEntityMethodPrototype<EntityType>::C2SRestEntityMethodPrototype( C2SHttpMethod methodType , const std::string &sPath )
     : C2SRestMethodPrototype( methodType , sPath ),
-      m_pCurrentEntityStreamer( NULL )
+      m_pEntityStreamerToUseForNextResponse( NULL )
   {};
 
   template <class EntityType>
@@ -101,42 +105,44 @@ namespace c2s
   template <class EntityType>
   C2SHttpResponse *C2SRestEntityMethodPrototype<EntityType>::processRequest( const C2SHttpRequest &request )
   {
-    if ( !m_entityStreamersByTimeOfRegistration.size() )
-      throw C2SRestException( "C2SRestEntityMethodPrototype::processRequest: " , "No entity streamers available" , InternalServerError );
+    m_pEntityStreamerToUseForNextResponse = this->detectEntityStreamerToUseForRequest( request );
+    return C2SRestMethodPrototype::processRequest( request );
+  }
 
-    m_pCurrentEntityStreamer = NULL;
+  template <class EntityType>
+  const C2SRestEntityStreamer<EntityType> *C2SRestEntityMethodPrototype<EntityType>::detectEntityStreamerToUseForRequest( const C2SHttpRequest &request ) const
+  {
+    if ( !m_entityStreamersByTimeOfRegistration.size() )
+      throw C2SRestException( "C2SRestEntityMethodPrototype::detectEntityStreamerToUseForRequest: " , "No entity streamers available" , InternalServerError );
 
     typename EntityStreamerList::const_iterator esit = m_entityStreamersByTimeOfRegistration.begin();
     typename EntityStreamerList::const_iterator esend = m_entityStreamersByTimeOfRegistration.end();
     for ( ; esit != esend; ++esit )
     {
-      const C2SRestEntityStreamer<EntityType> *pStreamer = *esit;
-      if ( request.header().Fields.isAccept( pStreamer->getMediaType().Type ) )
-      {
-        m_pCurrentEntityStreamer = pStreamer;
-        break;
-      }
+      const C2SRestEntityStreamer<EntityType> *pCurrentEntityStreamerObserved = *esit;
+      if ( request.header().Fields.isAccept( pCurrentEntityStreamerObserved->getMediaType().Type ) )
+        return pCurrentEntityStreamerObserved;
     }
 
-    if ( !m_pCurrentEntityStreamer )
-    {
-      if ( request.header().Fields.isAccept( C2SHttpMediaType::wildcard ) )
-        //use default
-        m_pCurrentEntityStreamer = *( m_entityStreamersByTimeOfRegistration.begin() );
-      else
-        throw C2SRestException( "C2SRestEntityMethodPrototype::process: " , "No appropriate content type was found" , NotAcceptable );
-    }
+    if ( request.header().Fields.isAccept( C2SHttpMediaType::wildcard ) )
+      return this->getFirstEntityStreamerAsDefault();
 
-    return C2SRestMethodPrototype::processRequest( request );
+    throw C2SRestException( "C2SRestEntityMethodPrototype::detectEntityStreamerToUseForRequest: " , "No appropriate content type was found" , NotAcceptable );
+  }
+
+  template <class EntityType>
+  const C2SRestEntityStreamer<EntityType> *C2SRestEntityMethodPrototype<EntityType>::getFirstEntityStreamerAsDefault() const
+  {
+    return *( m_entityStreamersByTimeOfRegistration.begin() );
   }
 
   template <class EntityType>
   C2SHttpResponse *C2SRestEntityMethodPrototype<EntityType>::buildResponse( C2SHttpStatus status , const EntityType &data ) const
   {
-    assert( m_pCurrentEntityStreamer );
+    assert( m_pEntityStreamerToUseForNextResponse );
     C2SHttpResponse *pResponse = C2SHttpResponse::build( status );
-    pResponse->setEntity( m_pCurrentEntityStreamer->entity( data ) );
-    pResponse->header().Fields.setContentType( m_pCurrentEntityStreamer->getMediaType().Type );
+    pResponse->setEntity( m_pEntityStreamerToUseForNextResponse->entity( data ) );
+    pResponse->header().Fields.setContentType( m_pEntityStreamerToUseForNextResponse->getMediaType().Type );
     return pResponse;
   }
 

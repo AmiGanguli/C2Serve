@@ -42,7 +42,6 @@ namespace c2s
 
   C2SRestResourceDescription::~C2SRestResourceDescription()
   {
-    // TODO Auto-generated destructor stub
   }
 
   C2SHttpResponse C2SRestResourceDescription::process( const C2SHttpRequest & )
