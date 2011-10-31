@@ -50,13 +50,13 @@ namespace c2s
 
     virtual C2SHttpResponse *processRequest( const C2SHttpRequest &request );
 
-    C2SHttpResponse *buildResponse( C2SHttpStatus status , const EntityType &data ) const;
-
   protected:
 
     C2SRestEntityMethodPrototype( C2SHttpMethod methodType , const std::string &sPath );
 
     C2SHttpEntity *entity( const EntityType &data ) const;
+
+    C2SHttpResponse *buildResponse( C2SHttpStatus status , const EntityType &data ) const;
 
     typedef std::list<C2SRestEntityStreamer<EntityType>*> EntityStreamerList;
 
