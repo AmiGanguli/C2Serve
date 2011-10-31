@@ -52,9 +52,9 @@ namespace c2s
       delete m_pParameter;
     };
 
-    virtual bool isValid( const std::string &sID ) const { return m_pParameter->isValid( sID ); }
+    virtual bool isValidPathID( const std::string &sPathParameterValueAsString ) const { return m_pParameter->isPossibleToConvert( sPathParameterValueAsString ); }
 
-    virtual void handle( const std::string &sID ) { return m_pParameter->handle( sID ); };
+    virtual void processPathID( const std::string &sPathParameterValueAsString ) { return m_pParameter->convertAndSetParameterValue( sPathParameterValueAsString ); };
 
   private:
 

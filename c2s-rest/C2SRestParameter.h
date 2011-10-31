@@ -45,9 +45,9 @@ namespace c2s
 
     virtual ~C2SRestParameterBase(){};
 
-    virtual bool isValid( const std::string &sID ) const = 0;
+    virtual bool isPossibleToConvert( const std::string &sParameterValueAsString ) const = 0;
 
-    virtual void handle( const std::string &sID ) = 0;
+    virtual void convertAndSetParameterValue( const std::string &sParameterValueAsString ) = 0;
 
   private:
 
@@ -62,53 +62,53 @@ namespace c2s
   {
   public:
 
-    C2SRestParameter( Type *pDest )
-      : m_pDest( pDest )
+    C2SRestParameter( Type *pObjectToWriteParameterValue )
+      : m_pObjectToWriteParameterValue( pObjectToWriteParameterValue )
     {};
 
     virtual ~C2SRestParameter(){};
 
-    virtual bool isValid( const std::string &sID ) const;
+    virtual bool isPossibleToConvert( const std::string &sParameterValueAsString ) const;
 
-    virtual void handle( const std::string &sID );
+    virtual void convertAndSetParameterValue( const std::string &sParameterValueAsString );
 
-    void setValue( const Type &value ) { *m_pDest = value; }
+    void setParameterValue( const Type &parameterValueToSet ) { *m_pObjectToWriteParameterValue = parameterValueToSet; }
 
   protected:
 
-    Type *m_pDest;
+    Type *m_pObjectToWriteParameterValue;
 
   };
 
   template <class Type>
-  bool C2SRestParameter<Type>::isValid( const std::string &sID ) const
+  bool C2SRestParameter<Type>::isPossibleToConvert( const std::string &sParameterValueAsString ) const
   {
-    std::istringstream strs( sID );
+    std::istringstream strs( sParameterValueAsString );
     Type dummy = Type( 0 );
     return ( strs >> dummy ) != 0;
   }
 
   //specialized for strings
   template <>
-  inline bool C2SRestParameter<std::string>::isValid( const std::string & ) const
+  inline bool C2SRestParameter<std::string>::isPossibleToConvert( const std::string & ) const
   {
     //will always match
     return true;
   }
 
   template <class Type>
-  void C2SRestParameter<Type>::handle( const std::string &sID )
+  void C2SRestParameter<Type>::convertAndSetParameterValue( const std::string &sParameterValueAsString )
   {
-    std::istringstream strs( sID );
-    if( !( strs >> ( *m_pDest ) ) )
-      throw C2SRestException( "C2SRestPathParameter::handle: " , "Cannot cast parameter \"" + sID + "\"" , BadRequest );
+    std::istringstream strs( sParameterValueAsString );
+    if( !( strs >> ( *m_pObjectToWriteParameterValue ) ) )
+      throw C2SRestException( "C2SRestPathParameter::convertAndSetParameterValue: " , "Cannot cast parameter \"" + sParameterValueAsString + "\"" , BadRequest );
   }
 
   //specialized for strings
   template <>
-  void inline C2SRestParameter<std::string>::handle( const std::string &sID )
+  void inline C2SRestParameter<std::string>::convertAndSetParameterValue( const std::string &sParameterValueAsString )
   {
-    *m_pDest = sID;
+    *m_pObjectToWriteParameterValue = sParameterValueAsString;
   }
 
 }

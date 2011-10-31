@@ -71,15 +71,15 @@ namespace c2s
       if ( iPathSegmentIdx == pathList.size() )
         return -1;
 
-      const std::string &sPathID = pathList[ iPathSegmentIdx ];
+      const std::string &sPathSegmentID = pathList[ iPathSegmentIdx ];
       const C2SRestPathSegment &segment = *( *it );
 
       //segment missmatch
-      if ( !segment.isValid( sPathID ) )
+      if ( !segment.isValidPathID( sPathSegmentID ) )
         return -1;
 
-      C2SRestPathSegment::EPathSegmentType segmentType = segment.type();
-      if ( segmentType == C2SRestPathSegment::Parameter )
+      C2SRestPathSegment::EPathSegmentType pathSegmentType = segment.getPathSegmentType();
+      if ( pathSegmentType == C2SRestPathSegment::Parameter )
         iDistanceStatus += 1;
 
       iDistance += iDistanceStatus;
@@ -99,7 +99,7 @@ namespace c2s
 
       const std::string &sPathID = pathList[ iPathSegmentIdx ];
       C2SRestPathSegment &segment = *( *it );
-      segment.handle( sPathID );
+      segment.processPathID( sPathID );
     }
   }
 

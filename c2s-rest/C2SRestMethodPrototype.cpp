@@ -80,6 +80,11 @@ namespace c2s
     return this->process();
   }
 
+  C2SHttpResponse *C2SRestMethodPrototype::buildResponse( C2SHttpStatus status ) const
+  {
+    return C2SHttpResponse::build( status );
+  }
+
   int C2SRestMethodPrototype::getDistanceToPathIDs( const C2SRestPathIDList &pathList ) const
   {
     return m_pathSegments.getDistanceToPathIDs( pathList );
@@ -88,6 +93,11 @@ namespace c2s
   void C2SRestMethodPrototype::processPathIDs( const C2SRestPathIDList &pathList )
   {
     m_pathSegments.processPathIDs( pathList );
+  }
+
+  bool C2SRestMethodPrototype::isMethodType( C2SHttpMethod methodType ) const
+  {
+    return methodType == m_methodType;
   }
 
 }

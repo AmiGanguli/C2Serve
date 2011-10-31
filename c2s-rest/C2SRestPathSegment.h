@@ -52,29 +52,29 @@ namespace c2s
 
     } EPathSegmentType;
 
-    C2SRestPathSegment( const std::string &sID )
-      : m_sID( sID ),
-        m_type( ID )
+    C2SRestPathSegment( const std::string &sPathSegmentID )
+      : m_sPathSegmentID( sPathSegmentID ),
+        m_pathSegmentType( ID )
     {};
 
-    C2SRestPathSegment( const std::string &sID , EPathSegmentType type )
-      : m_sID( sID ),
-        m_type( type )
+    C2SRestPathSegment( const std::string &sPathSegmentID , EPathSegmentType pathSegmentType )
+      : m_sPathSegmentID( sPathSegmentID ),
+        m_pathSegmentType( pathSegmentType )
     {};
 
     virtual ~C2SRestPathSegment(){};
 
-    virtual void handle( const std::string &sID )
+    virtual void processPathID( const std::string &sPathSegmentID )
     {
-      if ( m_sID != sID )
-        throw C2SRestException( "C2SRestPathSegment::handle: " , "Mismatch: \"" + m_sID + "\" != " + "\"" + sID + "\"" , InternalServerError );
+      if ( m_sPathSegmentID != sPathSegmentID )
+        throw C2SRestException( "C2SRestPathSegment::handle: " , "Mismatch: \"" + m_sPathSegmentID + "\" != " + "\"" + sPathSegmentID + "\"" , InternalServerError );
     }
 
-    virtual bool isValid( const std::string &sID ) const { return m_sID == sID; }
+    virtual bool isValidPathID( const std::string &sPathSegmentID ) const { return m_sPathSegmentID == sPathSegmentID; }
 
-    const std::string &id() const { return m_sID; }
+    const std::string &getPathID() const { return m_sPathSegmentID; }
 
-    EPathSegmentType type() const { return m_type; }
+    EPathSegmentType getPathSegmentType() const { return m_pathSegmentType; }
 
   private:
 
@@ -82,9 +82,9 @@ namespace c2s
 
     C2SRestPathSegment &operator=( const C2SRestPathSegment & );
 
-    std::string m_sID;
+    std::string m_sPathSegmentID;
 
-    EPathSegmentType m_type;
+    EPathSegmentType m_pathSegmentType;
 
   };
 

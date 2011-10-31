@@ -30,9 +30,11 @@
  */
 
 #include "C2SRestMatchMethodToRequest.h"
-
 #include "C2SRestMethodPrototype.h"
+
+#include "C2SHttpRequest.h"
 #include "C2SStringUtils.h"
+
 #include "StringUtils.h"
 
 namespace c2s

@@ -80,7 +80,7 @@ namespace c2s
   void C2SRestQueryParameter<ParameterType>::setDefaultValue()
   {
     if ( m_bIsDefaultAllowed )
-      m_parameterObjectToWrite.setValue( m_defaultValue );
+      m_parameterObjectToWrite.setParameterValue( m_defaultValue );
     else
       throw C2SRestException( "C2SRestQueryParameter::setDefaultValue: " , "Query parameter missing: " + m_sParameterID , BadRequest );
   }
@@ -88,7 +88,7 @@ namespace c2s
   template <class ParameterType>
   void C2SRestQueryParameter<ParameterType>::setParameterFromString( const std::string &sParameterValueAsString )
   {
-    m_parameterObjectToWrite.handle( sParameterValueAsString );
+    m_parameterObjectToWrite.convertAndSetParameterValue( sParameterValueAsString );
   }
 
 }

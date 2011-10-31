@@ -41,7 +41,7 @@ namespace c2s
   {
   public:
 
-    C2SRestException( const std::string &prefix , const std::string &msg , C2SHttpStatus status ) : C2SHttpException( prefix , msg , status ) {};
+    C2SRestException( const std::string &sClassAndFunctionPrefix , const std::string &sErrorMessage , C2SHttpStatus status ) : C2SHttpException( sClassAndFunctionPrefix , sErrorMessage , status ) {};
 
     virtual ~C2SRestException() throw() {};
 

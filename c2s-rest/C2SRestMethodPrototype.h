@@ -32,14 +32,16 @@
 #ifndef C2SRESTMETHODPROTOTYPE_H_
 #define C2SRESTMETHODPROTOTYPE_H_
 
+#include "C2SHttpMethod.h"
+
 #include "C2SHttpRequest.h"
 #include "C2SHttpResponse.h"
 
 #include "C2SRestPathParameter.h"
 #include "C2SRestQueryParameter.h"
-#include "C2SRestEntityStreamer.h"
 #include "C2SRestPathSegmentList.h"
 
+#include <map>
 #include <list>
 #include <string>
 
@@ -60,7 +62,7 @@ namespace c2s
 
     void processPathIDs( const C2SRestPathIDList &pathList );
 
-    bool isMethodType( C2SHttpMethod methodType ) const { return methodType == m_methodType; }
+    bool isMethodType( C2SHttpMethod methodType ) const;
 
   protected:
 
@@ -77,7 +79,7 @@ namespace c2s
     template <class Type>
     void addQueryParameter( const std::string &sParameterID , Type *pParameterObjectToWrite );
 
-    C2SHttpResponse *buildResponse( C2SHttpStatus status ) const { return C2SHttpResponse::build( status ); }
+    C2SHttpResponse *buildResponse( C2SHttpStatus status ) const;
 
   private:
 

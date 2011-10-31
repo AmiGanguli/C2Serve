@@ -33,6 +33,7 @@
 #define C2SRESTENTITYMETHODPROTOTYPE_H_
 
 #include "C2SRestMethodPrototype.h"
+#include "C2SRestEntityStreamer.h"
 
 #include <cassert>
 
