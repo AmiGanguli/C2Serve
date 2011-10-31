@@ -46,15 +46,13 @@ namespace c2s
 
     virtual ~C2SRestEntityMethodPrototype();
 
-    void addEntityStreamer( C2SRestEntityStreamer<EntityType> *pEntityStreamer );
-
     virtual C2SHttpResponse *processRequest( const C2SHttpRequest &request );
 
   protected:
 
     C2SRestEntityMethodPrototype( C2SHttpMethod methodType , const std::string &sPath );
 
-    C2SHttpEntity *entity( const EntityType &data ) const;
+    void addEntityStreamer( C2SRestEntityStreamer<EntityType> *pEntityStreamer );
 
     C2SHttpResponse *buildResponse( C2SHttpStatus status , const EntityType &data ) const;
 
