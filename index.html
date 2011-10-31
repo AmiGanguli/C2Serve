@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	  <title>C2Serve Project - Getting Started</title>
+	  
+	  <link rel="stylesheet" type="text/css" href="styles.css"/>
+	    
+	</head>
+<body>
+
+  <div>
+  
+    <div class="section" style="margin-top: 50px;">
+	  
+	    <h1>Download and Installation</h1>
+	  
+	    Download the <a href="https://github.com/c2s/C2Serve/zipball/master">source distribution</a> and unpack the archive.
+	    Alternatively, you can also clone the repository by running <code>git clone git@github.com:c2s/C2Serve.git</code>.
+	    The directory which contains the build and source will be referred in the following as <code>C2S_ROOT_DIR</code>.
+	    
+	    <br />
+	    <br />
+	    
+	    The build is realized using <a href="http://www.cmake.org/">CMake</a>, so you will need <a href="http://www.cmake.org/">CMake</a> installed on your build machine.
+	    Open a terminal and create a build directory.
+	    <a href="http://www.cmake.org/">CMake</a> will need it to create its build environment and to build the binaries there.
+	    
+	    <br />
+	    <br />
+	    
+	    Next step is to create the build environment.
+	    Change into the build directory and run <code>cmake C2S_ROOT_DIR</code>.
+	    By default, the libraries, headers and test executables are built into a created <code>install</code> directory within the build directory.
+	    You can specify another directory by defining the install prefix: <code>cmake -DINSTALL_PREFIX=MY_INSTALL_DIR</code>.
+	    
+	    <br />
+      <br />
+      
+      Now you can build the binaries by running <code>make install</code>.
+      The libraries are built into a <code>lib</code> directory which is created in the <code>install</code> directory.
+      To build the unit tests, you have to install the <a href="http://www.boost.org/">Boost libraries</a> or specify the Boost root directory when initializing the build environment: <code>-DBOOST_ROOT=MY_BOOST_ROOT_DIR</code>.
+	    
+    </div>
+  
+  </div>
+
+</body>
+</html>

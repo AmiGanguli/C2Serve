@@ -1,0 +1,32 @@
+@CHARSET "UTF-8";
+
+body
+{
+  background-color: #cccccc;
+  margin-top: 50px;
+  text-align: center;
+}
+
+div
+{
+  width: 1000px;
+  margin: 0px auto;
+  background-color: #aaaaaa;
+  border-style: solid;
+  border-width: 1px;
+}
+
+div.section
+{
+	width: 900px;
+  margin: 0px auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  text-align: justify;
+  border-style: none;
+}
+
+h1
+{
+  text-align: center;
+}
