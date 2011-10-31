@@ -56,27 +56,29 @@ namespace c2s
 
     C2SHttpResponse *buildResponse( C2SHttpStatus status , const EntityType &data ) const;
 
+  private:
+
     typedef std::list<C2SRestEntityStreamer<EntityType>*> EntityStreamerList;
 
-    const C2SRestEntityStreamer<EntityType> *m_pCurrentStreamer;
+    const C2SRestEntityStreamer<EntityType> *m_pCurrentEntityStreamer;
 
-    std::map<std::string,C2SHttpMediaType> m_mediatypes;
+    std::map<std::string,C2SHttpMediaType> m_allowedEntityMediaTypes;
 
-    EntityStreamerList m_entityStreamers;
+    EntityStreamerList m_entityStreamersByTimeOfRegistration;
 
   };
 
   template <class EntityType>
   C2SRestEntityMethodPrototype<EntityType>::C2SRestEntityMethodPrototype( C2SHttpMethod methodType , const std::string &sPath )
     : C2SRestMethodPrototype( methodType , sPath ),
-      m_pCurrentStreamer( NULL )
+      m_pCurrentEntityStreamer( NULL )
   {};
 
   template <class EntityType>
   C2SRestEntityMethodPrototype<EntityType>::~C2SRestEntityMethodPrototype()
   {
-    typename EntityStreamerList::iterator esit = m_entityStreamers.begin();
-    typename EntityStreamerList::iterator esend = m_entityStreamers.end();
+    typename EntityStreamerList::iterator esit = m_entityStreamersByTimeOfRegistration.begin();
+    typename EntityStreamerList::iterator esend = m_entityStreamersByTimeOfRegistration.end();
     for ( ; esit != esend; ++esit )
     {
       delete *esit;
@@ -88,38 +90,38 @@ namespace c2s
   {
     const C2SHttpMediaType &mediatype = pEntityStreamer->getMediaType();
 
-    if ( m_mediatypes.find( mediatype.Type ) != m_mediatypes.end() )
+    if ( m_allowedEntityMediaTypes.find( mediatype.Type ) != m_allowedEntityMediaTypes.end() )
       throw C2SRestException( "C2SRestEntityMethodPrototype::addEntityStreamer: " , "Media type already exists: " + mediatype.Type , InternalServerError );
 
-    m_mediatypes.insert( std::make_pair( mediatype.Type , mediatype ) );
-    m_entityStreamers.push_back( pEntityStreamer );
+    m_allowedEntityMediaTypes.insert( std::make_pair( mediatype.Type , mediatype ) );
+    m_entityStreamersByTimeOfRegistration.push_back( pEntityStreamer );
   }
 
   template <class EntityType>
   C2SHttpResponse *C2SRestEntityMethodPrototype<EntityType>::processRequest( const C2SHttpRequest &request )
   {
-    if ( !m_entityStreamers.size() )
+    if ( !m_entityStreamersByTimeOfRegistration.size() )
       throw C2SRestException( "C2SRestEntityMethodPrototype::processRequest: " , "No entity streamers available" , InternalServerError );
 
-    m_pCurrentStreamer = NULL;
+    m_pCurrentEntityStreamer = NULL;
 
-    typename EntityStreamerList::const_iterator esit = m_entityStreamers.begin();
-    typename EntityStreamerList::const_iterator esend = m_entityStreamers.end();
+    typename EntityStreamerList::const_iterator esit = m_entityStreamersByTimeOfRegistration.begin();
+    typename EntityStreamerList::const_iterator esend = m_entityStreamersByTimeOfRegistration.end();
     for ( ; esit != esend; ++esit )
     {
       const C2SRestEntityStreamer<EntityType> *pStreamer = *esit;
       if ( request.header().Fields.isAccept( pStreamer->getMediaType().Type ) )
       {
-        m_pCurrentStreamer = pStreamer;
+        m_pCurrentEntityStreamer = pStreamer;
         break;
       }
     }
 
-    if ( !m_pCurrentStreamer )
+    if ( !m_pCurrentEntityStreamer )
     {
       if ( request.header().Fields.isAccept( C2SHttpMediaType::wildcard ) )
         //use default
-        m_pCurrentStreamer = *( m_entityStreamers.begin() );
+        m_pCurrentEntityStreamer = *( m_entityStreamersByTimeOfRegistration.begin() );
       else
         throw C2SRestException( "C2SRestEntityMethodPrototype::process: " , "No appropriate content type was found" , NotAcceptable );
     }
@@ -130,10 +132,10 @@ namespace c2s
   template <class EntityType>
   C2SHttpResponse *C2SRestEntityMethodPrototype<EntityType>::buildResponse( C2SHttpStatus status , const EntityType &data ) const
   {
-    assert( m_pCurrentStreamer );
+    assert( m_pCurrentEntityStreamer );
     C2SHttpResponse *pResponse = C2SHttpResponse::build( status );
-    pResponse->setEntity( m_pCurrentStreamer->entity( data ) );
-    pResponse->header().Fields.setContentType( m_pCurrentStreamer->getMediaType().Type );
+    pResponse->setEntity( m_pCurrentEntityStreamer->entity( data ) );
+    pResponse->header().Fields.setContentType( m_pCurrentEntityStreamer->getMediaType().Type );
     return pResponse;
   }
 
