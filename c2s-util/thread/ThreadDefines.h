@@ -34,19 +34,19 @@
 
 #ifndef USE_BOOST_THREADS
 
-#if defined LINUX || defined DARWIN
+  #ifndef WIN32
 
-#ifndef USE_POSIX_THREADS
-#define USE_POSIX_THREADS
-#endif //USE_POSIX_THREADS
+    #ifndef USE_POSIX_THREADS
+      #define USE_POSIX_THREADS
+    #endif //USE_POSIX_THREADS
 
-#else //LINUX || DARWIN
+  #else //WIN32
 
-#ifndef USE_BOOST_THREADS
-#define USE_BOOST_THREADS
-#endif //USE_BOOST_THREADS
+    #ifndef USE_BOOST_THREADS
+      #define USE_BOOST_THREADS
+    #endif //USE_BOOST_THREADS
 
-#endif //LINUX || DARWIN
+  #endif //WIN32
 
 #endif //USE_BOOST_THREADS
 
