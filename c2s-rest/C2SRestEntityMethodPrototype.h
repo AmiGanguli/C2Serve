@@ -53,7 +53,7 @@ namespace c2s
 
     C2SRestEntityMethodPrototype( C2SHttpMethod methodType , const std::string &sPath );
 
-    void addEntityStreamer( C2SRestEntityStreamer<EntityType> *pEntityStreamer );
+    void installEntityStreamer( C2SRestEntityStreamer<EntityType> *pEntityStreamer );
 
     C2SHttpResponse *buildResponse( C2SHttpStatus status , const EntityType &data ) const;
 
@@ -91,12 +91,12 @@ namespace c2s
   }
 
   template <class EntityType>
-  void C2SRestEntityMethodPrototype<EntityType>::addEntityStreamer( C2SRestEntityStreamer<EntityType> *pEntityStreamer )
+  void C2SRestEntityMethodPrototype<EntityType>::installEntityStreamer( C2SRestEntityStreamer<EntityType> *pEntityStreamer )
   {
     const C2SHttpMediaType &mediatype = pEntityStreamer->getMediaType();
 
     if ( m_allowedEntityMediaTypes.find( mediatype.Type ) != m_allowedEntityMediaTypes.end() )
-      throw C2SRestException( "C2SRestEntityMethodPrototype::addEntityStreamer: " , "Media type already exists: " + mediatype.Type , InternalServerError );
+      throw C2SRestException( "C2SRestEntityMethodPrototype::installEntityStreamer: " , "Media type already exists: " + mediatype.Type , InternalServerError );
 
     m_allowedEntityMediaTypes.insert( std::make_pair( mediatype.Type , mediatype ) );
     m_entityStreamersByTimeOfRegistration.push_back( pEntityStreamer );

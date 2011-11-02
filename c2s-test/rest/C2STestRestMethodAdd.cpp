@@ -52,8 +52,8 @@ namespace c2s
       C2SRestEntityMethodPrototype<unsigned int>::addPathParameter( "arg1" , &m_iArg1 );
       C2SRestEntityMethodPrototype<unsigned int>::addPathParameter( "arg2" , &m_iArg2 );
       C2SRestEntityMethodPrototype<unsigned int>::addQueryParameter( "multiplier" , &m_iMultiplier , m_iMultiplier );
-      C2SRestEntityMethodPrototype<unsigned int>::addEntityStreamer( new C2STestRestEntityStreamerXML<unsigned int>() );
-      C2SRestEntityMethodPrototype<unsigned int>::addEntityStreamer( new C2STestRestEntityStreamerJSON<unsigned int>() );
+      C2SRestEntityMethodPrototype<unsigned int>::installEntityStreamer( new C2STestRestEntityStreamerXML<unsigned int>() );
+      C2SRestEntityMethodPrototype<unsigned int>::installEntityStreamer( new C2STestRestEntityStreamerJSON<unsigned int>() );
     };
 
     C2SHttpResponse *C2STestRestMethodAdd::process()
