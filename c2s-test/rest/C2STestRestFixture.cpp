@@ -35,6 +35,7 @@
 #include "C2STestRestMethodAdd.h"
 #include "C2STestRestMethodThreading.h"
 #include "C2STestRestMethodQueryFields.h"
+#include "C2STestRestMethodMediaTypeConverter.h"
 
 #include "C2SRestResource.h"
 
@@ -72,6 +73,7 @@ namespace c2s
       c2s::C2SRestResource *pRestResource1 = c2s::C2SRestResource::createRestResourceWithContextRoot( sContextRootOfTestResource );
       pRestResource1->registerMethodPrototype( new c2s::test::C2STestRestMethodAdd() );
       pRestResource1->registerMethodPrototype( new c2s::test::C2STestRestMethodQueryFields() );
+      pRestResource1->registerMethodPrototype( new c2s::test::C2STestRestMethodMediaTypeConverter() );
       pRestResource1->registerMethodPrototype( new c2s::test::C2STestRestMethodThreading( pGlobalMutex ) );
       resources.push_back( pRestResource1 );
 

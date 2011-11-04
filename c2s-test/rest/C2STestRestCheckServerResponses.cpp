@@ -35,6 +35,7 @@
 
 #include "C2STestRestMethodAdd.h"
 #include "C2STestRestMethodThreading.h"
+#include "C2STestRestMethodMediaTypeConverter.h"
 #include "C2STestRestMethodQueryFields.h"
 
 #include "C2STestRestRequest.h"
@@ -83,6 +84,7 @@ namespace c2s
       checkEmptyResourceContextRoot();
       checkEmptyResourceContextRootWithLeadingSlash();
       checkEmptyResourceMethodNotFound();
+      checkXMLRequestEntityToJSONResponseEntity();
     }
 
     void C2STestRestCheckServerResponses::checkResponse( const c2s::test::C2STestRestRequest &request , const c2s::test::C2STestRestResponse &response_check )
@@ -435,6 +437,20 @@ namespace c2s
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::NotFound )
+
+        );
+    }
+
+    void C2STestRestCheckServerResponses::checkXMLRequestEntityToJSONResponseEntity()
+    {
+      checkResponse (
+
+          c2s::test::C2STestRestRequest::
+          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPath ).
+          accept( c2s::C2SHttpMediaType::application__xml )
+          ,
+          c2s::test::C2STestRestResponse::
+          build( c2s::Created )
 
         );
     }

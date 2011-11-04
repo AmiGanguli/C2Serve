@@ -77,6 +77,7 @@ namespace c2s
       static void checkEmptyResourceContextRoot();
       static void checkEmptyResourceContextRootWithLeadingSlash();
       static void checkEmptyResourceMethodNotFound();
+      static void checkXMLRequestEntityToJSONResponseEntity();
 
       C2STestRestCheckServerResponses();
 
