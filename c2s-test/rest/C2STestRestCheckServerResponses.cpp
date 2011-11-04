@@ -35,11 +35,14 @@
 
 #include "C2STestRestMethodAdd.h"
 #include "C2STestRestMethodThreading.h"
-#include "C2STestRestMethodMediaTypeConverter.h"
 #include "C2STestRestMethodQueryFields.h"
+#include "C2STestRestMethodInvalidEntity.h"
+#include "C2STestRestMethodMediaTypeConverter.h"
 
 #include "C2STestRestRequest.h"
 #include "C2STestRestResponse.h"
+
+#include <boost/test/unit_test.hpp>
 
 namespace c2s
 {
@@ -69,6 +72,7 @@ namespace c2s
       checkResourceNotFoundDueToForbiddenPathParameters();
       checkEncodingAndDecodingOfQueryFields();
       checkEncodingAndDecodingOfQueryFieldsMissingQueryParameter();
+      checkInvalidEntityType();
       checkPathParametersWithXMLResponseEntity();
       checkPathParametersWithJSONResponseEntity();
       checkPathParametersWithXMLResponseEntityAsDefault();
@@ -89,6 +93,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkResponse( const c2s::test::C2STestRestRequest &request , const c2s::test::C2STestRestResponse &response_check )
     {
+      BOOST_MESSAGE( "processing URI \"" + request.getURI() + "\"" );
       c2s::C2SHttpResponse response = request.process();
       response_check.check( response );
     }
@@ -233,6 +238,18 @@ namespace c2s
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::BadRequest )
+
+        );
+    }
+
+    void C2STestRestCheckServerResponses::checkInvalidEntityType()
+    {
+      checkResponse (
+
+          c2s::test::C2STestRestRequest::
+          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodInvalidEntity::sPath )
+          ,
+          c2s::test::C2STestRestResponse::build( c2s::InternalServerError )
 
         );
     }

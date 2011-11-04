@@ -62,6 +62,7 @@ namespace c2s
       static void checkResourceNotFoundDueToForbiddenPathParameters();
       static void checkEncodingAndDecodingOfQueryFields();
       static void checkEncodingAndDecodingOfQueryFieldsMissingQueryParameter();
+      static void checkInvalidEntityType();
       static void checkPathParametersWithXMLResponseEntity();
       static void checkPathParametersWithJSONResponseEntity();
       static void checkPathParametersWithXMLResponseEntityAsDefault();

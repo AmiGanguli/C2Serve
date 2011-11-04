@@ -34,6 +34,7 @@
 
 #include "C2SRestMethodPrototype.h"
 #include "C2SRestEntityStreamer.h"
+#include "C2SHttpInvalidEntityType.h"
 
 #include <cassert>
 
@@ -109,6 +110,13 @@ namespace c2s
     return C2SRestMethodPrototype::processRequest( request );
   }
 
+  template <>
+  inline C2SHttpResponse *C2SRestEntityMethodPrototype<C2SHttpInvalidEntityType>::processRequest( const C2SHttpRequest &request )
+  {
+    m_pEntityStreamerToUseForNextResponse = NULL;
+    return C2SRestMethodPrototype::processRequest( request );
+  }
+
   template <class EntityType>
   const C2SRestEntityStreamer<EntityType> *C2SRestEntityMethodPrototype<EntityType>::detectEntityStreamerToUseForRequest( const C2SHttpRequest &request ) const
   {
@@ -144,6 +152,13 @@ namespace c2s
     pResponse->setEntity( m_pEntityStreamerToUseForNextResponse->entity( data ) );
     pResponse->header().Fields.setContentType( m_pEntityStreamerToUseForNextResponse->getMediaType().Type );
     return pResponse;
+  }
+
+  template <>
+  inline C2SHttpResponse *C2SRestEntityMethodPrototype<C2SHttpInvalidEntityType>::buildResponse( C2SHttpStatus status , const C2SHttpInvalidEntityType &data ) const
+  {
+    assert( m_pEntityStreamerToUseForNextResponse == NULL );
+    throw C2SRestException( "C2SRestEntityMethodPrototype<C2SHttpInvalidEntityType>::buildResponse: " , "Response with entity body is not allowed for entity type C2SHttpInvalidEntityType" , InternalServerError );
   }
 
 }

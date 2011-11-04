@@ -55,6 +55,8 @@ namespace c2s
 
       C2SHttpResponse process() const;
 
+      const std::string &getURI() const;
+
     private:
 
       C2STestRestRequest( C2SHttpMethod method , const std::string &sURI );

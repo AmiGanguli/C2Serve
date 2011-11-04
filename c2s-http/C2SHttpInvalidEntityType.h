@@ -29,36 +29,15 @@
 
  */
 
-#include "C2STestRestMethodQueryFields.h"
 
-#include <boost/test/unit_test.hpp>
+#ifndef C2SHTTPINVALIDENTITYTYPE_H_
+#define C2SHTTPINVALIDENTITYTYPE_H_
 
 namespace c2s
 {
-  namespace test
-  {
 
-    const std::string C2STestRestMethodQueryFields::sPath = "check-query-fields/";
+  class C2SHttpInvalidEntityType{};
 
-    const std::string C2STestRestMethodQueryFields::sQueryFieldValueExpected = "12arg:,478859'*##*";
-
-    C2STestRestMethodQueryFields::C2STestRestMethodQueryFields()
-      : C2SRestMethodPrototypeGET<>( sPath )
-    {
-      C2SRestMethodPrototypeGET<>::addQueryParameter( "test_uri" , &m_sTestURI );
-    };
-
-    C2SHttpResponse *C2STestRestMethodQueryFields::process()
-    {
-      BOOST_MESSAGE( "C2STestRestMethodQueryFields::process: \"" << m_sTestURI << "\"" );
-      BOOST_CHECK( m_sTestURI == sQueryFieldValueExpected );
-      return C2SRestMethodPrototype::buildResponse( OK );
-    }
-
-    C2STestRestMethodQueryFields *C2STestRestMethodQueryFields::clone() const
-    {
-      return new C2STestRestMethodQueryFields();
-    }
-
-  }
 }
+
+#endif /* C2SHTTPINVALIDENTITYTYPE_H_ */

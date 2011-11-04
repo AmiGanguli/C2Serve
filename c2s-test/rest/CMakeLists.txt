@@ -6,6 +6,7 @@ add_executable( c2s_test_rest
   C2STestRestMethodQueryFields
   C2STestRestMethodThreading
   C2STestRestMethodMediaTypeConverter
+  C2STestRestMethodInvalidEntity
   C2STestRestRequest
 	C2STestRestResponse
 	C2STestRestFixture

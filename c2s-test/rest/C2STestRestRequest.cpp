@@ -71,6 +71,11 @@ namespace c2s
       return client.send( m_request );
     }
 
+    const std::string &C2STestRestRequest::getURI() const
+    {
+      return m_request.header().URI;
+    }
+
   }
 }
 

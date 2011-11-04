@@ -38,7 +38,7 @@
 namespace c2s
 {
 
-  template <class ResponseEntityType>
+  template <class ResponseEntityType = C2SHttpInvalidEntityType>
   class C2SRestMethodPrototypeGET : public C2SRestEntityMethodPrototype<ResponseEntityType>
   {
   protected:
