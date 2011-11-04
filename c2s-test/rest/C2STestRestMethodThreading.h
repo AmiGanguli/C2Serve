@@ -33,7 +33,7 @@
 #ifndef C2STESTRESTMETHODTHREADING_H_
 #define C2STESTRESTMETHODTHREADING_H_
 
-#include "C2SRestMethodPrototype.h"
+#include "C2SRestMethodPrototypeGET.h"
 
 #include "Mutex.h"
 
@@ -42,7 +42,7 @@ namespace c2s
   namespace test
   {
 
-    class C2STestRestMethodThreading : public C2SRestMethodPrototype
+    class C2STestRestMethodThreading : public C2SRestMethodPrototypeGET<>
     {
     public:
 
