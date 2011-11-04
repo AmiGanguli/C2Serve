@@ -44,23 +44,23 @@ namespace c2s
     const std::string C2STestRestMethodAdd::sPath = "math/add";
 
     C2STestRestMethodAdd::C2STestRestMethodAdd()
-      : C2SRestEntityMethodPrototype<unsigned int>( GET , sPath ),
+      : C2SRestMethodPrototypeGET<unsigned int>( sPath ),
         m_iArg1( 0 ),
         m_iArg2( 0 ),
         m_iMultiplier( 0 )
     {
-      C2SRestEntityMethodPrototype<unsigned int>::addPathParameter( "arg1" , &m_iArg1 );
-      C2SRestEntityMethodPrototype<unsigned int>::addPathParameter( "arg2" , &m_iArg2 );
-      C2SRestEntityMethodPrototype<unsigned int>::addQueryParameter( "multiplier" , &m_iMultiplier , m_iMultiplier );
-      C2SRestEntityMethodPrototype<unsigned int>::installEntityStreamer( new C2STestRestEntityStreamerXML<unsigned int>() );
-      C2SRestEntityMethodPrototype<unsigned int>::installEntityStreamer( new C2STestRestEntityStreamerJSON<unsigned int>() );
+      C2SRestMethodPrototypeGET<unsigned int>::addPathParameter( "arg1" , &m_iArg1 );
+      C2SRestMethodPrototypeGET<unsigned int>::addPathParameter( "arg2" , &m_iArg2 );
+      C2SRestMethodPrototypeGET<unsigned int>::addQueryParameter( "multiplier" , &m_iMultiplier , m_iMultiplier );
+      C2SRestMethodPrototypeGET<unsigned int>::installEntityStreamer( new C2STestRestEntityStreamerXML<unsigned int>() );
+      C2SRestMethodPrototypeGET<unsigned int>::installEntityStreamer( new C2STestRestEntityStreamerJSON<unsigned int>() );
     };
 
     C2SHttpResponse *C2STestRestMethodAdd::process()
     {
       BOOST_MESSAGE( "C2STestRestMethodAdder::process: " << m_iArg1 << " + " << m_iArg2 << " * " << m_iMultiplier );
       unsigned int iResult = ( m_iArg1 + m_iArg2 ) * m_iMultiplier;
-      return C2SRestEntityMethodPrototype<unsigned int>::buildResponse( OK , iResult );
+      return C2SRestMethodPrototypeGET<unsigned int>::buildResponse( OK , iResult );
     }
 
     C2STestRestMethodAdd *C2STestRestMethodAdd::clone() const

@@ -58,7 +58,7 @@ namespace c2s
 
     C2SHttpResponse *C2STestRestMethodMediaTypeConverter::process()
     {
-      return C2SRestEntityMethodPrototype<std::string>::buildResponse( Created , "DUMMYDATA" );
+      return C2SRestMethodPrototypePOST<std::string>::buildResponse( Created , "DUMMYDATA" );
     }
 
   }

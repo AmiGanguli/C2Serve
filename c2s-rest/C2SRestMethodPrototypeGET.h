@@ -30,39 +30,34 @@
  */
 
 
-#ifndef C2STESTRESTMETHODADD_H_
-#define C2STESTRESTMETHODADD_H_
+#ifndef C2SRESTMETHODPROTOTYPEGET_H_
+#define C2SRESTMETHODPROTOTYPEGET_H_
 
-#include "C2SRestMethodPrototypeGET.h"
+#include "C2SRestEntityMethodPrototype.h"
 
 namespace c2s
 {
-  namespace test
+
+  template <class ResponseEntityType>
+  class C2SRestMethodPrototypeGET : public C2SRestEntityMethodPrototype<ResponseEntityType>
   {
+  protected:
 
-    class C2STestRestMethodAdd : public C2SRestMethodPrototypeGET<unsigned int>
-    {
-    public:
+    C2SRestMethodPrototypeGET( const std::string &sPath );
 
-      C2STestRestMethodAdd();
+  private:
 
-      C2SHttpResponse *process();
+    C2SRestMethodPrototypeGET( const C2SRestMethodPrototypeGET & );
 
-      C2STestRestMethodAdd *clone() const;
+    C2SRestMethodPrototypeGET &operator=( const C2SRestMethodPrototypeGET & );
 
-      static const std::string sPath;
+  };
 
-    private:
+  template <class ResponseEntityType>
+  C2SRestMethodPrototypeGET<ResponseEntityType>::C2SRestMethodPrototypeGET( const std::string &sPath )
+    : C2SRestEntityMethodPrototype<ResponseEntityType>( GET , sPath )
+  {};
 
-      unsigned int m_iArg1;
-
-      unsigned int m_iArg2;
-
-      unsigned int m_iMultiplier;
-
-    };
-
-  }
 }
 
-#endif /* C2STESTRESTMETHODADD_H_ */
+#endif /* C2SRESTMETHODPROTOTYPEGET_H_ */
