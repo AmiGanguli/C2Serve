@@ -32,7 +32,7 @@
 #ifndef C2STESTRESTMETHODMEDIATYPECONVERTER_H_
 #define C2STESTRESTMETHODMEDIATYPECONVERTER_H_
 
-#include "C2SRestEntityMethodPrototype.h"
+#include "C2SRestMethodPrototypePOST.h"
 
 namespace c2s
 {
@@ -40,7 +40,7 @@ namespace c2s
   namespace test
   {
 
-    class C2STestRestMethodMediaTypeConverter : public C2SRestEntityMethodPrototype<std::string>
+    class C2STestRestMethodMediaTypeConverter : public C2SRestMethodPrototypePOST<std::string>
     {
     public:
 

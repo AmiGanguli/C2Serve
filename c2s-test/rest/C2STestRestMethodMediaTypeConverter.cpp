@@ -42,9 +42,9 @@ namespace c2s
     const std::string C2STestRestMethodMediaTypeConverter::sPath = "media-type/convert";
 
     C2STestRestMethodMediaTypeConverter::C2STestRestMethodMediaTypeConverter()
-      : C2SRestEntityMethodPrototype<std::string>( POST , sPath )
+      : C2SRestMethodPrototypePOST<std::string>( sPath )
     {
-      C2SRestEntityMethodPrototype<std::string>::installEntityStreamer( new C2STestRestEntityStreamerXML<std::string>() );
+      C2SRestMethodPrototypePOST<std::string>::installEntityStreamer( new C2STestRestEntityStreamerXML<std::string>() );
     }
 
     C2STestRestMethodMediaTypeConverter::~C2STestRestMethodMediaTypeConverter()
