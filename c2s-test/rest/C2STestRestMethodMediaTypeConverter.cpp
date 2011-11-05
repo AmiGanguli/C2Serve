@@ -32,6 +32,7 @@
 #include "C2STestRestMethodMediaTypeConverter.h"
 
 #include "C2STestRestEntityStreamerXML.h"
+#include "C2STestRestEntityStreamerJSON.h"
 #include "C2STestRestEntityUnstreamerXML.h"
 
 #include <boost/test/unit_test.hpp>
@@ -50,6 +51,7 @@ namespace c2s
     {
       C2SRestMethodPrototypePOST<std::string>::installRequestEntityUnstreamer( m_pRequestEntityUnstreamerXML );
       C2SRestMethodPrototypePOST<std::string>::installEntityStreamer( new C2STestRestEntityStreamerXML<std::string>() );
+      C2SRestMethodPrototypePOST<std::string>::installEntityStreamer( new C2STestRestEntityStreamerJSON<std::string>() );
     }
 
     C2STestRestMethodMediaTypeConverter::~C2STestRestMethodMediaTypeConverter()
@@ -65,8 +67,9 @@ namespace c2s
     C2SHttpResponse *C2STestRestMethodMediaTypeConverter::process()
     {
       BOOST_CHECK( m_pRequestEntityUnstreamerXML->isDataReceived() );
+      const std::string &sContentReceived = m_pRequestEntityUnstreamerXML->getReceivedContent();
       m_pRequestEntityUnstreamerXML->setIsDataReceived( false );
-      return C2SRestMethodPrototypePOST<std::string>::buildResponse( Created , "DUMMYDATA" );
+      return C2SRestMethodPrototypePOST<std::string>::buildResponse( Created , sContentReceived );
     }
 
   }

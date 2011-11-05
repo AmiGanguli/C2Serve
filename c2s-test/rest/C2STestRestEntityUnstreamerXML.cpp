@@ -59,6 +59,7 @@ namespace c2s
       std::string sClosingTagReceived = sEntityDataString.substr( sEntityDataString.size() - ( sClosingTagExpected.size() ) );
       BOOST_CHECK( sClosingTagReceived == sClosingTagExpected );
 
+      m_sContentReceived = sEntityDataString.substr( sOpeningTagReceived.size() , sEntityDataString.size() - ( sClosingTagReceived.size() + sOpeningTagReceived.size() ) );
       m_bIsDataReceived = true;
     }
 
@@ -70,6 +71,12 @@ namespace c2s
     bool C2STestRestEntityUnstreamerXML::isDataReceived() const
     {
       return m_bIsDataReceived;
+    }
+
+    const std::string &C2STestRestEntityUnstreamerXML::getReceivedContent()
+    {
+      BOOST_REQUIRE( m_bIsDataReceived );
+      return m_sContentReceived;
     }
 
   }

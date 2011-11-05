@@ -280,7 +280,7 @@ namespace c2s
           accept( c2s::C2SHttpMediaType::application__json )
           ,
           c2s::test::C2STestRestResponse::build( c2s::OK ).
-          entity( c2s::C2SHttpMediaType::application__json , "{ \"result\" : 0 }" )
+          entity( c2s::C2SHttpMediaType::application__json , "{0}" )
 
         );
     }
@@ -388,7 +388,7 @@ namespace c2s
           query_field( "multiplier" , "2" )
           ,
           c2s::test::C2STestRestResponse::build( c2s::OK ).
-          entity( c2s::C2SHttpMediaType::application__json , "{ \"result\" : 12 }" )
+          entity( c2s::C2SHttpMediaType::application__json , "{12}" )
 
         );
     }
@@ -463,19 +463,23 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkXMLRequestEntityToJSONResponseEntity()
     {
-      std::string sEntityData = "<" + C2STestRestEntityUnstreamerXML::sRootElementID + ">";
-      sEntityData += "my content";
-      sEntityData += "</" + C2STestRestEntityUnstreamerXML::sRootElementID + ">";
+      std::string sEntityContent = "my content";
+      std::string sEntityDataToSend = "<" + C2STestRestEntityUnstreamerXML::sRootElementID + ">";
+      sEntityDataToSend += sEntityContent;
+      sEntityDataToSend += "</" + C2STestRestEntityUnstreamerXML::sRootElementID + ">";
+
+      std::string sEntityDataReceivedExpected = "{" + sEntityContent + "}";
 
       checkResponse (
 
           c2s::test::C2STestRestRequest::
           build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPath ).
-          accept( c2s::C2SHttpMediaType::application__xml ).
-          entity( c2s::C2SHttpMediaType::application__xml , sEntityData )
+          accept( c2s::C2SHttpMediaType::application__json ).
+          entity( c2s::C2SHttpMediaType::application__xml , sEntityDataToSend )
           ,
           c2s::test::C2STestRestResponse::
-          build( c2s::Created )
+          build( c2s::Created ).
+          entity( c2s::C2SHttpMediaType::application__json , sEntityDataReceivedExpected )
 
         );
     }

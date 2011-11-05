@@ -53,7 +53,7 @@ namespace c2s
 
       C2SHttpEntity *entity( const Type &data ) const
       {
-        std::string sJSON = "{ \"result\" : " + c2s::util::toString( data ) + " }";
+        std::string sJSON = "{" + c2s::util::toString( data ) + "}";
         char *cdata = new char[ sJSON.size() ];
         std::memcpy( cdata , sJSON.c_str() , sJSON.size() );
         return new C2SHttpEntity( cdata , sJSON.size() , true );

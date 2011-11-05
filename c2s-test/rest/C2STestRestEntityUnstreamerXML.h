@@ -52,11 +52,15 @@ namespace c2s
 
       bool isDataReceived() const;
 
+      const std::string &getReceivedContent();
+
       static const std::string sRootElementID;
 
     private:
 
       bool m_bIsDataReceived;
+
+      std::string m_sContentReceived;
 
     };
 
