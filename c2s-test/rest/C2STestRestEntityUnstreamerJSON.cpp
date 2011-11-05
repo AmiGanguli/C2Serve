@@ -29,48 +29,47 @@
 
  */
 
-#ifndef C2STESTRESTMETHODMEDIATYPECONVERTER_H_
-#define C2STESTRESTMETHODMEDIATYPECONVERTER_H_
+#include "C2STestRestEntityUnstreamerJSON.h"
 
-#include "C2SRestMethodPrototypePOST.h"
+#include <boost/test/unit_test.hpp>
 
 namespace c2s
 {
+
   namespace test
   {
 
-    class C2STestRestEntityUnstreamerXML;
-    class C2STestRestEntityUnstreamerJSON;
+    C2STestRestEntityUnstreamerJSON::C2STestRestEntityUnstreamerJSON()
+      : C2SHttpEntityUnstreamerBase( C2SHttpMediaType::application__json ),
+        m_bIsDataReceived( false )
+    {};
 
-    class C2STestRestMethodMediaTypeConverter : public C2SRestMethodPrototypePOST<std::string>
+    void C2STestRestEntityUnstreamerJSON::unstream( const C2SHttpEntity &entity )
     {
-    public:
+      std::string sEntityDataString( entity.data , entity.size );
+      BOOST_REQUIRE( sEntityDataString[ 0 ] == '{' );
+      BOOST_REQUIRE( sEntityDataString[ sEntityDataString.size() - 1 ] == '}' );
+      m_sContentReceived = sEntityDataString.substr( 1 , sEntityDataString.size() - 2 );
+      BOOST_MESSAGE( m_sContentReceived );
+      m_bIsDataReceived = true;
+    }
 
-      C2STestRestMethodMediaTypeConverter();
+    void C2STestRestEntityUnstreamerJSON::setIsDataReceived( bool bIsDataReceived )
+    {
+      m_bIsDataReceived = bIsDataReceived;
+    }
 
-      virtual ~C2STestRestMethodMediaTypeConverter();
+    bool C2STestRestEntityUnstreamerJSON::isDataReceived() const
+    {
+      return m_bIsDataReceived;
+    }
 
-      virtual C2SRestMethodPrototype *clone() const;
-
-      static const std::string sPath;
-
-    protected:
-
-      virtual C2SHttpResponse *process();
-
-    private:
-
-      C2SHttpResponse *processXML();
-
-      C2SHttpResponse *processJSON();
-
-      C2STestRestEntityUnstreamerXML *m_pRequestEntityUnstreamerXML;
-
-      C2STestRestEntityUnstreamerJSON *m_pRequestEntityUnstreamerJSON;
-
-    };
+    const std::string &C2STestRestEntityUnstreamerJSON::getReceivedContent()
+    {
+      BOOST_REQUIRE( m_bIsDataReceived );
+      return m_sContentReceived;
+    }
 
   }
-}
 
-#endif /* C2STESTRESTMETHODMEDIATYPECONVERTER_H_ */
+}

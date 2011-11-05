@@ -70,11 +70,11 @@ namespace c2s
 
       if ( m_entity.size() )
       {
-        BOOST_MESSAGE( "response content length: " << response.header().Fields.getContentLength() );
+        BOOST_MESSAGE( "response content length: " << response.header().Fields.getContentLength() << " (" << m_entity.size() << " expected)" );
         BOOST_CHECK( response.header().Fields.getContentLength() == m_entity.size() );
         std::string sResponseEntity;
         response.getEntity( &sResponseEntity );
-        BOOST_MESSAGE( "response data: \"" << sResponseEntity << "\"" );
+        BOOST_MESSAGE( "response data: \"" << sResponseEntity << "\" (expected: \"" << m_entity << "\")" );
         BOOST_CHECK( m_entity == sResponseEntity );
         BOOST_CHECK( m_mediatype.Type == response.header().Fields.getContentType().Type );
       }

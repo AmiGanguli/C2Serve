@@ -39,6 +39,7 @@
 #include "C2STestRestMethodInvalidEntity.h"
 #include "C2STestRestMethodMediaTypeConverter.h"
 
+#include "C2STestRestEntityStreamerXML.h"
 #include "C2STestRestEntityUnstreamerXML.h"
 
 #include "C2STestRestRequest.h"
@@ -91,6 +92,7 @@ namespace c2s
       checkEmptyResourceContextRootWithLeadingSlash();
       checkEmptyResourceMethodNotFound();
       checkXMLRequestEntityToJSONResponseEntity();
+      checkJSONRequestEntityToXMLResponseEntity();
       checkHTMLRequestEntityToJSONResponseEntityUnsupportedMediaTypeResponse();
     }
 
@@ -266,7 +268,7 @@ namespace c2s
           accept( c2s::C2SHttpMediaType::application__xml )
           ,
           c2s::test::C2STestRestResponse::build( c2s::OK ).
-          entity( c2s::C2SHttpMediaType::application__xml , "<result>0</result>" )
+          entity( c2s::C2SHttpMediaType::application__xml , "<" + C2STestRestEntityStreamerXML<unsigned int>::sRootElement + ">0</" + C2STestRestEntityStreamerXML<unsigned int>::sRootElement + ">" )
 
         );
     }
@@ -294,7 +296,7 @@ namespace c2s
           accept( c2s::C2SHttpMediaType::wildcard )
           ,
           c2s::test::C2STestRestResponse::build( c2s::OK ).
-          entity( c2s::C2SHttpMediaType::application__xml , "<result>0</result>" )
+          entity( c2s::C2SHttpMediaType::application__xml , "<" + C2STestRestEntityStreamerXML<unsigned int>::sRootElement + ">0</" + C2STestRestEntityStreamerXML<unsigned int>::sRootElement + ">" )
 
         );
     }
@@ -373,7 +375,7 @@ namespace c2s
           query_field( "multiplier" , "2" )
           ,
           c2s::test::C2STestRestResponse::build( c2s::OK ).
-          entity( c2s::C2SHttpMediaType::application__xml , "<result>12</result>" )
+          entity( c2s::C2SHttpMediaType::application__xml , "<" + C2STestRestEntityStreamerXML<unsigned int>::sRootElement + ">12</" + C2STestRestEntityStreamerXML<unsigned int>::sRootElement + ">" )
 
         );
     }
@@ -480,6 +482,29 @@ namespace c2s
           c2s::test::C2STestRestResponse::
           build( c2s::Created ).
           entity( c2s::C2SHttpMediaType::application__json , sEntityDataReceivedExpected )
+
+        );
+    }
+
+    void C2STestRestCheckServerResponses::checkJSONRequestEntityToXMLResponseEntity()
+    {
+      std::string sEntityContent = "my content";
+      std::string sEntityDataReceivedExpected = "<" + C2STestRestEntityStreamerXML<std::string>::sRootElement + ">";
+      sEntityDataReceivedExpected += sEntityContent;
+      sEntityDataReceivedExpected += "</" + C2STestRestEntityStreamerXML<std::string>::sRootElement + ">";
+
+      std::string sEntityDataToSend = "{" + sEntityContent + "}";
+
+      checkResponse (
+
+          c2s::test::C2STestRestRequest::
+          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPath ).
+          accept( c2s::C2SHttpMediaType::application__xml ).
+          entity( c2s::C2SHttpMediaType::application__json , sEntityDataToSend )
+          ,
+          c2s::test::C2STestRestResponse::
+          build( c2s::Created ).
+          entity( c2s::C2SHttpMediaType::application__xml , sEntityDataReceivedExpected )
 
         );
     }

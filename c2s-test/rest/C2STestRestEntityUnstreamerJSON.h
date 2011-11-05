@@ -29,48 +29,41 @@
 
  */
 
-#ifndef C2STESTRESTMETHODMEDIATYPECONVERTER_H_
-#define C2STESTRESTMETHODMEDIATYPECONVERTER_H_
+#ifndef C2STESTRESTENTITYUNSTREAMERJSON_H_
+#define C2STESTRESTENTITYUNSTREAMERJSON_H_
 
-#include "C2SRestMethodPrototypePOST.h"
+#include "C2SHttpEntityUnstreamerBase.h"
 
 namespace c2s
 {
+
   namespace test
   {
 
-    class C2STestRestEntityUnstreamerXML;
-    class C2STestRestEntityUnstreamerJSON;
-
-    class C2STestRestMethodMediaTypeConverter : public C2SRestMethodPrototypePOST<std::string>
+    class C2STestRestEntityUnstreamerJSON : public C2SHttpEntityUnstreamerBase
     {
     public:
 
-      C2STestRestMethodMediaTypeConverter();
+      C2STestRestEntityUnstreamerJSON();
 
-      virtual ~C2STestRestMethodMediaTypeConverter();
+      void unstream( const C2SHttpEntity &entity );
 
-      virtual C2SRestMethodPrototype *clone() const;
+      void setIsDataReceived( bool bIsDataReceived );
 
-      static const std::string sPath;
+      bool isDataReceived() const;
 
-    protected:
-
-      virtual C2SHttpResponse *process();
+      const std::string &getReceivedContent();
 
     private:
 
-      C2SHttpResponse *processXML();
+      bool m_bIsDataReceived;
 
-      C2SHttpResponse *processJSON();
-
-      C2STestRestEntityUnstreamerXML *m_pRequestEntityUnstreamerXML;
-
-      C2STestRestEntityUnstreamerJSON *m_pRequestEntityUnstreamerJSON;
+      std::string m_sContentReceived;
 
     };
 
   }
+
 }
 
-#endif /* C2STESTRESTMETHODMEDIATYPECONVERTER_H_ */
+#endif /* C2STESTRESTENTITYUNSTREAMERJSON_H_ */

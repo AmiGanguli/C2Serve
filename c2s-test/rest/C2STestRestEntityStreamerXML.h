@@ -53,13 +53,18 @@ namespace c2s
 
       C2SHttpEntity *entity( const Type &data ) const
       {
-        std::string sXML = "<result>" + c2s::util::toString( data ) + "</result>";
+        std::string sXML = "<" + sRootElement + ">" + c2s::util::toString( data ) + "</" + sRootElement + ">";
         char *cdata = new char[ sXML.size() ];
         std::memcpy( cdata , sXML.c_str() , sXML.size() );
         return new C2SHttpEntity( cdata , sXML.size() , true );
       }
 
+      static const std::string sRootElement;
+
     };
+
+    template <class Type>
+    const std::string C2STestRestEntityStreamerXML<Type>::sRootElement = "xml";
 
   }
 }

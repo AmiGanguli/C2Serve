@@ -8,6 +8,7 @@ add_executable( c2s_test_rest
   C2STestRestMethodMediaTypeConverter
   C2STestRestMethodInvalidEntity
   C2STestRestEntityUnstreamerXML
+  C2STestRestEntityUnstreamerJSON
   C2STestRestRequest
 	C2STestRestResponse
 	C2STestRestFixture

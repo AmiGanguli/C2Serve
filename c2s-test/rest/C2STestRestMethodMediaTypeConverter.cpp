@@ -34,12 +34,12 @@
 #include "C2STestRestEntityStreamerXML.h"
 #include "C2STestRestEntityStreamerJSON.h"
 #include "C2STestRestEntityUnstreamerXML.h"
+#include "C2STestRestEntityUnstreamerJSON.h"
 
 #include <boost/test/unit_test.hpp>
 
 namespace c2s
 {
-
   namespace test
   {
 
@@ -47,9 +47,11 @@ namespace c2s
 
     C2STestRestMethodMediaTypeConverter::C2STestRestMethodMediaTypeConverter()
       : C2SRestMethodPrototypePOST<std::string>( sPath ),
-        m_pRequestEntityUnstreamerXML( new C2STestRestEntityUnstreamerXML() )
+        m_pRequestEntityUnstreamerXML( new C2STestRestEntityUnstreamerXML() ),
+        m_pRequestEntityUnstreamerJSON( new C2STestRestEntityUnstreamerJSON() )
     {
       C2SRestMethodPrototypePOST<std::string>::installRequestEntityUnstreamer( m_pRequestEntityUnstreamerXML );
+      C2SRestMethodPrototypePOST<std::string>::installRequestEntityUnstreamer( m_pRequestEntityUnstreamerJSON );
       C2SRestMethodPrototypePOST<std::string>::installEntityStreamer( new C2STestRestEntityStreamerXML<std::string>() );
       C2SRestMethodPrototypePOST<std::string>::installEntityStreamer( new C2STestRestEntityStreamerJSON<std::string>() );
     }
@@ -57,6 +59,7 @@ namespace c2s
     C2STestRestMethodMediaTypeConverter::~C2STestRestMethodMediaTypeConverter()
     {
       delete m_pRequestEntityUnstreamerXML;
+      delete m_pRequestEntityUnstreamerJSON;
     }
 
     C2SRestMethodPrototype *C2STestRestMethodMediaTypeConverter::clone() const
@@ -66,12 +69,29 @@ namespace c2s
 
     C2SHttpResponse *C2STestRestMethodMediaTypeConverter::process()
     {
+      if ( m_pRequestEntityUnstreamerXML->isDataReceived() )
+        return this->processXML();
+
+      return this->processJSON();
+    }
+
+    C2SHttpResponse *C2STestRestMethodMediaTypeConverter::processXML()
+    {
       BOOST_CHECK( m_pRequestEntityUnstreamerXML->isDataReceived() );
+      BOOST_CHECK( !m_pRequestEntityUnstreamerJSON->isDataReceived() );
       const std::string &sContentReceived = m_pRequestEntityUnstreamerXML->getReceivedContent();
       m_pRequestEntityUnstreamerXML->setIsDataReceived( false );
       return C2SRestMethodPrototypePOST<std::string>::buildResponse( Created , sContentReceived );
     }
 
-  }
+    C2SHttpResponse *C2STestRestMethodMediaTypeConverter::processJSON()
+    {
+      BOOST_CHECK( m_pRequestEntityUnstreamerJSON->isDataReceived() );
+      BOOST_CHECK( !m_pRequestEntityUnstreamerXML->isDataReceived() );
+      const std::string &sContentReceived = m_pRequestEntityUnstreamerJSON->getReceivedContent();
+      m_pRequestEntityUnstreamerJSON->setIsDataReceived( false );
+      return C2SRestMethodPrototypePOST<std::string>::buildResponse( Created , sContentReceived );
+    }
 
+  }
 }
