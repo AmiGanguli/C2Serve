@@ -38,6 +38,7 @@
 namespace c2s
 {
 
+  class C2SSocketInfo;
   class C2SHttpRequest;
 
   class C2SHttpClientException : public C2SException
@@ -59,6 +60,8 @@ namespace c2s
     C2SHttpResponse send( const C2SHttpRequest &request );
 
   private:
+
+    static void writeToSocket( const std::string &sDataToWrite , const C2SSocketInfo &info );
 
     std::string m_sHost;
 

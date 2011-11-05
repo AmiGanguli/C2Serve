@@ -83,9 +83,9 @@ namespace c2s
 
   C2SHttpResponse C2SHttpClient::send( const C2SHttpRequest &request )
   {
-#ifdef WINXX
-
     C2SSocketInfo info;
+
+#ifdef WINXX
 
     SOCKADDR_IN addr;
 
@@ -120,12 +120,11 @@ namespace c2s
 
 #else //WINXX
 
-    int iSocketFileDesc = 0;
     struct sockaddr_in serverAddress;
     struct hostent *server;
 
-    iSocketFileDesc = socket( AF_INET , SOCK_STREAM , 0 );
-    if ( iSocketFileDesc < 0 )
+    info.SocketDescriptor = socket( AF_INET , SOCK_STREAM , 0 );
+    if ( info.SocketDescriptor < 0 )
       throw C2SHttpClientException( "C2SHttpClient::send: ERROR opening socket" );
 
     server = gethostbyname( m_sHost.c_str() );
@@ -137,7 +136,7 @@ namespace c2s
     bcopy( ( char * ) server->h_addr , ( char * ) &serverAddress.sin_addr.s_addr , server->h_length );
 
     serverAddress.sin_port = htons( m_iPortNumber );
-    if ( connect( iSocketFileDesc , ( struct sockaddr *) &serverAddress , sizeof( serverAddress ) ) < 0 )
+    if ( connect( info.SocketDescriptor , ( struct sockaddr *) &serverAddress , sizeof( serverAddress ) ) < 0 )
       throw C2SHttpClientException( "C2SHttpClient::send: ERROR connecting to socket" );
 
 #endif //WINXX
@@ -145,13 +144,7 @@ namespace c2s
     std::string sHeader = request.header().toString();
 
     //send header
-#ifdef WINXX
-    int n = ::send( info.SocketDescriptor , sHeader.c_str() , sHeader.size() , 0 );
-#else
-    int n = write( iSocketFileDesc , sHeader.c_str() , sHeader.size() );
-#endif
-    if (n < 0)
-      throw C2SHttpClientException( "C2SHttpClient::send: Cannot send header! ERROR writing to socket" );
+    C2SHttpClient::writeToSocket( sHeader , info );
 
     //TODO: send body
 
@@ -171,7 +164,7 @@ namespace c2s
 #ifdef WINXX
       iBytesRead = recv( info.SocketDescriptor , buffer , BUFFERSIZE , MSG_PARTIAL );
 #else
-      iBytesRead = read( iSocketFileDesc , buffer , BUFFERSIZE );
+      iBytesRead = read( info.SocketDescriptor , buffer , BUFFERSIZE );
 #endif
       if ( iBytesRead < 0 )
         throw C2SHttpClientException( "C2SHttpClient::send: Error reading from socket!" );
@@ -182,12 +175,24 @@ namespace c2s
 #ifdef WINXX
     closesocket( info.SocketDescriptor );
 #else
-    close( iSocketFileDesc );
+    close( info.SocketDescriptor );
 #endif
 
     response.finished();
 
     return response;
+  }
+
+  void C2SHttpClient::writeToSocket( const std::string &sDataToWrite , const C2SSocketInfo &info )
+  {
+#ifdef WINXX
+    int n = ::send( info.SocketDescriptor , sDataToWrite.c_str() , sDataToWrite.size() , 0 );
+#else
+    int n = write( info.SocketDescriptor , sDataToWrite.c_str() , sDataToWrite.size() );
+#endif
+    if (n < 0)
+      throw C2SHttpClientException( "C2SHttpClient::writeToSocket: ERROR writing to socket" );
+
   }
 
 }
