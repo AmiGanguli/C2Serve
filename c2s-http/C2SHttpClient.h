@@ -61,7 +61,7 @@ namespace c2s
 
   private:
 
-    static void writeToSocket( const std::string &sDataToWrite , const C2SSocketInfo &info );
+    static void writeToSocket( const char *data , unsigned int iSize , const C2SSocketInfo &info );
 
     std::string m_sHost;
 

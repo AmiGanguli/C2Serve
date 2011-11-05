@@ -141,12 +141,19 @@ namespace c2s
 
 #endif //WINXX
 
-    std::string sHeader = request.header().toString();
+    std::string sRequestData = request.header().toString();
+
+    if ( request.header().Fields.getContentLength() )
+    {
+      if ( request.header().Method == GET )
+        throw C2SHttpException( "C2SHttpClient::send: " , "No content allowed for GET request" , BadRequest );
+
+      const C2SHttpEntity &entity = request.entity();
+      sRequestData += std::string( entity.data , entity.size );
+    }
 
     //send header
-    C2SHttpClient::writeToSocket( sHeader , info );
-
-    //TODO: send body
+    C2SHttpClient::writeToSocket( sRequestData.c_str() , sRequestData.size() , info );
 
     C2SHttpResponse response;
 
@@ -183,12 +190,12 @@ namespace c2s
     return response;
   }
 
-  void C2SHttpClient::writeToSocket( const std::string &sDataToWrite , const C2SSocketInfo &info )
+  void C2SHttpClient::writeToSocket( const char *data , unsigned int iSize , const C2SSocketInfo &info )
   {
 #ifdef WINXX
-    int n = ::send( info.SocketDescriptor , sDataToWrite.c_str() , sDataToWrite.size() , 0 );
+    int n = ::send( info.SocketDescriptor , data , iSize , 0 );
 #else
-    int n = write( info.SocketDescriptor , sDataToWrite.c_str() , sDataToWrite.size() );
+    int n = write( info.SocketDescriptor , data , iSize );
 #endif
     if (n < 0)
       throw C2SHttpClientException( "C2SHttpClient::writeToSocket: ERROR writing to socket" );
