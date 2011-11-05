@@ -33,13 +33,13 @@
 #ifndef C2SRESTMETHODPROTOTYPEPOST_H_
 #define C2SRESTMETHODPROTOTYPEPOST_H_
 
-#include "C2SRestEntityMethodPrototype.h"
+#include "C2SRestResponseEntityMethodPrototype.h"
 
 namespace c2s
 {
 
   template <class ResponseEntityType>
-  class C2SRestMethodPrototypePOST : public C2SRestEntityMethodPrototype<ResponseEntityType>
+  class C2SRestMethodPrototypePOST : public C2SRestResponseEntityMethodPrototype<ResponseEntityType>
   {
   protected:
 
@@ -55,7 +55,7 @@ namespace c2s
 
   template <class ResponseEntityType>
   C2SRestMethodPrototypePOST<ResponseEntityType>::C2SRestMethodPrototypePOST( const std::string &sPath )
-    : C2SRestEntityMethodPrototype<ResponseEntityType>( POST , sPath )
+    : C2SRestResponseEntityMethodPrototype<ResponseEntityType>( POST , sPath )
   {};
 
 }
