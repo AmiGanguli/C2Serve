@@ -68,8 +68,9 @@ namespace c2s
     C2STestRestRequest &C2STestRestRequest::entity( const C2SHttpMediaType &mediaType , const std::string &sEntityData )
     {
       m_sRequestEntityData = sEntityData;
-      m_request.header().Fields.setContentType( mediaType );
       m_request.setEntity( new C2SHttpEntity( m_sRequestEntityData.c_str() , m_sRequestEntityData.size() ) );
+      m_request.header().Fields.setContentType( mediaType );
+      m_request.header().Fields.setContentLength( m_sRequestEntityData.size() );
       return *this;
     }
 

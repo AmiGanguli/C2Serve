@@ -365,7 +365,7 @@ namespace c2s
       throw C2SHttpException( "C2SHttpParser::body: " , "Requested size (" + c2s::util::toString( size ) + ") exceeds actual size (" + c2s::util::toString( m_iContentSize ) + ")!" , InternalServerError );
 
     if ( m_iCurrentBodyIdx < size )
-      throw C2SHttpException( "C2SHttpParser::body: " , "Actual body size (" + c2s::util::toString( m_iCurrentBodyIdx ) + ") is smaller that requested size (" + c2s::util::toString( size ) + ")!" , InternalServerError );
+      throw C2SHttpException( "C2SHttpParser::body: " , "Actual body size (" + c2s::util::toString( m_iCurrentBodyIdx ) + ") is smaller than requested size (" + c2s::util::toString( size ) + ")!" , InternalServerError );
 
     return m_body;
   }

@@ -39,6 +39,8 @@
 #include "C2STestRestMethodInvalidEntity.h"
 #include "C2STestRestMethodMediaTypeConverter.h"
 
+#include "C2STestRestEntityUnstreamerXML.h"
+
 #include "C2STestRestRequest.h"
 #include "C2STestRestResponse.h"
 
@@ -461,12 +463,16 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkXMLRequestEntityToJSONResponseEntity()
     {
+      std::string sEntityData = "<" + C2STestRestEntityUnstreamerXML::sRootElementID + ">";
+      sEntityData += "my content";
+      sEntityData += "</" + C2STestRestEntityUnstreamerXML::sRootElementID + ">";
+
       checkResponse (
 
           c2s::test::C2STestRestRequest::
           build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPath ).
           accept( c2s::C2SHttpMediaType::application__xml ).
-          entity( c2s::C2SHttpMediaType::application__xml , "<xml>my content</xml>" )
+          entity( c2s::C2SHttpMediaType::application__xml , sEntityData )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::Created )

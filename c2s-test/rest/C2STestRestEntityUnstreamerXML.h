@@ -30,27 +30,37 @@
  */
 
 
-#ifndef C2STESTRESTREQUESTENTITYUNSTREAMERXML_H_
-#define C2STESTRESTREQUESTENTITYUNSTREAMERXML_H_
+#ifndef C2STESTRESTENTITYUNSTREAMERXML_H_
+#define C2STESTRESTENTITYUNSTREAMERXML_H_
 
-#include "C2SHttpRequestEntityUnstreamerBase.h"
+#include "C2SHttpEntityUnstreamerBase.h"
 
 namespace c2s
 {
   namespace test
   {
 
-    class C2STestRestRequestEntityUnstreamerXML : public C2SHttpRequestEntityUnstreamerBase
+    class C2STestRestEntityUnstreamerXML : public C2SHttpEntityUnstreamerBase
     {
     public:
 
-      C2STestRestRequestEntityUnstreamerXML()
-        : C2SHttpRequestEntityUnstreamerBase( C2SHttpMediaType::application__xml )
-      {};
+      C2STestRestEntityUnstreamerXML();
+
+      void unstream( const C2SHttpEntity &entity );
+
+      void setIsDataReceived( bool bIsDataReceived );
+
+      bool isDataReceived() const;
+
+      static const std::string sRootElementID;
+
+    private:
+
+      bool m_bIsDataReceived;
 
     };
 
   }
 }
 
-#endif /* C2STESTRESTREQUESTENTITYUNSTREAMERXML_H_ */
+#endif /* C2STESTRESTENTITYUNSTREAMERXML_H_ */

@@ -30,23 +30,26 @@
  */
 
 
-#ifndef C2SHTTPREQUESTENTITYUNSTREAMERBASE_H_
-#define C2SHTTPREQUESTENTITYUNSTREAMERBASE_H_
+#ifndef C2SHTTPENTITYUNSTREAMERBASE_H_
+#define C2SHTTPENTITYUNSTREAMERBASE_H_
 
+#include "C2SHttpEntity.h"
 #include "C2SHttpMediaType.h"
 
 namespace c2s
 {
 
-  class C2SHttpRequestEntityUnstreamerBase
+  class C2SHttpEntityUnstreamerBase
   {
   public:
 
     const C2SHttpMediaType &getAcceptedMediaType() const { return m_acceptedMediaType; }
 
+    virtual void unstream( const C2SHttpEntity &entity ) = 0;
+
   protected:
 
-    C2SHttpRequestEntityUnstreamerBase( C2SHttpMediaType acceptedMediaType )
+    C2SHttpEntityUnstreamerBase( C2SHttpMediaType acceptedMediaType )
       : m_acceptedMediaType( acceptedMediaType )
     {};
 
@@ -57,4 +60,4 @@ namespace c2s
 
 }
 
-#endif /* C2SHTTPREQUESTENTITYUNSTREAMERBASE_H_ */
+#endif /* C2SHTTPENTITYUNSTREAMERBASE_H_ */

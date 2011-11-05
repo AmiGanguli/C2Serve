@@ -40,7 +40,7 @@ namespace c2s
   namespace test
   {
 
-    class C2STestRestRequestEntityUnstreamerXML;
+    class C2STestRestEntityUnstreamerXML;
 
     class C2STestRestMethodMediaTypeConverter : public C2SRestMethodPrototypePOST<std::string>
     {
@@ -60,7 +60,7 @@ namespace c2s
 
     private:
 
-      C2STestRestRequestEntityUnstreamerXML *m_pRequestEntityUnstreamerXML;
+      C2STestRestEntityUnstreamerXML *m_pRequestEntityUnstreamerXML;
 
     };
 

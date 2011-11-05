@@ -65,7 +65,7 @@ namespace c2s
 
     void C2STestRestResponse::check( const C2SHttpResponse &response ) const
     {
-      BOOST_MESSAGE( "response status: " << response.header().Status );
+      BOOST_MESSAGE( "response status: " << response.header().Status << "; Phrase: \"" + response.header().ReasonPhrase + "\"" );
       BOOST_CHECK( response.header().Status == m_status );
 
       if ( m_entity.size() )

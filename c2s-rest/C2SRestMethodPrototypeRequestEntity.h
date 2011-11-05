@@ -35,7 +35,7 @@
 
 #include "C2SRestMethodPrototypeResponseEntity.h"
 
-#include "C2SHttpRequestEntityUnstreamerBase.h"
+#include "C2SHttpEntityUnstreamerBase.h"
 
 #include <map>
 
@@ -55,7 +55,7 @@ namespace c2s
 
     virtual ~C2SRestMethodPrototypeRequestEntity(){};
 
-    virtual void installRequestEntityUnstreamer( C2SHttpRequestEntityUnstreamerBase *pRequestEntityUnstreamer );
+    virtual void installRequestEntityUnstreamer( C2SHttpEntityUnstreamerBase *pRequestEntityUnstreamer );
 
   private:
 
@@ -65,11 +65,11 @@ namespace c2s
 
     void unstreamRequestEntity( const C2SHttpRequest &request );
 
-    C2SHttpRequestEntityUnstreamerBase *detectRequestEntityUnstreamerForMediaType( const C2SHttpMediaType &requestEntityMediaType );
+    C2SHttpEntityUnstreamerBase *detectRequestEntityUnstreamerForMediaType( const C2SHttpMediaType &requestEntityMediaType );
 
     bool isMediaTypeInstalled( const C2SHttpMediaType &mediaType ) const;
 
-    std::map<std::string,C2SHttpRequestEntityUnstreamerBase*> m_requestEntityStreamersByMediaType;
+    std::map<std::string,C2SHttpEntityUnstreamerBase*> m_requestEntityStreamersByMediaType;
 
   };
 
@@ -90,11 +90,12 @@ namespace c2s
   template <class ResponseEntityType>
   void C2SRestMethodPrototypeRequestEntity<ResponseEntityType>::unstreamRequestEntity( const C2SHttpRequest &request )
   {
-    C2SHttpRequestEntityUnstreamerBase *pRequestEntityMediaTypeUnstreamer = this->detectRequestEntityUnstreamerForMediaType( request.header().Fields.getContentType() );
+    C2SHttpEntityUnstreamerBase *pRequestEntityMediaTypeUnstreamer = this->detectRequestEntityUnstreamerForMediaType( request.header().Fields.getContentType() );
+    pRequestEntityMediaTypeUnstreamer->unstream( request.entity() );
   }
 
   template <class ResponseEntityType>
-  C2SHttpRequestEntityUnstreamerBase *C2SRestMethodPrototypeRequestEntity<ResponseEntityType>::detectRequestEntityUnstreamerForMediaType( const C2SHttpMediaType &requestEntityMediaType )
+  C2SHttpEntityUnstreamerBase *C2SRestMethodPrototypeRequestEntity<ResponseEntityType>::detectRequestEntityUnstreamerForMediaType( const C2SHttpMediaType &requestEntityMediaType )
   {
     if ( !this->isMediaTypeInstalled( requestEntityMediaType ) )
       throw C2SRestException( "C2SRestMethodPrototypeRequestEntity::detectRequestEntityUnstreamerForMediaType: " , "Request media type cannot be handled by server" , UnsupportedMediaType );
@@ -103,7 +104,7 @@ namespace c2s
   }
 
   template <class ResponseEntityType>
-  void C2SRestMethodPrototypeRequestEntity<ResponseEntityType>::installRequestEntityUnstreamer( C2SHttpRequestEntityUnstreamerBase *pRequestEntityUnstreamer )
+  void C2SRestMethodPrototypeRequestEntity<ResponseEntityType>::installRequestEntityUnstreamer( C2SHttpEntityUnstreamerBase *pRequestEntityUnstreamer )
   {
     C2SHttpMediaType acceptedMediaTypeForNewUnstreamer = pRequestEntityUnstreamer->getAcceptedMediaType();
     if ( this->isMediaTypeInstalled( acceptedMediaTypeForNewUnstreamer ) )
