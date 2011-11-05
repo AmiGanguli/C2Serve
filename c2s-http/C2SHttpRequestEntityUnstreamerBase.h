@@ -30,46 +30,31 @@
  */
 
 
-#ifndef C2STESTRESTREQUEST_H_
-#define C2STESTRESTREQUEST_H_
+#ifndef C2SHTTPREQUESTENTITYUNSTREAMERBASE_H_
+#define C2SHTTPREQUESTENTITYUNSTREAMERBASE_H_
 
-#include "C2SHttpRequest.h"
-#include "C2SHttpResponse.h"
+#include "C2SHttpMediaType.h"
 
 namespace c2s
 {
-  namespace test
+
+  class C2SHttpRequestEntityUnstreamerBase
   {
+  public:
 
-    class C2STestRestRequest
-    {
-    public:
+    const C2SHttpMediaType &getAcceptedMediaType() const { return m_acceptedMediaType; }
 
-      virtual ~C2STestRestRequest();
+  protected:
 
-      static C2STestRestRequest build( C2SHttpMethod method , const std::string &sURI );
+    C2SHttpRequestEntityUnstreamerBase( C2SHttpMediaType acceptedMediaType )
+      : m_acceptedMediaType( acceptedMediaType )
+    {};
 
-      C2STestRestRequest &query_field( const std::string &name , const std::string &value );
 
-      C2STestRestRequest &accept( const C2SHttpMediaType &mediatype );
+    C2SHttpMediaType m_acceptedMediaType;
 
-      C2STestRestRequest &entity( const C2SHttpMediaType &mediatype , const std::string &sEntityData );
+  };
 
-      C2SHttpResponse process() const;
-
-      const std::string &getURI() const;
-
-    private:
-
-      C2STestRestRequest( C2SHttpMethod method , const std::string &sURI );
-
-      C2SHttpRequest m_request;
-
-      std::string m_sRequestEntityData;
-
-    };
-
-  }
 }
 
-#endif /* C2STESTRESTREQUEST_H_ */
+#endif /* C2SHTTPREQUESTENTITYUNSTREAMERBASE_H_ */

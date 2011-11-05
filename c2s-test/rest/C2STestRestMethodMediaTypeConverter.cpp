@@ -32,6 +32,9 @@
 #include "C2STestRestMethodMediaTypeConverter.h"
 
 #include "C2STestRestEntityStreamerXML.h"
+#include "C2STestRestRequestEntityUnstreamerXML.h"
+
+#include <boost/test/unit_test.hpp>
 
 namespace c2s
 {
@@ -42,13 +45,16 @@ namespace c2s
     const std::string C2STestRestMethodMediaTypeConverter::sPath = "media-type/convert";
 
     C2STestRestMethodMediaTypeConverter::C2STestRestMethodMediaTypeConverter()
-      : C2SRestMethodPrototypePOST<std::string>( sPath )
+      : C2SRestMethodPrototypePOST<std::string>( sPath ),
+        m_pRequestEntityUnstreamerXML( new C2STestRestRequestEntityUnstreamerXML() )
     {
+      C2SRestMethodPrototypePOST<std::string>::installRequestEntityUnstreamer( m_pRequestEntityUnstreamerXML );
       C2SRestMethodPrototypePOST<std::string>::installEntityStreamer( new C2STestRestEntityStreamerXML<std::string>() );
     }
 
     C2STestRestMethodMediaTypeConverter::~C2STestRestMethodMediaTypeConverter()
     {
+      delete m_pRequestEntityUnstreamerXML;
     }
 
     C2SRestMethodPrototype *C2STestRestMethodMediaTypeConverter::clone() const

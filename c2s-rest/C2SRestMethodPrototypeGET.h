@@ -33,13 +33,13 @@
 #ifndef C2SRESTMETHODPROTOTYPEGET_H_
 #define C2SRESTMETHODPROTOTYPEGET_H_
 
-#include "C2SRestResponseEntityMethodPrototype.h"
+#include "C2SRestMethodPrototypeResponseEntity.h"
 
 namespace c2s
 {
 
   template <class ResponseEntityType = C2SHttpInvalidEntityType>
-  class C2SRestMethodPrototypeGET : public C2SRestResponseEntityMethodPrototype<ResponseEntityType>
+  class C2SRestMethodPrototypeGET : public C2SRestMethodPrototypeResponseEntity<ResponseEntityType>
   {
   protected:
 
@@ -55,7 +55,7 @@ namespace c2s
 
   template <class ResponseEntityType>
   C2SRestMethodPrototypeGET<ResponseEntityType>::C2SRestMethodPrototypeGET( const std::string &sPath )
-    : C2SRestResponseEntityMethodPrototype<ResponseEntityType>( GET , sPath )
+    : C2SRestMethodPrototypeResponseEntity<ResponseEntityType>( GET , sPath )
   {};
 
 }

@@ -60,7 +60,7 @@ namespace c2s
 
     const C2SHttpMediaType &getAccept( const std::string &sMediaType ) const;
 
-    void setContentType( const std::string &sMediaType );
+    void setContentType( const C2SHttpMediaType &mediatype );
 
     const C2SHttpMediaType &getContentType() const { return m_contentType; }
 

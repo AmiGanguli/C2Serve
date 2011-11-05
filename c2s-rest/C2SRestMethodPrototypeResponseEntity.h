@@ -29,8 +29,8 @@
 
  */
 
-#ifndef C2SRESTRESPONSEENTITYMETHODPROTOTYPE_H_
-#define C2SRESTRESPONSEENTITYMETHODPROTOTYPE_H_
+#ifndef C2SRESTMETHODPROTOTYPERESPONSEENTITY_H_
+#define C2SRESTMETHODPROTOTYPERESPONSEENTITY_H_
 
 #include "C2SRestMethodPrototype.h"
 #include "C2SRestEntityStreamer.h"
@@ -42,17 +42,17 @@ namespace c2s
 {
 
   template <class ResponseEntityType>
-  class C2SRestResponseEntityMethodPrototype : public C2SRestMethodPrototype
+  class C2SRestMethodPrototypeResponseEntity : public C2SRestMethodPrototype
   {
   public:
 
-    virtual ~C2SRestResponseEntityMethodPrototype();
+    virtual ~C2SRestMethodPrototypeResponseEntity();
 
     virtual C2SHttpResponse *processRequest( const C2SHttpRequest &request );
 
   protected:
 
-    C2SRestResponseEntityMethodPrototype( C2SHttpMethod methodType , const std::string &sPath );
+    C2SRestMethodPrototypeResponseEntity( C2SHttpMethod methodType , const std::string &sPath );
 
     void installEntityStreamer( C2SRestEntityStreamer<ResponseEntityType> *pEntityStreamer );
 
@@ -75,13 +75,13 @@ namespace c2s
   };
 
   template <class ResponseEntityType>
-  C2SRestResponseEntityMethodPrototype<ResponseEntityType>::C2SRestResponseEntityMethodPrototype( C2SHttpMethod methodType , const std::string &sPath )
+  C2SRestMethodPrototypeResponseEntity<ResponseEntityType>::C2SRestMethodPrototypeResponseEntity( C2SHttpMethod methodType , const std::string &sPath )
     : C2SRestMethodPrototype( methodType , sPath ),
       m_pEntityStreamerToUseForNextResponse( NULL )
   {};
 
   template <class ResponseEntityType>
-  C2SRestResponseEntityMethodPrototype<ResponseEntityType>::~C2SRestResponseEntityMethodPrototype()
+  C2SRestMethodPrototypeResponseEntity<ResponseEntityType>::~C2SRestMethodPrototypeResponseEntity()
   {
     typename EntityStreamerList::iterator esit = m_entityStreamersByTimeOfRegistration.begin();
     typename EntityStreamerList::iterator esend = m_entityStreamersByTimeOfRegistration.end();
@@ -92,36 +92,36 @@ namespace c2s
   }
 
   template <class ResponseEntityType>
-  void C2SRestResponseEntityMethodPrototype<ResponseEntityType>::installEntityStreamer( C2SRestEntityStreamer<ResponseEntityType> *pEntityStreamer )
+  void C2SRestMethodPrototypeResponseEntity<ResponseEntityType>::installEntityStreamer( C2SRestEntityStreamer<ResponseEntityType> *pEntityStreamer )
   {
     const C2SHttpMediaType &mediatype = pEntityStreamer->getMediaType();
 
     if ( m_allowedEntityMediaTypes.find( mediatype.Type ) != m_allowedEntityMediaTypes.end() )
-      throw C2SRestException( "C2SRestResponseEntityMethodPrototype::installEntityStreamer: " , "Media type already exists: " + mediatype.Type , InternalServerError );
+      throw C2SRestException( "C2SRestMethodPrototypeResponseEntity::installEntityStreamer: " , "Media type already exists: " + mediatype.Type , InternalServerError );
 
     m_allowedEntityMediaTypes.insert( std::make_pair( mediatype.Type , mediatype ) );
     m_entityStreamersByTimeOfRegistration.push_back( pEntityStreamer );
   }
 
   template <class ResponseEntityType>
-  C2SHttpResponse *C2SRestResponseEntityMethodPrototype<ResponseEntityType>::processRequest( const C2SHttpRequest &request )
+  C2SHttpResponse *C2SRestMethodPrototypeResponseEntity<ResponseEntityType>::processRequest( const C2SHttpRequest &request )
   {
     m_pEntityStreamerToUseForNextResponse = this->detectEntityStreamerToUseForRequest( request );
     return C2SRestMethodPrototype::processRequest( request );
   }
 
   template <>
-  inline C2SHttpResponse *C2SRestResponseEntityMethodPrototype<C2SHttpInvalidEntityType>::processRequest( const C2SHttpRequest &request )
+  inline C2SHttpResponse *C2SRestMethodPrototypeResponseEntity<C2SHttpInvalidEntityType>::processRequest( const C2SHttpRequest &request )
   {
     m_pEntityStreamerToUseForNextResponse = NULL;
     return C2SRestMethodPrototype::processRequest( request );
   }
 
   template <class ResponseEntityType>
-  const C2SRestEntityStreamer<ResponseEntityType> *C2SRestResponseEntityMethodPrototype<ResponseEntityType>::detectEntityStreamerToUseForRequest( const C2SHttpRequest &request ) const
+  const C2SRestEntityStreamer<ResponseEntityType> *C2SRestMethodPrototypeResponseEntity<ResponseEntityType>::detectEntityStreamerToUseForRequest( const C2SHttpRequest &request ) const
   {
     if ( !m_entityStreamersByTimeOfRegistration.size() )
-      throw C2SRestException( "C2SRestResponseEntityMethodPrototype::detectEntityStreamerToUseForRequest: " , "No entity streamers available" , InternalServerError );
+      throw C2SRestException( "C2SRestMethodPrototypeResponseEntity::detectEntityStreamerToUseForRequest: " , "No entity streamers available" , InternalServerError );
 
     typename EntityStreamerList::const_iterator esit = m_entityStreamersByTimeOfRegistration.begin();
     typename EntityStreamerList::const_iterator esend = m_entityStreamersByTimeOfRegistration.end();
@@ -135,17 +135,17 @@ namespace c2s
     if ( request.header().Fields.isAccept( C2SHttpMediaType::wildcard ) )
       return this->getFirstEntityStreamerAsDefault();
 
-    throw C2SRestException( "C2SRestResponseEntityMethodPrototype::detectEntityStreamerToUseForRequest: " , "No appropriate content type was found" , NotAcceptable );
+    throw C2SRestException( "C2SRestMethodPrototypeResponseEntity::detectEntityStreamerToUseForRequest: " , "No appropriate content type was found" , NotAcceptable );
   }
 
   template <class ResponseEntityType>
-  const C2SRestEntityStreamer<ResponseEntityType> *C2SRestResponseEntityMethodPrototype<ResponseEntityType>::getFirstEntityStreamerAsDefault() const
+  const C2SRestEntityStreamer<ResponseEntityType> *C2SRestMethodPrototypeResponseEntity<ResponseEntityType>::getFirstEntityStreamerAsDefault() const
   {
     return *( m_entityStreamersByTimeOfRegistration.begin() );
   }
 
   template <class ResponseEntityType>
-  C2SHttpResponse *C2SRestResponseEntityMethodPrototype<ResponseEntityType>::buildResponse( C2SHttpStatus status , const ResponseEntityType &data ) const
+  C2SHttpResponse *C2SRestMethodPrototypeResponseEntity<ResponseEntityType>::buildResponse( C2SHttpStatus status , const ResponseEntityType &data ) const
   {
     assert( m_pEntityStreamerToUseForNextResponse );
     C2SHttpResponse *pResponse = C2SHttpResponse::build( status );
@@ -155,12 +155,12 @@ namespace c2s
   }
 
   template <>
-  inline C2SHttpResponse *C2SRestResponseEntityMethodPrototype<C2SHttpInvalidEntityType>::buildResponse( C2SHttpStatus status , const C2SHttpInvalidEntityType &data ) const
+  inline C2SHttpResponse *C2SRestMethodPrototypeResponseEntity<C2SHttpInvalidEntityType>::buildResponse( C2SHttpStatus status , const C2SHttpInvalidEntityType &data ) const
   {
     assert( m_pEntityStreamerToUseForNextResponse == NULL );
-    throw C2SRestException( "C2SRestResponseEntityMethodPrototype<C2SHttpInvalidEntityType>::buildResponse: " , "Response with entity body is not allowed for entity type C2SHttpInvalidEntityType" , InternalServerError );
+    throw C2SRestException( "C2SRestMethodPrototypeResponseEntity<C2SHttpInvalidEntityType>::buildResponse: " , "Response with entity body is not allowed for entity type C2SHttpInvalidEntityType" , InternalServerError );
   }
 
 }
 
-#endif /* C2SRESTRESPONSEENTITYMETHODPROTOTYPE_H_ */
+#endif /* C2SRESTMETHODPROTOTYPERESPONSEENTITY_H_ */

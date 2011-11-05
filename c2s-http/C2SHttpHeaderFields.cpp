@@ -88,11 +88,10 @@ namespace c2s
     return m_accept.get( sMediaType );
   }
 
-  void C2SHttpHeaderFields::setContentType( const std::string &sMediaType )
+  void C2SHttpHeaderFields::setContentType( const C2SHttpMediaType &mediatype )
   {
-    m_fields[ FIELD_CONTENT_TYPE ] = sMediaType;
-    m_contentType.Type = sMediaType;
-    m_contentType.fQ = 1.f;
+    m_fields[ FIELD_CONTENT_TYPE ] = mediatype.Type;
+    m_contentType = mediatype;
   }
 
   void C2SHttpHeaderFields::setContentLength( unsigned int iContentLength )

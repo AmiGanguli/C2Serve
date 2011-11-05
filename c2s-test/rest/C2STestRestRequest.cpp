@@ -65,6 +65,14 @@ namespace c2s
       return *this;
     }
 
+    C2STestRestRequest &C2STestRestRequest::entity( const C2SHttpMediaType &mediaType , const std::string &sEntityData )
+    {
+      m_sRequestEntityData = sEntityData;
+      m_request.header().Fields.setContentType( mediaType );
+      m_request.setEntity( new C2SHttpEntity( m_sRequestEntityData.c_str() , m_sRequestEntityData.size() ) );
+      return *this;
+    }
+
     C2SHttpResponse C2STestRestRequest::process() const
     {
       C2SHttpClient client( "localhost" , C2STestRestFixture::iPortOfTestServer );

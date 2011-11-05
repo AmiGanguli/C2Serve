@@ -57,6 +57,8 @@ namespace c2s
 
     C2SHttpRequestHeader &header() { return m_header; }
 
+    void setEntity( C2SHttpEntity *pHttpEntity );
+
     const C2SHttpEntity &entity() const;
 
   private:

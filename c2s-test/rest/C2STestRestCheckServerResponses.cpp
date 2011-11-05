@@ -89,6 +89,7 @@ namespace c2s
       checkEmptyResourceContextRootWithLeadingSlash();
       checkEmptyResourceMethodNotFound();
       checkXMLRequestEntityToJSONResponseEntity();
+      checkHTMLRequestEntityToJSONResponseEntityUnsupportedMediaTypeResponse();
     }
 
     void C2STestRestCheckServerResponses::checkResponse( const c2s::test::C2STestRestRequest &request , const c2s::test::C2STestRestResponse &response_check )
@@ -464,10 +465,26 @@ namespace c2s
 
           c2s::test::C2STestRestRequest::
           build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPath ).
-          accept( c2s::C2SHttpMediaType::application__xml )
+          accept( c2s::C2SHttpMediaType::application__xml ).
+          entity( c2s::C2SHttpMediaType::application__xml , "<xml>my content</xml>" )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::Created )
+
+        );
+    }
+
+    void C2STestRestCheckServerResponses::checkHTMLRequestEntityToJSONResponseEntityUnsupportedMediaTypeResponse()
+    {
+      checkResponse (
+
+          c2s::test::C2STestRestRequest::
+          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPath ).
+          accept( c2s::C2SHttpMediaType::application__xml ).
+          entity( c2s::C2SHttpMediaType::text__html , "<html>my content</html>" )
+          ,
+          c2s::test::C2STestRestResponse::
+          build( c2s::UnsupportedMediaType )
 
         );
     }

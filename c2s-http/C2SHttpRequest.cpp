@@ -69,4 +69,11 @@ namespace c2s
     return *m_pEntity;
   }
 
+  void C2SHttpRequest::setEntity( C2SHttpEntity *pHttpEntity )
+  {
+    if ( m_pEntity )
+      delete m_pEntity;
+    m_pEntity = pHttpEntity;
+  }
+
 }
