@@ -30,4 +30,6 @@ install( TARGETS
 	c2s_test_rest
 	DESTINATION bin )
 
-add_test( c2s_test_rest c2s_test_rest )
+if ( NOT DISABLE_C2S_TESTING )
+  add_test( c2s_test_rest c2s_test_rest )
+endif ( NOT DISABLE_C2S_TESTING )

@@ -16,7 +16,10 @@ target_link_libraries( threadtest_posix ${Boost_LIBRARIES} pthread )
 
 install( TARGETS threadtest_posix DESTINATION bin )
 
-add_test( threadtest_posix threadtest_posix )
+if ( NOT DISABLE_C2S_TESTING )
+  add_test( threadtest_posix threadtest_posix )
+endif ( NOT DISABLE_C2S_TESTING )
+
 
 endif( NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" )
     

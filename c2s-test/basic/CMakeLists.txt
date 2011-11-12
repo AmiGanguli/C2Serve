@@ -17,4 +17,6 @@ install( TARGETS
 	c2s_test_http_basic
 	DESTINATION bin )
 
-add_test( c2s_test_http_basic c2s_test_http_basic )
+if ( NOT DISABLE_C2S_TESTING )
+  add_test( c2s_test_http_basic c2s_test_http_basic )
+endif ( NOT DISABLE_C2S_TESTING )

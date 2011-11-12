@@ -20,4 +20,6 @@ endif( NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" )
     
 install( TARGETS threadtest_boost DESTINATION bin )
 
-add_test( threadtest_boost threadtest_boost )
+if ( NOT DISABLE_C2S_TESTING )
+  add_test( threadtest_boost threadtest_boost )
+endif ( NOT DISABLE_C2S_TESTING )
