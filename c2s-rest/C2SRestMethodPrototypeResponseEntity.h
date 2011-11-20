@@ -155,7 +155,7 @@ namespace c2s
   }
 
   template <>
-  inline C2SHttpResponse *C2SRestMethodPrototypeResponseEntity<C2SHttpInvalidEntityType>::buildResponse( C2SHttpStatus status , const C2SHttpInvalidEntityType &data ) const
+  inline C2SHttpResponse *C2SRestMethodPrototypeResponseEntity<C2SHttpInvalidEntityType>::buildResponse( C2SHttpStatus , const C2SHttpInvalidEntityType & ) const
   {
     assert( m_pEntityStreamerToUseForNextResponse == NULL );
     throw C2SRestException( "C2SRestMethodPrototypeResponseEntity<C2SHttpInvalidEntityType>::buildResponse: " , "Response with entity body is not allowed for entity type C2SHttpInvalidEntityType" , InternalServerError );
