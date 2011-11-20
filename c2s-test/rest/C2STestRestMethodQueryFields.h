@@ -52,11 +52,21 @@ namespace c2s
 
       static const std::string sPath;
 
-      static const std::string sQueryFieldValueExpected;
+      static const std::string sQueryField1Name;
+
+      static const std::string sQueryField2Name;
+
+      static const std::string sQueryField1ValueExpected;
+
+      static const std::string sQueryField2ValueExpected;
+
+      static const std::string sQueryField2ValueDefault;
 
     private:
 
-      std::string m_sTestURI;
+      std::string m_sQueryField1ValueReceived;
+
+      std::string m_sQueryField2ValueReceived;
 
     };
 

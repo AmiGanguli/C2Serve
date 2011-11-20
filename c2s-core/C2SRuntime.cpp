@@ -92,7 +92,8 @@ namespace c2s
 
   void C2SRuntime::waitForStartup()
   {
-    while( bIsOnStartup || !bIsRunning );
+    while( bIsOnStartup || !bIsRunning )
+      ;
   }
 
   void C2SRuntime::runInternal()
@@ -107,6 +108,7 @@ namespace c2s
     m_pSocketListener->interrupt();
 
     //wait for run shutdown
-    while( bIsRunning );
+    while( bIsRunning )
+      ;
   }
 }

@@ -40,18 +40,28 @@ namespace c2s
 
     const std::string C2STestRestMethodQueryFields::sPath = "check-query-fields/";
 
-    const std::string C2STestRestMethodQueryFields::sQueryFieldValueExpected = "12arg:,478859'*##*";
+    const std::string C2STestRestMethodQueryFields::sQueryField1Name = "uri";
+
+    const std::string C2STestRestMethodQueryFields::sQueryField2Name = "cfg";
+
+    const std::string C2STestRestMethodQueryFields::sQueryField1ValueExpected = "12arg:,478859'*##*";
+
+    const std::string C2STestRestMethodQueryFields::sQueryField2ValueExpected = "field2Received";
+
+    const std::string C2STestRestMethodQueryFields::sQueryField2ValueDefault = "field2default";
 
     C2STestRestMethodQueryFields::C2STestRestMethodQueryFields()
       : C2SRestMethodPrototypeGET<>( sPath )
     {
-      C2SRestMethodPrototypeGET<>::addQueryParameter( "test_uri" , &m_sTestURI );
+      C2SRestMethodPrototypeGET<>::addQueryParameter( sQueryField1Name , &m_sQueryField1ValueReceived );
+      C2SRestMethodPrototypeGET<>::addQueryParameter( sQueryField2Name , &m_sQueryField2ValueReceived , sQueryField2ValueDefault );
     };
 
     C2SHttpResponse *C2STestRestMethodQueryFields::process()
     {
-      BOOST_MESSAGE( "C2STestRestMethodQueryFields::process: \"" << m_sTestURI << "\"" );
-      BOOST_CHECK( m_sTestURI == sQueryFieldValueExpected );
+      BOOST_MESSAGE( "C2STestRestMethodQueryFields::process: \"" << m_sQueryField1ValueReceived << "\"; \"" << m_sQueryField2ValueReceived << "\"" );
+      BOOST_CHECK( m_sQueryField1ValueReceived == sQueryField1ValueExpected );
+      BOOST_CHECK( m_sQueryField2ValueReceived == sQueryField2ValueExpected );
       return C2SRestMethodPrototype::buildResponse( OK );
     }
 

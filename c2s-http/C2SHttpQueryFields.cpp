@@ -73,8 +73,12 @@ namespace c2s
     os << "?";
 
     C2SHttpQueryFields::const_iterator it = fields.begin();
-    for ( ; it != fields.end(); ++it )
+    for ( unsigned int iCurrentFieldToStream = 1; it != fields.end(); ++it, ++iCurrentFieldToStream )
+    {
       os << it->first << "=" << c2s::util::urlEncode( it->second );
+      if ( iCurrentFieldToStream < fields.size() )
+        os << "&";
+    }
 
     return os;
   }
