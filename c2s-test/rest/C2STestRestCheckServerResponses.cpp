@@ -226,7 +226,8 @@ namespace c2s
 
           c2s::test::C2STestRestRequest::
           build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodQueryFields::sPath ).
-          query_field( "test_uri" , c2s::test::C2STestRestMethodQueryFields::sQueryFieldValueExpected )
+          query_field( C2STestRestMethodQueryFields::sQueryField1Name , c2s::test::C2STestRestMethodQueryFields::sQueryField1ValueExpected ).
+          query_field( C2STestRestMethodQueryFields::sQueryField2Name , c2s::test::C2STestRestMethodQueryFields::sQueryField2ValueExpected )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::OK )
