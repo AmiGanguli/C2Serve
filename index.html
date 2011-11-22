@@ -41,6 +41,23 @@
       The libraries are built into a <code>lib</code> directory which is created in the <code>install</code> directory.
       To build the unit tests, you have to install the <a href="http://www.boost.org/">Boost libraries</a> or specify the Boost root directory when initializing the build environment: <code>-DBOOST_ROOT=MY_BOOST_ROOT_DIR</code>.
 	    
+	    <br />
+	    <br />
+	    
+	    If you are using <a href="http://www.cmake.org/">CMake</a> in your project, you can also easily add the <code>CMakeLists.txt</code> in the C2Serve root directory to your build system:
+	    
+	    <div class="code">
+		    <code class="cmake-lists">
+		       set( DISABLE_C2S_SYSTEM_SETTINGS ON ) <br />
+		       add_subdirectory( C2S_ROOT_DIR )
+		    </code>
+	    </div>
+    
+	    First of all you should disable the C2Serve system scripts.
+	    Afterwards you can add the <code>C2S_ROOT_DIR</code> to your build paths.
+	    If this directory is placed outside of your source tree, <a href="http://www.cmake.org/">CMake</a> needs a binary directory defined to know where to build the binaries.
+	    Check the <a href="http://cmake.org/cmake/help/cmake-2-8-docs.html">CMake documendation</a> for more information.
+	    
     </div>
   
   </div>
