@@ -112,9 +112,18 @@
     
       <div class="code">
         <code class="cpp">
+        
           <br />
             &nbsp;&nbsp;&nbsp;&nbsp;...<br />
           <br />
+          
+          <i class="sw">#include</i> <i class="m">&quot;C2SRestResource.h&quot;</i><br />
+          <i class="sw">#include</i> <i class="m">&quot;MyRestResourceImplementation.h&quot;</i><br />
+        
+          <br />
+            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+          <br />
+          &nbsp;&nbsp;<i class="tn">std</i>::<i class="tn">string</i> sContextRoot = <i class="m">&quot;example/resource&quot;</i>;<br />
           &nbsp;&nbsp;<i class="tn">C2SRestResource</i> *pResource = <i class="tn">C2SRestResource</i>::createRestResourceWithContextRoot( sContextRoot );<br />
           &nbsp;&nbsp;pResource->registerMethodPrototype( <i class="sw">new</i> <i class="tn">MyRestMethodImplementation()</i> );<br />
           <br />
