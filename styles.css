@@ -34,7 +34,37 @@ div.code
   background-color: #cccccc;
 }
 
+code i.sw
+{
+  color: #7e1600;
+  font-style: normal;
+  font-weight: bold;
+}
+
+code i.fd
+{
+  font-style: normal;
+  font-weight: bold;
+}
+
+code i.tn
+{
+  font-style: normal;
+  color: #1f6a40;
+}
+
+code i.m
+{
+  font-style: normal;
+  color: #1731b0;
+}
+
 h1
+{
+  text-align: center;
+}
+
+h2
 {
   text-align: center;
 }
