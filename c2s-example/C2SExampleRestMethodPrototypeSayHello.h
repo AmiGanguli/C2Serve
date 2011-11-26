@@ -60,7 +60,11 @@ namespace c2s
 
       const static std::string sPath;
 
+      const static std::string sInvalidName;
+
       io::DateTimeLogger *m_pLogger;
+
+      std::string m_sNameToGreet;
 
     };
 

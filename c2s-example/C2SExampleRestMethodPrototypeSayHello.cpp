@@ -41,11 +41,15 @@ namespace c2s
 
     const std::string C2SExampleRestMethodPrototypeSayHello::sPath = "say-hello";
 
+    const std::string C2SExampleRestMethodPrototypeSayHello::sInvalidName = "c2s-example-invalid-name";
+
     C2SExampleRestMethodPrototypeSayHello::C2SExampleRestMethodPrototypeSayHello()
       : C2SRestMethodPrototypeGET<std::string>( sPath ),
-        m_pLogger( new io::DateTimeLogger( "c2s-example" ) )
+        m_pLogger( new io::DateTimeLogger( "c2s-example" ) ),
+        m_sNameToGreet( sInvalidName )
     {
       C2SRestMethodPrototypeGET<std::string>::installEntityStreamer( new C2SHttpEntityStreamerPlainText() );
+      C2SRestMethodPrototypeGET<std::string>::addQueryParameter( "name" , &m_sNameToGreet , m_sNameToGreet );
     }
 
     C2SExampleRestMethodPrototypeSayHello::~C2SExampleRestMethodPrototypeSayHello()
@@ -55,8 +59,11 @@ namespace c2s
 
     C2SHttpResponse *C2SExampleRestMethodPrototypeSayHello::process()
     {
-      m_pLogger->info( "Say hello" );
-      return C2SRestMethodPrototypeGET<std::string>::buildResponse( OK , "=== c2s-example says hello ===" );
+      std::string sGreetToName = "";
+      if ( m_sNameToGreet != sInvalidName )
+        sGreetToName = std::string( " to " ) + m_sNameToGreet;
+      m_pLogger->info( "Say hello" + sGreetToName );
+      return C2SRestMethodPrototypeGET<std::string>::buildResponse( OK , std::string( "=== c2s-example says hello" ) + sGreetToName + " ===" );
     }
 
     C2SExampleRestMethodPrototypeSayHello *C2SExampleRestMethodPrototypeSayHello::clone() const
