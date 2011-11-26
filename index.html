@@ -107,8 +107,11 @@
       C2Serve provides a class <code><i class="tn">C2SRestResource</i></code>.
       Each instance of that class represents an actual REST resource at a specific context root of the server.
       To create a new resource call the static method <code><i class="tn">C2SRestResource::createRestResourceWithContextRoot()</i></code>.
-      This function will create a new resource, register that resource at the service and return a reference to created resource.
+      This function will create a new REST resource.
       You can now add REST methods by calling <code><i class="tn">C2SRestResource</i>::registerMethodPrototype()</code>.
+      Finally, you will have to register the REST resource at the http resource manager.
+      Each http requests will be forwarded to one REST resource, identified by the path.
+      If no resource matches, status 404 is returned (not found).
     
       <div class="code">
         <code class="cpp">
@@ -118,7 +121,7 @@
           <br />
           
           <i class="sw">#include</i> <i class="m">&quot;C2SRestResource.h&quot;</i><br />
-          <i class="sw">#include</i> <i class="m">&quot;MyRestResourceImplementation.h&quot;</i><br />
+          <i class="sw">#include</i> <i class="m">&quot;MyRestMethodImplementation.h&quot;</i><br />
         
           <br />
             &nbsp;&nbsp;&nbsp;&nbsp;...<br />
@@ -126,6 +129,30 @@
           &nbsp;&nbsp;<i class="tn">std</i>::<i class="tn">string</i> sContextRoot = <i class="m">&quot;example/resource&quot;</i>;<br />
           &nbsp;&nbsp;<i class="tn">C2SRestResource</i> *pResource = <i class="tn">C2SRestResource</i>::createRestResourceWithContextRoot( sContextRoot );<br />
           &nbsp;&nbsp;pResource->registerMethodPrototype( <i class="sw">new</i> <i class="tn">MyRestMethodImplementation()</i> );<br />
+          &nbsp;&nbsp;<i class="tn">C2SHttpResourceManager</i>::registerResource( pResource );<br />
+          <br />
+            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+          <br />
+        </code>
+      </div>
+   
+      <h2>Start Socket Listener</h2>
+    
+        This is the easiest part. You simply have to call <code><i class="tn">C2SHttpServer</i>::run()</code>:
+      
+      <div class="code">
+        <code class="cpp">
+        
+          <br />
+            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+          <br />
+          
+          <i class="sw">#include</i> <i class="m">&quot;C2SHttpServer.h&quot;</i><br />
+        
+          <br />
+            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+          <br />
+          &nbsp;&nbsp;<i class="tn">C2SHttpServer</i>::run();<br />
           <br />
             &nbsp;&nbsp;&nbsp;&nbsp;...<br />
           <br />
