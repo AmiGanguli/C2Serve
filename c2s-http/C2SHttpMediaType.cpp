@@ -40,6 +40,7 @@ namespace c2s
 {
 
   const std::string C2SHttpMediaType::wildcard = "*/*";
+  const std::string C2SHttpMediaType::text__plain = "text/plain";
   const std::string C2SHttpMediaType::text__css = "text/css";
   const std::string C2SHttpMediaType::text__html = "text/html";
   const std::string C2SHttpMediaType::application__xhtml_xml = "application/xhtml+xml";

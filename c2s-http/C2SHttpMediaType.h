@@ -57,6 +57,8 @@ namespace c2s
 
     static const std::string wildcard;
 
+    static const std::string text__plain;
+
     static const std::string text__css;
 
     static const std::string text__html;
