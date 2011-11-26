@@ -31,6 +31,7 @@
 
 #include "C2SExampleRestMethodPrototypeSayHello.h"
 
+#include "C2SHttpEntityStreamerPlainText.h"
 #include "DateTimeLogger.h"
 
 namespace c2s
@@ -41,9 +42,10 @@ namespace c2s
     const std::string C2SExampleRestMethodPrototypeSayHello::sPath = "say-hello";
 
     C2SExampleRestMethodPrototypeSayHello::C2SExampleRestMethodPrototypeSayHello()
-      : C2SRestMethodPrototypeGET<>( sPath ),
+      : C2SRestMethodPrototypeGET<std::string>( sPath ),
         m_pLogger( new io::DateTimeLogger( "c2s-example" ) )
     {
+      C2SRestMethodPrototypeGET<std::string>::installEntityStreamer( new C2SHttpEntityStreamerPlainText() );
     }
 
     C2SExampleRestMethodPrototypeSayHello::~C2SExampleRestMethodPrototypeSayHello()
@@ -54,7 +56,7 @@ namespace c2s
     C2SHttpResponse *C2SExampleRestMethodPrototypeSayHello::process()
     {
       m_pLogger->info( "Say hello" );
-      return C2SHttpResponse::build( OK );
+      return C2SRestMethodPrototypeGET<std::string>::buildResponse( OK , "=== c2s-example says hello ===" );
     }
 
     C2SExampleRestMethodPrototypeSayHello *C2SExampleRestMethodPrototypeSayHello::clone() const

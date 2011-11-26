@@ -44,7 +44,7 @@ namespace c2s
   namespace example
   {
 
-    class C2SExampleRestMethodPrototypeSayHello : public C2SRestMethodPrototypeGET<>
+    class C2SExampleRestMethodPrototypeSayHello : public C2SRestMethodPrototypeGET<std::string>
     {
     public:
 
