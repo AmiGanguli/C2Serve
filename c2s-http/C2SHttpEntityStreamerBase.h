@@ -29,8 +29,8 @@
 
  */
 
-#ifndef C2SRESTENTITYSTREAMER_H_
-#define C2SRESTENTITYSTREAMER_H_
+#ifndef C2SHTTPENTITYSTREAMERBASE_H_
+#define C2SHTTPENTITYSTREAMERBASE_H_
 
 #include "C2SHttpEntity.h"
 #include "C2SHttpMediaType.h"
@@ -41,11 +41,11 @@ namespace c2s
 {
 
   template <class Type>
-  class C2SRestEntityStreamer
+  class C2SHttpEntityStreamerBase
   {
   public:
 
-    virtual ~C2SRestEntityStreamer(){};
+    virtual ~C2SHttpEntityStreamerBase(){};
 
     virtual C2SHttpEntity *entity( const Type &data ) const = 0;
 
@@ -53,7 +53,7 @@ namespace c2s
 
   protected:
 
-    C2SRestEntityStreamer( const C2SHttpMediaType &mediatype ) : m_mediatype( mediatype ) {};
+    C2SHttpEntityStreamerBase( const C2SHttpMediaType &mediatype ) : m_mediatype( mediatype ) {};
 
     C2SHttpMediaType m_mediatype;
 
@@ -61,4 +61,4 @@ namespace c2s
 
 }
 
-#endif /* C2SRESTENTITYSTREAMER_H_ */
+#endif /* C2SHTTPENTITYSTREAMERBASE_H_ */

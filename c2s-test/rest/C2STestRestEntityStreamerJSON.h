@@ -33,7 +33,7 @@
 #ifndef C2STESTRESTENTITYSTREAMERJSON_H_
 #define C2STESTRESTENTITYSTREAMERJSON_H_
 
-#include "C2SRestEntityStreamer.h"
+#include "C2SHttpEntityStreamerBase.h"
 #include "StringUtils.h"
 
 namespace c2s
@@ -42,12 +42,12 @@ namespace c2s
   {
 
     template <class Type>
-    class C2STestRestEntityStreamerJSON : public C2SRestEntityStreamer<Type>
+    class C2STestRestEntityStreamerJSON : public C2SHttpEntityStreamerBase<Type>
     {
     public:
 
       C2STestRestEntityStreamerJSON()
-        : C2SRestEntityStreamer<Type>( C2SHttpMediaType::application__json )
+        : C2SHttpEntityStreamerBase<Type>( C2SHttpMediaType::application__json )
       {};
 
 

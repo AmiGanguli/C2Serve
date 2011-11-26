@@ -33,7 +33,7 @@
 #ifndef C2STESTRESTENTITYSTREAMERXML_H_
 #define C2STESTRESTENTITYSTREAMERXML_H_
 
-#include "C2SRestEntityStreamer.h"
+#include "C2SHttpEntityStreamerBase.h"
 #include "StringUtils.h"
 
 namespace c2s
@@ -42,12 +42,12 @@ namespace c2s
   {
 
     template <class Type>
-    class C2STestRestEntityStreamerXML : public C2SRestEntityStreamer<Type>
+    class C2STestRestEntityStreamerXML : public C2SHttpEntityStreamerBase<Type>
     {
     public:
 
       C2STestRestEntityStreamerXML()
-        : C2SRestEntityStreamer<Type>( C2SHttpMediaType::application__xml )
+        : C2SHttpEntityStreamerBase<Type>( C2SHttpMediaType::application__xml )
       {};
 
 
