@@ -37,4 +37,5 @@ add_subdirectory( c2s-http )
 add_subdirectory( c2s-rest )
 add_subdirectory( c2s-util )
 add_subdirectory( c2s-test )
+add_subdirectory( c2s-example )
 
