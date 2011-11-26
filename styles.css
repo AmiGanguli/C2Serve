@@ -16,6 +16,36 @@ div
   border-width: 1px;
 }
 
+a:link
+{
+	color: #2D408D;
+	text-decoration:none;
+}
+
+a:visited
+{
+	color: #72859C;
+	text-decoration:none;
+}
+
+a:focus
+{
+	color: red;
+	text-decoration:underline;
+}
+
+a:hover
+{
+	color: #2146D9;
+	text-decoration:none;
+}
+
+a:active
+{
+	color: #8D3A2F;
+	text-decoration:underline;
+}
+
 div.section
 {
 	width: 900px;
@@ -61,10 +91,13 @@ code i.m
 
 h1
 {
-  text-align: center;
+  text-align: left;
+  font-size: 16pt;
 }
 
 h2
 {
-  text-align: center;
+  text-align: left;
+  margin-top: 50px;
+  font-size: 14pt;
 }
