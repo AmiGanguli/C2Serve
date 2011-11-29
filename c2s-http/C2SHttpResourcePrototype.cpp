@@ -29,17 +29,17 @@
 
  */
 
-#include "C2SHttpResource.h"
+#include "C2SHttpResourcePrototype.h"
 
 #include "C2SHttpException.h"
 
 namespace c2s
 {
 
-  void C2SHttpResource::sendResponse( const C2SHttpResponse &response )
+  void C2SHttpResourcePrototype::sendResponse( const C2SHttpResponse &response )
   {
     if ( !m_pResponseHandler )
-      throw C2SHttpException( "C2SHttpResource::sendResponse:" , "Response handler is NULL!" , InternalServerError );
+      throw C2SHttpException( "C2SHttpResourcePrototype::sendResponse:" , "Response handler is NULL!" , InternalServerError );
 
     m_pResponseHandler->sendResponse( response );
   }

@@ -39,7 +39,7 @@
 namespace c2s
 {
 
-  class C2SHttpResource;
+  class C2SHttpResourcePrototype;
 
   namespace test
   {
@@ -64,7 +64,7 @@ namespace c2s
 
     private:
 
-      static std::list<C2SHttpResource*> createResources( c2s::thread::Mutex *pGlobalMutex );
+      static std::list<C2SHttpResourcePrototype*> createResources( c2s::thread::Mutex *pGlobalMutex );
 
       c2s::test::C2STestServerRunner *m_sr;
 

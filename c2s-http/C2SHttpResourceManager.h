@@ -33,7 +33,7 @@
 #define C2SHTTPRESOURCEMANAGER_H_
 
 #include "C2SHttpRequest.h"
-#include "C2SHttpResource.h"
+#include "C2SHttpResourcePrototype.h"
 
 #include "C2SDataPullInterface.h"
 
@@ -73,13 +73,11 @@ namespace c2s
 
     void handleRequest( const C2SHttpRequest &request );
 
-    C2SHttpResource *bestMatch( const C2SHttpRequest &request );
+    C2SHttpResourcePrototype *bestMatch( const C2SHttpRequest &request );
 
-    //register prototype
-    static void registerResource( C2SHttpResource *pResource );
+    static void registerResourcePrototype( C2SHttpResourcePrototype *pResource );
 
-    //release prototypes
-    static void releaseResources();
+    static void releaseResourcePrototypes();
 
   private:
 
@@ -87,9 +85,9 @@ namespace c2s
 
     C2SHttpResourceManager &operator=( const C2SHttpResourceManager & );
 
-    typedef std::map<std::string,C2SHttpResource*> ResourceContainer;
-    typedef std::map<std::string,C2SHttpResource*>::const_iterator const_iterator;
-    typedef std::map<std::string,C2SHttpResource*>::iterator iterator;
+    typedef std::map<std::string,C2SHttpResourcePrototype*> ResourceContainer;
+    typedef std::map<std::string,C2SHttpResourcePrototype*>::const_iterator const_iterator;
+    typedef std::map<std::string,C2SHttpResourcePrototype*>::iterator iterator;
 
     static ResourceContainer &getResourcePrototypes();
 

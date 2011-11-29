@@ -31,7 +31,7 @@
 
 #include "C2SGlobalSettings.h"
 
-#include "C2SRestResource.h"
+#include "C2SRestResourcePrototype.h"
 
 #include "C2SHttpServer.h"
 #include "C2SHttpResourceManager.h"
@@ -52,7 +52,7 @@ int main( int , char ** )
   globalServerSettings.iPort = iServerPort;
 
   //create new REST resource
-  C2SRestResource *pResource = C2SRestResource::createRestResourceWithContextRoot( sExampleRESTResourceContextRoot );
+  C2SRestResourcePrototype *pResource = C2SRestResourcePrototype::createRestResourceWithContextRoot( sExampleRESTResourceContextRoot );
 
   //register method prototypes
   //for each server thread, a copy of a method prototype is created (by calling the clone() method)
@@ -60,7 +60,7 @@ int main( int , char ** )
   pResource->registerMethodPrototype( new C2SExampleRestMethodPrototypeSayHello() );
 
   //register REST resource at the http resource manager
-  C2SHttpResourceManager::registerResource( pResource );
+  C2SHttpResourceManager::registerResourcePrototype( pResource );
 
   //start socket listener
   //this method blocks the program

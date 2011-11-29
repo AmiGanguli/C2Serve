@@ -29,8 +29,8 @@
 
  */
 
-#ifndef C2SHTTPRESOURCE_H_
-#define C2SHTTPRESOURCE_H_
+#ifndef C2SHTTPRESOURCEPROTOTYPE_H_
+#define C2SHTTPRESOURCEPROTOTYPE_H_
 
 #include <string>
 
@@ -54,20 +54,20 @@ namespace c2s
 
   };
 
-  class C2SHttpResource
+  class C2SHttpResourcePrototype
   {
   public:
 
-    C2SHttpResource( const std::string &sContextRoot )
+    C2SHttpResourcePrototype( const std::string &sContextRoot )
       : m_sContextRoot( sContextRoot ),
         m_pResponseHandler( NULL )
     {};
 
-    virtual ~C2SHttpResource(){};
+    virtual ~C2SHttpResourcePrototype(){};
 
     virtual void processRequest(  const C2SHttpRequest &request ) = 0;
 
-    virtual C2SHttpResource *clone() const = 0;
+    virtual C2SHttpResourcePrototype *clone() const = 0;
 
     virtual void sendResponse( const C2SHttpResponse &response );
 
@@ -85,4 +85,4 @@ namespace c2s
 
 }
 
-#endif /* C2SHTTPRESOURCE_H_ */
+#endif /* C2SHTTPRESOURCEPROTOTYPE_H_ */

@@ -38,7 +38,7 @@
 #include "C2STestRestMethodInvalidEntity.h"
 #include "C2STestRestMethodMediaTypeConverter.h"
 
-#include "C2SRestResource.h"
+#include "C2SRestResourcePrototype.h"
 
 namespace c2s
 {
@@ -67,11 +67,11 @@ namespace c2s
       delete pGlobalMutex;
     }
 
-    std::list<c2s::C2SHttpResource*> C2STestRestFixture::createResources( c2s::thread::Mutex *pGlobalMutex )
+    std::list<c2s::C2SHttpResourcePrototype*> C2STestRestFixture::createResources( c2s::thread::Mutex *pGlobalMutex )
     {
-      std::list<c2s::C2SHttpResource*> resources;
+      std::list<c2s::C2SHttpResourcePrototype*> resources;
 
-      c2s::C2SRestResource *pRestResource1 = c2s::C2SRestResource::createRestResourceWithContextRoot( sContextRootOfTestResource );
+      c2s::C2SRestResourcePrototype *pRestResource1 = c2s::C2SRestResourcePrototype::createRestResourceWithContextRoot( sContextRootOfTestResource );
       pRestResource1->registerMethodPrototype( new c2s::test::C2STestRestMethodAdd() );
       pRestResource1->registerMethodPrototype( new c2s::test::C2STestRestMethodQueryFields() );
       pRestResource1->registerMethodPrototype( new c2s::test::C2STestRestMethodMediaTypeConverter() );
@@ -79,7 +79,7 @@ namespace c2s
       pRestResource1->registerMethodPrototype( new c2s::test::C2STestRestMethodThreading( pGlobalMutex ) );
       resources.push_back( pRestResource1 );
 
-      resources.push_back( c2s::C2SRestResource::createRestResourceWithContextRoot( "/" + sContextRootOfEmptyResource ) );
+      resources.push_back( c2s::C2SRestResourcePrototype::createRestResourceWithContextRoot( "/" + sContextRootOfEmptyResource ) );
 
       return resources;
     }

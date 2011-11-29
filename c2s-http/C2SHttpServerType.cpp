@@ -52,7 +52,7 @@ namespace c2s
 
   void C2SHttpServerType::release() const
   {
-    C2SHttpResourceManager::releaseResources();
+    C2SHttpResourceManager::releaseResourcePrototypes();
   }
 
 }

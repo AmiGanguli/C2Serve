@@ -61,14 +61,8 @@ namespace c2s
 
     C2SHttpResponseHeader &header() { return m_header; }
 
-    //entity is deleted
+    //entity will be deleted
     void setEntity( C2SHttpEntity *pEntity );
-
-    //data is not copied
-//      void setEntity( const char *data , unsigned int size );
-
-//      template <class Streamable>
-//      void setEntity( const Streamable &o );
 
     template <class Streamable>
     void getEntity( Streamable *pO ) const;
@@ -79,9 +73,6 @@ namespace c2s
 
     static C2SHttpResponse *build( C2SHttpStatus status );
 
-//      template <class Streamable>
-//      static C2SHttpResponse *build( C2SHttpStatus status , const Streamable &entity );
-
   private:
 
     C2SHttpParser m_parser;
@@ -91,33 +82,6 @@ namespace c2s
     C2SHttpEntity *m_pBody;
 
   };
-
-
-//    template <class Streamable>
-//    C2SHttpResponse *C2SHttpResponse::build( C2SHttpStatus status , const Streamable &entity )
-//    {
-//      C2SHttpResponse *pResponse = C2SHttpResponse::build( status );
-//      pResponse->setEntity( entity );
-//      return pResponse;
-//    }
-
-//    template <class Streamable>
-//    void C2SHttpResponse::setEntity( const Streamable &o )
-//    {
-//      //TODO: use customized stream here (prevent copying of data)
-//      std::stringstream strs;
-//      strs << o;
-//
-//      const std::string &sDataString = strs.str();
-//      unsigned int iContentLength = sDataString.size();
-//      m_header.Fields.setContentLength( iContentLength );
-//
-//      char *data = new char[ iContentLength ];
-//      memcpy( data , sDataString.c_str() , iContentLength );
-//
-//      delete m_pBody;
-//      m_pBody = new C2SHttpEntity( data , iContentLength , true );
-//    }
 
   template <class Streamable>
   void C2SHttpResponse::getEntity( Streamable *pO ) const

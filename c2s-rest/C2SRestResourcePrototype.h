@@ -29,10 +29,10 @@
 
  */
 
-#ifndef C2SRESTRESOURCE_H_
-#define C2SRESTRESOURCE_H_
+#ifndef C2SRESTRESOURCEPROTOTYPE_H_
+#define C2SRESTRESOURCEPROTOTYPE_H_
 
-#include "C2SHttpResource.h"
+#include "C2SHttpResourcePrototype.h"
 
 #include "C2SRestMethodPrototype.h"
 #include "C2SRestMethodPrototypeList.h"
@@ -43,25 +43,25 @@
 namespace c2s
 {
 
-  class C2SRestResource: public C2SHttpResource
+  class C2SRestResourcePrototype: public C2SHttpResourcePrototype
   {
   public:
 
-    virtual ~C2SRestResource();
+    virtual ~C2SRestResourcePrototype();
 
-    static C2SRestResource *createRestResourceWithContextRoot( const std::string &sContextRootOfRestResource );
+    static C2SRestResourcePrototype *createRestResourceWithContextRoot( const std::string &sContextRootOfRestResource );
 
     void processRequest( const C2SHttpRequest &request );
 
-    C2SHttpResource *clone() const;
+    C2SHttpResourcePrototype *clone() const;
 
     void registerMethodPrototype( C2SRestMethodPrototype *pMethod );
 
   private:
 
-    C2SRestResource( const std::string &sHostName , const std::string &sContextRoot );
+    C2SRestResourcePrototype( const std::string &sHostName , const std::string &sContextRoot );
 
-    C2SRestResource( const C2SRestResource &r );
+    C2SRestResourcePrototype( const C2SRestResourcePrototype &r );
 
     //TODO: implement
     bool existsMethodPrototype( const C2SRestMethodPrototype *pMethod ) const;
@@ -82,4 +82,4 @@ namespace c2s
 
 }
 
-#endif /* C2SRESTRESOURCE_H_ */
+#endif /* C2SRESTRESOURCEPROTOTYPE_H_ */

@@ -29,7 +29,7 @@
 
  */
 
-#include "C2SRestResource.h"
+#include "C2SRestResourcePrototype.h"
 
 #include "C2SRestException.h"
 #include "C2SRestMatchMethodToRequest.h"
@@ -46,14 +46,14 @@
 namespace c2s
 {
 
-  C2SRestResource::C2SRestResource( const std::string &sHostName , const std::string &sContextRoot )
-    : C2SHttpResource( sContextRoot ),
+  C2SRestResourcePrototype::C2SRestResourcePrototype( const std::string &sHostName , const std::string &sContextRoot )
+    : C2SHttpResourcePrototype( sContextRoot ),
       m_resourceDescription( sHostName , sContextRoot )
   {
   }
 
-  C2SRestResource::C2SRestResource( const C2SRestResource &r )
-    : C2SHttpResource( r ),
+  C2SRestResourcePrototype::C2SRestResourcePrototype( const C2SRestResourcePrototype &r )
+    : C2SHttpResourcePrototype( r ),
       m_resourceDescription( r.m_resourceDescription )
   {
     C2SRestMethodPrototypeList::const_iterator mit = r.m_registeredMethodPrototypes.begin();
@@ -62,41 +62,41 @@ namespace c2s
       C2SRestMethodPrototype *pPrototype = *mit;
       C2SRestMethodPrototype *pClone = pPrototype->clone();
       if ( pClone == pPrototype )
-        throw C2SRestException( "C2SRestResource::C2SRestResource: " , "C2SRestMethodPrototype::clone() is not allowed to return reference to itself!" , InternalServerError );
+        throw C2SRestException( "C2SRestResourcePrototype::C2SRestResourcePrototype: " , "C2SRestMethodPrototype::clone() is not allowed to return reference to itself!" , InternalServerError );
 
       m_registeredMethodPrototypes.push_back( pClone );
     }
   };
 
-  C2SRestResource::~C2SRestResource()
+  C2SRestResourcePrototype::~C2SRestResourcePrototype()
   {
     C2SRestMethodPrototypeList::iterator mit = m_registeredMethodPrototypes.begin();
     for ( ; mit != m_registeredMethodPrototypes.end(); ++mit )
       delete ( *mit );
   }
 
-  C2SRestResource *C2SRestResource::createRestResourceWithContextRoot( const std::string &sContextRootOfRestResource )
+  C2SRestResourcePrototype *C2SRestResourcePrototype::createRestResourceWithContextRoot( const std::string &sContextRootOfRestResource )
   {
-    C2SRestResource *pResource = new C2SRestResource( C2SGlobalSettings::Settings().C2SHostName , sContextRootOfRestResource );
+    C2SRestResourcePrototype *pResource = new C2SRestResourcePrototype( C2SGlobalSettings::Settings().C2SHostName , sContextRootOfRestResource );
     return pResource;
   }
 
-  void C2SRestResource::registerMethodPrototype( C2SRestMethodPrototype *pMethod )
+  void C2SRestResourcePrototype::registerMethodPrototype( C2SRestMethodPrototype *pMethod )
   {
     if ( this->existsMethodPrototype( pMethod ) )
-      throw C2SRestException( "C2SRestResource::registerMethodPrototype: " , "Duplicate REST method" , InternalServerError );
+      throw C2SRestException( "C2SRestResourcePrototype::registerMethodPrototype: " , "Duplicate REST method" , InternalServerError );
 
     m_registeredMethodPrototypes.push_back( pMethod );
   }
 
-  bool C2SRestResource::existsMethodPrototype( const C2SRestMethodPrototype * ) const
+  bool C2SRestResourcePrototype::existsMethodPrototype( const C2SRestMethodPrototype * ) const
   {
     //TODO: implement!!
-    std::cout << "C2SRestResource::existsMethodPrototype: Not yet implemented" << std::endl;
+    std::cout << "C2SRestResourcePrototype::existsMethodPrototype: Not yet implemented" << std::endl;
     return false;
   }
 
-  void C2SRestResource::processRequest( const C2SHttpRequest &request )
+  void C2SRestResourcePrototype::processRequest( const C2SHttpRequest &request )
   {
     if ( this->isAccessToContextRoot( request.header().URI ) )
       this->createAndSendResponseFromResourceDescription( request );
@@ -104,26 +104,26 @@ namespace c2s
       this->createAndSendResponseFromMethodWithBestMatchForRequest( request );
   }
 
-  bool C2SRestResource::isAccessToContextRoot( const std::string &sResourceContext ) const
+  bool C2SRestResourcePrototype::isAccessToContextRoot( const std::string &sResourceContext ) const
   {
     return uriEquals( sResourceContext.c_str() , sResourceContext.size() , m_sContextRoot.c_str() , m_sContextRoot.size() , false );
   }
 
-  void C2SRestResource::createAndSendResponseFromResourceDescription( const C2SHttpRequest &request )
+  void C2SRestResourcePrototype::createAndSendResponseFromResourceDescription( const C2SHttpRequest &request )
   {
     if ( request.header().Method != GET )
-      throw C2SRestException( "C2SRestResource::processRequest: " , "Access to context root of RESTful resource only allowed as GET request" , MethodNotAllowed );
+      throw C2SRestException( "C2SRestResourcePrototype::processRequest: " , "Access to context root of RESTful resource only allowed as GET request" , MethodNotAllowed );
 
     C2SHttpResponse response = m_resourceDescription.process( request );
     m_pResponseHandler->sendResponse( response );
   }
 
-  void C2SRestResource::createAndSendResponseFromMethodWithBestMatchForRequest( const C2SHttpRequest &request )
+  void C2SRestResourcePrototype::createAndSendResponseFromMethodWithBestMatchForRequest( const C2SHttpRequest &request )
   {
     C2SRestMethodPrototype *pMethod = this->getMethodWithBestMatchForRequest( request );
 
     if ( !pMethod )
-      throw C2SRestException( "C2SRestResource::processRequest: " , "Resource not found" , NotFound );
+      throw C2SRestException( "C2SRestResourcePrototype::processRequest: " , "Resource not found" , NotFound );
 
     if ( pMethod )
     {
@@ -133,15 +133,15 @@ namespace c2s
     }
   }
 
-  C2SRestMethodPrototype *C2SRestResource::getMethodWithBestMatchForRequest( const C2SHttpRequest &requestToMatch )
+  C2SRestMethodPrototype *C2SRestResourcePrototype::getMethodWithBestMatchForRequest( const C2SHttpRequest &requestToMatch )
   {
     C2SRestMatchMethodToRequest methodToRequestMatching( m_sContextRoot , m_registeredMethodPrototypes , requestToMatch );
     return methodToRequestMatching.getPrototypeWithBestMatchAndPrepareFromURI();
   }
 
-  C2SHttpResource *C2SRestResource::clone() const
+  C2SHttpResourcePrototype *C2SRestResourcePrototype::clone() const
   {
-    return new C2SRestResource( *this );
+    return new C2SRestResourcePrototype( *this );
   }
 
 }

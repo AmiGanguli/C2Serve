@@ -65,16 +65,16 @@ namespace c2s
 //          BOOST_MESSAGE( "startup complete" );
       }
 
-      C2STestServerRunner( const std::list<C2SHttpResource*> &resources , unsigned short iPort = C2SGlobalSettings::Settings().iPort )
+      C2STestServerRunner( const std::list<C2SHttpResourcePrototype*> &resources , unsigned short iPort = C2SGlobalSettings::Settings().iPort )
         : m_serverThread( &m_serverRunTime )
       {
         c2s::thread::Lock lock( &m_mutex );
 
-        std::list<C2SHttpResource*>::const_iterator it = resources.begin();
+        std::list<C2SHttpResourcePrototype*>::const_iterator it = resources.begin();
         for ( ; it != resources.end(); ++it )
         {
 //            BOOST_MESSAGE( "add resource \"" + ( *it )->getContextRoot() + "\"" );
-          C2SHttpResourceManager::registerResource( *it );
+          C2SHttpResourceManager::registerResourcePrototype( *it );
         }
 
 //          BOOST_MESSAGE( "startup server" );

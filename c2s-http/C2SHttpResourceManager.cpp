@@ -47,7 +47,7 @@
 namespace c2s
 {
 
-  void release( const std::pair<std::string,C2SHttpResource*> &p )
+  void release( const std::pair<std::string,C2SHttpResourcePrototype*> &p )
   {
     delete p.second;
   }
@@ -94,7 +94,7 @@ namespace c2s
     const_iterator it  = Resources.begin();
     for ( ; it != Resources.end(); ++it )
     {
-      C2SHttpResource *pResource = it->second->clone();
+      C2SHttpResourcePrototype *pResource = it->second->clone();
       pResource->setResponseHandler( &m_responseHandler );
       m_resources.insert( std::make_pair( it->first , pResource ) );
     }
@@ -127,7 +127,7 @@ namespace c2s
       }
       else
       {
-        C2SHttpResource *pBestMatch = this->bestMatch( request );
+        C2SHttpResourcePrototype *pBestMatch = this->bestMatch( request );
         if ( !pBestMatch )
           throw C2SHttpException( "C2SHttpResourceManager::handleRequest:" , "Not found: '" + request.header().URI + "'" , NotFound );
 
@@ -145,13 +145,13 @@ namespace c2s
     }
   }
 
-  C2SHttpResource *C2SHttpResourceManager::bestMatch( const C2SHttpRequest &request )
+  C2SHttpResourcePrototype *C2SHttpResourceManager::bestMatch( const C2SHttpRequest &request )
   {
     if ( !m_resources.size() )
       return NULL;
 
     //find resource with longest match string
-    C2SHttpResource *pBestMatch = findLongestMatchString( request.header().URI , m_resources );
+    C2SHttpResourcePrototype *pBestMatch = findLongestMatchString( request.header().URI , m_resources );
 
     if ( pBestMatch ) //return resource with longest match string
       return pBestMatch;
@@ -164,7 +164,7 @@ namespace c2s
     return it->second;
   }
 
-  void C2SHttpResourceManager::registerResource( C2SHttpResource *pResource )
+  void C2SHttpResourceManager::registerResourcePrototype( C2SHttpResourcePrototype *pResource )
   {
     ResourceContainer &Resources = C2SHttpResourceManager::getResourcePrototypes();
     if ( Resources.find( pResource->getContextRoot() ) != Resources.end() )
@@ -173,7 +173,7 @@ namespace c2s
     Resources.insert( std::make_pair( pResource->getContextRoot() , pResource ) );
   }
 
-  void C2SHttpResourceManager::releaseResources()
+  void C2SHttpResourceManager::releaseResourcePrototypes()
   {
     ResourceContainer &Resources = C2SHttpResourceManager::getResourcePrototypes();
     std::for_each(  Resources.begin() , Resources.end() , release );
