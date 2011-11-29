@@ -94,12 +94,6 @@ namespace c2s
     m_parser.parse( data , size , &m_header );
   }
 
-//    void C2SHttpResponse::setEntity( const char *data , unsigned int size )
-//    {
-//      delete m_pBody;
-//      m_pBody = new C2SHttpEntity( data , size );
-//    }
-
   void C2SHttpResponse::setEntity( C2SHttpEntity *pEntity )
   {
     delete m_pBody;
