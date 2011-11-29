@@ -146,7 +146,7 @@ namespace c2s
         if ( !m_currSize )
           throw C2SHttpException( "C2SHttpQueryFieldSetter::operator():" , "Cannot parse URI string, detected empty query field name", BadRequest );
 
-        m_pQueryFields->add( std::string( m_currData , m_currSize ) , c2s::util::urlDecode( std::string( data , size ) ) );
+        m_pQueryFields->addField( std::string( m_currData , m_currSize ) , c2s::util::urlDecode( std::string( data , size ) ) );
       }
 
       m_bIsNewField = false;
@@ -375,7 +375,7 @@ namespace c2s
     C2SHttpResponseParser rp;
     splitNhandle( data , size , ' ' , &rp );
 
-    pHeader->fVersion = rp.fHttpVerstion;
+    pHeader->Version = rp.fHttpVerstion;
     pHeader->Status = rp.Status;
     pHeader->ReasonPhrase = rp.sReasonPhrase;
   }

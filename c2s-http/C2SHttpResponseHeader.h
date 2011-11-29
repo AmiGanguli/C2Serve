@@ -54,7 +54,7 @@ namespace c2s
 
     std::string toString() const;
 
-    float fVersion;
+    float Version;
 
     C2SHttpStatus Status;
 

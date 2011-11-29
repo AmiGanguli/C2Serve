@@ -48,19 +48,19 @@ namespace c2s
   {
   }
 
-  void C2SHttpQueryFields::add( const std::string &name , const std::string &value )
+  void C2SHttpQueryFields::addField( const std::string &sFieldName , const std::string &sFieldValue )
   {
-    if ( m_fields.find( name ) != m_fields.end() )
-      throw C2SHttpException( "C2SHttpQueryFields::add: " , "Duplicate field name: " + name , BadRequest );
+    if ( m_fields.find( sFieldName ) != m_fields.end() )
+      throw C2SHttpException( "C2SHttpQueryFields::add: " , "Duplicate field name: " + sFieldName , BadRequest );
 
-    m_fields[ name ] = value;
+    m_fields[ sFieldName ] = sFieldValue;
   }
 
-  const std::string &C2SHttpQueryFields::get( const std::string &name ) const
+  const std::string &C2SHttpQueryFields::getValueForFieldName( const std::string &sFieldName ) const
   {
-    const_iterator it = m_fields.find( name );
+    const_iterator it = m_fields.find( sFieldName );
     if ( it == m_fields.end() )
-      throw C2SHttpException( "C2SHttpQueryFields::get: " , "Cannot find query field: " + name , InternalServerError );
+      throw C2SHttpException( "C2SHttpQueryFields::get: " , "Cannot find query field: " + sFieldName , InternalServerError );
 
     return it->second;
   }

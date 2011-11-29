@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE( HttpResponseOK )
   parser.parse( sChunk3.c_str() , sChunk3.size() , &header );
   parser.parse( sChunk4.c_str() , sChunk4.size() , &header );
 
-  BOOST_CHECK( header.fVersion == 1.1f );
+  BOOST_CHECK( header.Version == 1.1f );
   BOOST_CHECK( header.Status == c2s::OK );
   BOOST_CHECK( !header.ReasonPhrase.size() );
 
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE( HttpResponseNotFound )
   parser.parse( sChunk1.c_str() , sChunk1.size() , &header );
   parser.parse( sChunk2.c_str() , sChunk2.size() , &header );
 
-  BOOST_CHECK( header.fVersion == 1.1f );
+  BOOST_CHECK( header.Version == 1.1f );
   BOOST_CHECK( header.Status == c2s::NotFound );
   BOOST_CHECK( header.ReasonPhrase == "Not Found" );
 }
@@ -215,9 +215,9 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST3 )
   parser.parse( sChunk3.c_str() , sChunk3.size() , &header );
   parser.parse( sChunk4.c_str() , sChunk4.size() , &header );
 
-  BOOST_CHECK( header.QueryFields.get( "fieldname1" ) == "value1" );
-  BOOST_CHECK( header.QueryFields.get( "fieldname2" ) == "value2" );
-  BOOST_CHECK( header.QueryFields.get( "fieldname3" ) == "value3" );
+  BOOST_CHECK( header.QueryFields.getValueForFieldName( "fieldname1" ) == "value1" );
+  BOOST_CHECK( header.QueryFields.getValueForFieldName( "fieldname2" ) == "value2" );
+  BOOST_CHECK( header.QueryFields.getValueForFieldName( "fieldname3" ) == "value3" );
 
   BOOST_CHECK( header.Method == c2s::POST );
   BOOST_CHECK( header.URI == "/c2s/test/http-parser" );

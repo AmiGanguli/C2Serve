@@ -37,20 +37,20 @@ namespace c2s
 {
 
   C2SHttpResponseHeader::C2SHttpResponseHeader()
-    : fVersion( 1.1f ),
+    : Version( 1.1f ),
       Status( InternalServerError )
   {
 
   }
 
   C2SHttpResponseHeader::C2SHttpResponseHeader( C2SHttpStatus status )
-    : fVersion( 1.1f ),
+    : Version( 1.1f ),
       Status( status )
   {
   }
 
   C2SHttpResponseHeader::C2SHttpResponseHeader( C2SHttpStatus status , const std::string &sReasonPhrase )
-  : fVersion( 1.1f ),
+  : Version( 1.1f ),
     Status( status ),
     ReasonPhrase( sReasonPhrase )
   {

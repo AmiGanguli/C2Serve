@@ -55,7 +55,7 @@ namespace c2s
 
     C2STestRestRequest &C2STestRestRequest::query_field( const std::string &name , const std::string &value )
     {
-      m_request.header().QueryFields.add( name , value );
+      m_request.header().QueryFields.addField( name , value );
       return *this;
     }
 

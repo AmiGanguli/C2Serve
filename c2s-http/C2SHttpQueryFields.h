@@ -48,9 +48,9 @@ namespace c2s
 
     typedef std::map<std::string,std::string>::const_iterator const_iterator;
 
-    void add( const std::string &name , const std::string &value );
+    void addField( const std::string &sFieldName , const std::string &sFieldValue );
 
-    const std::string &get( const std::string &name ) const;
+    const std::string &getValueForFieldName( const std::string &sFieldName ) const;
 
     const_iterator begin() const { return m_fields.begin(); }
     const_iterator end() const { return m_fields.end(); }
