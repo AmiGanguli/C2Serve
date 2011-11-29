@@ -31,6 +31,7 @@
 
 #include "C2SHttpServer.h"
 #include "C2SHttpServerType.h"
+#include "C2SHttpResourceManager.h"
 
 #include "C2SRuntime.h"
 
@@ -62,6 +63,11 @@ namespace c2s
   void C2SHttpServer::shutdown()
   {
     C2SRuntime::shutdown();
+  }
+
+  void C2SHttpServer::registerResourcePrototype( C2SHttpResourcePrototype *pResourcePrototype )
+  {
+    C2SHttpResourceManager::registerResourcePrototype( pResourcePrototype );
   }
 
 }

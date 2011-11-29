@@ -33,7 +33,6 @@
 #define C2STESTSERVERRUNNER_H_
 
 #include "C2STestServerThread.h"
-#include "C2SHttpResourceManager.h"
 #include "C2SGlobalSettings.h"
 
 #include "Thread.h"
@@ -74,7 +73,7 @@ namespace c2s
         for ( ; it != resources.end(); ++it )
         {
 //            BOOST_MESSAGE( "add resource \"" + ( *it )->getContextRoot() + "\"" );
-          C2SHttpResourceManager::registerResourcePrototype( *it );
+          C2SHttpServer::registerResourcePrototype( *it );
         }
 
 //          BOOST_MESSAGE( "startup server" );

@@ -36,6 +36,7 @@ namespace c2s
 {
 
   class C2SHttpServerType;
+  class C2SHttpResourcePrototype;
 
   /**
    *
@@ -83,6 +84,8 @@ namespace c2s
      *
      */
     static void waitForStartup();
+
+    static void registerResourcePrototype( C2SHttpResourcePrototype *pResourcePrototype );
 
   private:
 

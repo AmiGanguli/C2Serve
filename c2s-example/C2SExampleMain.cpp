@@ -30,11 +30,8 @@
  */
 
 #include "C2SGlobalSettings.h"
-
 #include "C2SRestResourcePrototype.h"
-
 #include "C2SHttpServer.h"
-#include "C2SHttpResourceManager.h"
 
 #include "C2SExampleRestMethodPrototypeSayHello.h"
 
@@ -60,7 +57,7 @@ int main( int , char ** )
   pResource->registerMethodPrototype( new C2SExampleRestMethodPrototypeSayHello() );
 
   //register REST resource at the http resource manager
-  C2SHttpResourceManager::registerResourcePrototype( pResource );
+  C2SHttpServer::registerResourcePrototype( pResource );
 
   //start socket listener
   //this method blocks the program
