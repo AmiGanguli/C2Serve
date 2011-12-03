@@ -44,6 +44,8 @@ namespace c2s
 
     C2SRestQueryParameterBase( const std::string &sParameterID ) : m_sParameterID( sParameterID ) {};
 
+    virtual ~C2SRestQueryParameterBase(){};
+
     virtual void setDefaultValue() = 0;
 
     virtual void setParameterFromString( const std::string &sParameterValueAsString ) = 0;
