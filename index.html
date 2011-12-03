@@ -2,190 +2,53 @@
 <html>
 	<head>
 	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	  <title>C2Serve Project - Getting Started</title>
+	  <title>C2Serve Project</title>
 	  
-	  <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <script type="text/javascript" src="c2s-htdocs/Document.js"></script>
+  
+	  <link rel="stylesheet" type="text/css" href="c2s-htdocs/Basic.css"/>
+    <link rel="stylesheet" type="text/css" href="c2s-htdocs/Menu.css"/>
 	    
 	</head>
 <body>
 
-  <div>
+  <table>
+    <tr>
+      <td class="menu">
+        <table class="menu">
+        
+          <tr><td height="10px"></td></tr>
+        
+          <tr><td class="item">
+            <a href="c2s-htdocs/important_notes.html" target="content_frame">Important Notes</a>
+          </td></tr>
+          
+          <tr><td class="item">
+            <a href="c2s-htdocs/download_and_installation.html" target="content_frame">Download and Installation</a>
+          </td></tr>
+          
+          <tr><td class="item">
+            <a href="c2s-htdocs/create_simple_server.html" target="content_frame">Create Simple Server</a>
+          </td></tr>
+          
+          <tr><td class="item">
+            <a href="c2s-htdocs/impressum.html" target="content_frame">Impressum</a>
+          </td></tr>
+        
+          <tr><td height="100px"></td></tr>
+        
+        </table>
+      </td>
+      <td>
   
-    <div class="section" style="margin-top: 50px;">
-    
-      <h1>Important Notes</h1>
-      
-      C2Serve is in beta phase. This means that there may be still some unknown bugs and memory issues.
-      The interface of some basic classes and functions will change in all likelihood.
-      Windows is currently not supported, only UNIX systems.
-      Furthermore, the documentation currently only explains the basics of C2Serve.
-      A more detailed explanation is planned by the end of 2011.
-      
-      <br />
-      <br />
-          
-      To figure out how C2Serve works you can start with the example in directory <code>c2s-example</code>.
-      This example shows how to create REST resources and methods and start the socket listener.
-      A more detailed look into C2Serve is provided by the tests in <code>c2s-test</code>, especially <code>c2s-test/rest</code>.
-      The following section also explains the basic steps to create a web service using C2Serve.
-    
-    
-    </div>
-    
-    <div class="section" style="margin-top: 50px;">
-	  
-	    <h1>Download and Installation</h1>
-	  
-	    Download the <a href="https://github.com/c2s/C2Serve/zipball/master">source distribution</a> and unpack the archive.
-	    Alternatively, you can also clone the repository by running <code>git clone git@github.com:c2s/C2Serve.git</code>.
-	    The directory which contains the build and source will be referred in the following as <code>C2S_ROOT_DIR</code>.
-	    
-	    <br />
-	    <br />
-	    
-	    The build is realized using <a href="http://www.cmake.org/">CMake</a>, so you will need <a href="http://www.cmake.org/">CMake</a> installed on your build machine.
-	    Open a terminal and create a build directory.
-	    <a href="http://www.cmake.org/">CMake</a> will need it to create its build environment and to build the binaries there.
-	    
-	    <br />
-	    <br />
-	    
-	    Next step is to create the build environment.
-	    Change into the build directory and run <code>cmake C2S_ROOT_DIR</code>.
-	    By default, the libraries, headers and test executables are built into a created <code>install</code> directory within the build directory.
-	    You can specify another directory by defining the install prefix: <code>cmake -DINSTALL_PREFIX=MY_INSTALL_DIR</code>.
-	    
-	    <br />
-      <br />
-      
-      Now you can build the binaries by running <code>make install</code>.
-      The libraries are built into a <code>lib</code> directory which is created in the <code>install</code> directory.
-      To build the unit tests, you have to install the <a href="http://www.boost.org/">Boost libraries</a> or specify the Boost root directory when initializing the build environment: <code>-DBOOST_ROOT=MY_BOOST_ROOT_DIR</code>.
-	    
-	    <br />
-	    <br />
-	    
-	    If you are using <a href="http://www.cmake.org/">CMake</a> in your project, you can also easily add the <code>CMakeLists.txt</code> in the C2Serve root directory to your build system:
-	    
-	    <div class="code">
-		    <code class="cmake-lists">
-		       set( DISABLE_C2S_SYSTEM_SETTINGS ON ) <br />
-		       add_subdirectory( C2S_ROOT_DIR )
-		    </code>
-	    </div>
-    
-	    First of all you should disable the C2Serve system scripts.
-	    Afterwards you can add the <code>C2S_ROOT_DIR</code> to your build paths.
-	    If this directory is placed outside of your source tree, <a href="http://www.cmake.org/">CMake</a> needs a binary directory defined to know where to build the binaries.
-	    Check the <a href="http://cmake.org/cmake/help/cmake-2-8-docs.html">CMake documendation</a> for more information.
-	
-   </div>
-   
-   <div class="section" style="margin-top: 50px;">
-    
-      <h1>Create a Simple Server</h1>
-    
-      Starting a C2Serve REST service can be summarized in three steps:
-      
-      <ul>
-      
-        <li>
-          Define the port to listen for incoming requests.
-        </li>
-        
-        <li>
-          Create the available REST resources and methods.
-        </li>
-        
-        <li>
-          Start the socket listener.
-        </li>
-        
-      </ul>
-      
-      <h2>Define Server Port</h2>
-      
-      The server's port is simply a global integer value, defined in the class <code><i class="tn">C2SGlobalSettings</i></code>.
-      The global instance can be accessed using the public static function <code><i class="tn">C2SGlobalSettings</i>::Settings()</code>:
-      
-      <div class="code">
-        <code class="cpp">
-        
-          <i class="sw">#include</i> <i class="m">&quot;C2SGlobalSettings.h&quot;</i><br />
-          <br />
-          <i class="sw">int</i> <i class="fd">main</i>( <i class="sw">int</i>, <i class="sw">char</i> ** )<br />
-          {<br />
-          &nbsp;&nbsp;<i class="sw">using namespace</i> c2s;<br />
-          &nbsp;&nbsp;<i class="tn">C2SGlobalSettings</i> &globalServerSettings = <i class="tn">C2SGlobalSettings</i>::Settings();<br />
-          &nbsp;&nbsp;globalServerSettings.<i class="m">iPort</i> = 3344;<br />
-          <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;...<br />
-          <br />
-        </code>
-      </div>
-   
-      <h2>Define REST Resource and Methods</h2>
-      
-      C2Serve provides a class <code><i class="tn">C2SRestResource</i></code>.
-      Each instance of that class represents an actual REST resource at a specific context root of the server.
-      To create a new resource call the static method <code><i class="tn">C2SRestResource::createRestResourceWithContextRoot()</i></code>.
-      This function will create a new REST resource.
-      You can now add REST methods by calling <code><i class="tn">C2SRestResource</i>::registerMethodPrototype()</code>.
-      Finally, you will have to register the REST resource at the http resource manager.
-      Each http requests will be forwarded to one REST resource, identified by the path.
-      If no resource matches, status 404 is returned (not found).
-    
-      <div class="code">
-        <code class="cpp">
-        
-          <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
-          <br />
-          
-          <i class="sw">#include</i> <i class="m">&quot;C2SRestResourcePrototype.h&quot;</i><br />
-          <i class="sw">#include</i> <i class="m">&quot;MyRestMethodImplementation.h&quot;</i><br />
-        
-          <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
-          <br />
-          &nbsp;&nbsp;<i class="tn">std</i>::<i class="tn">string</i> sContextRoot = <i class="m">&quot;example/resource&quot;</i>;<br />
-          &nbsp;&nbsp;<i class="tn">C2SRestResourcePrototype</i> *pResource =<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="tn">C2SRestResourcePrototype</i>::createRestResourceWithContextRoot( sContextRoot );<br />
-          &nbsp;&nbsp;pResource->registerMethodPrototype( <i class="sw">new</i> <i class="tn">MyRestMethodImplementation()</i> );<br />
-          &nbsp;&nbsp;<i class="tn">C2SHttpServer</i>::registerResourcePrototype( pResource );<br />
-          <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
-          <br />
-        </code>
-      </div>
-   
-      <h2>Start Socket Listener</h2>
-    
-        This is the easiest part. You simply have to call <code><i class="tn">C2SHttpServer</i>::run()</code>:
-      
-      <div class="code">
-        <code class="cpp">
-        
-          <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
-          <br />
-          
-          <i class="sw">#include</i> <i class="m">&quot;C2SHttpServer.h&quot;</i><br />
-        
-          <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
-          <br />
-          &nbsp;&nbsp;<i class="tn">C2SHttpServer</i>::run();<br />
-          <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
-          <br />
-        </code>
-      </div>
-   
-    </div>
-    
-  </div>
-  
+			  <iframe style="margin-top: 30px;" src="c2s-htdocs/important_notes.html" allowtransparency="true" width="1024" id="content_frame" name="content_frame" scrolling="no" marginwidth="0" marginheight="0" frameborder="0">
+			    <p>Unfortunately, your browser is not able to view embedded frames..</p>
+			  </iframe>
+
+      </td>
+    </tr>
+  </table>
+
   	<script type="text/javascript" src="http://fc.webmasterpro.de/counter.php?name=c2serve"></script>
 	<noscript><div><img src="http://fc.webmasterpro.de/as_noscript.php?name=c2serve" style="width:1px;height:1px;" alt="" /></div></noscript>
 	

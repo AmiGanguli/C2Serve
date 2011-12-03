@@ -1,0 +1,53 @@
+@CHARSET "UTF-8";
+
+td.menu
+{
+  vertical-align: top;
+}
+
+table.menu
+{
+  margin-top: 50px;
+  margin-left: 20px;
+  padding: 5px;
+  width: 200px;
+}
+
+table.menu td.item
+{
+  background-color: #f1f3b7;
+  text-align: center;
+  padding: 3px;
+  border-style: solid;
+  border-width: 1px;
+}
+
+table.menu td.item a:link
+{
+  color: #414237;
+  text-decoration:none;
+}
+
+table.menu td.item a:visited
+{
+  text-decoration:none;
+  color: #6B6D5A;
+}
+
+table.menu td.item a:focus
+{
+  color: red;
+  text-decoration:underline;
+}
+
+table.menu td.item a:hover
+{
+  color: #B9BA9B;
+  text-decoration:none;
+}
+
+table.menu td.item a:active
+{
+  color: #D6D8B4;
+  text-decoration:underline;
+}
