@@ -74,6 +74,7 @@ namespace c2s
     if ( m_pEntity )
       delete m_pEntity;
     m_pEntity = pHttpEntity;
+    m_header.Fields.setContentLength( pHttpEntity->size );
   }
 
 }
