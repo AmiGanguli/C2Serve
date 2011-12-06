@@ -44,7 +44,8 @@
 
 #include <iostream>
 
-#define BUFFERSIZE 4096
+//must not be too large (may cause loss of data when reading from socket)
+#define BUFFERSIZE 256
 
 namespace c2s
 {
