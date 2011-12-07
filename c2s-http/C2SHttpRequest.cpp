@@ -55,6 +55,11 @@ namespace c2s
     m_parser.parse( data , size , &m_header );
   }
 
+  bool C2SHttpRequest::isComplete() const
+  {
+    return m_parser.isAllRequestDataReceived();
+  }
+
   void C2SHttpRequest::finished()
   {
     if ( m_header.Fields.getContentLength() )

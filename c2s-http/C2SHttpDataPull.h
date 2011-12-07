@@ -54,6 +54,8 @@ namespace c2s
 
     void flush();
 
+    bool isComplete() const;
+
   private:
 
     C2SHttpRequest *m_pRequest;

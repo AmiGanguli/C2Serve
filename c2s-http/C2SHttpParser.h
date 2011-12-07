@@ -56,6 +56,8 @@ namespace c2s
 
     char *entity( unsigned int size );
 
+    bool isAllRequestDataReceived() const;
+
   private:
 
     template <class HeaderType>

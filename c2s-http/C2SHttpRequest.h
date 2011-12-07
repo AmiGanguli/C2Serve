@@ -51,6 +51,8 @@ namespace c2s
 
     void push( char *data , unsigned int size );
 
+    bool isComplete() const;
+
     void finished();
 
     const C2SHttpRequestHeader &header() const { return m_header; }
