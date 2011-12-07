@@ -74,4 +74,9 @@ namespace c2s
     m_pResourceManager->handleRequest( *m_pRequest );
   }
 
+  bool C2SHttpDataPull::isComplete() const
+  {
+    return m_pRequest->isComplete();
+  }
+
 }

@@ -44,8 +44,7 @@
 
 #include <iostream>
 
-//must not be too large (may cause loss of data when reading from socket)
-#define BUFFERSIZE 256
+#define BUFFERSIZE 4096
 
 namespace c2s
 {
@@ -125,9 +124,12 @@ namespace c2s
     bzero( buffer , BUFFERSIZE );
 #endif
 
+std::cout << "===data from socket======================================================" << std::endl;
     int iBytesRead = BUFFERSIZE;
 //    while ( iBytesRead == BUFFERSIZE )
-    while ( iBytesRead > 0 )
+    //TODO: This is a workaround: Some clients may not call shutdown after writing to socket is completed, so we have to check ourselves if the request is complete
+    //      What if the client is buggy? Timeout?
+    while ( iBytesRead > 0 && !m_pDataPull->isComplete() )
     {
       //read data from buffer
 #ifdef WINXX
@@ -139,8 +141,13 @@ namespace c2s
       if ( iBytesRead < 0 )
         throw C2SSocketAcceptHandlerException( "C2SSocketAcceptHandler::listen: Error reading from socket!" );
 
+      std::cout << std::string( buffer , iBytesRead );
+
       m_pDataPull->receive( buffer , iBytesRead );
     }
+std::cout << std::endl;
+std::cout << "========================================================================" << std::endl;
+
 
     try
     {

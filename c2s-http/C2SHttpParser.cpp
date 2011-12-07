@@ -370,6 +370,18 @@ namespace c2s
     return m_body;
   }
 
+
+  bool C2SHttpParser::isAllRequestDataReceived() const
+  {
+    if ( !m_bHeaderFinished )
+      return false;
+
+    if ( m_iContentSize > m_iCurrentBodyIdx )
+      return false;
+
+    return true;
+  }
+
   void handleFirstLine( const char *data , unsigned int size , C2SHttpResponseHeader *pHeader )
   {
     C2SHttpResponseParser rp;

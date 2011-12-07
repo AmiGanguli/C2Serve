@@ -49,6 +49,8 @@ namespace c2s
 
     virtual void flush() = 0;
 
+    virtual bool isComplete() const = 0;
+
   protected:
 
     C2SDataPullInterface( C2SDataPushInterface *pDataPush ) : m_dataPush( *pDataPush ) {};
