@@ -124,7 +124,6 @@ namespace c2s
     bzero( buffer , BUFFERSIZE );
 #endif
 
-std::cout << "===data from socket======================================================" << std::endl;
     int iBytesRead = BUFFERSIZE;
 //    while ( iBytesRead == BUFFERSIZE )
     //TODO: This is a workaround: Some clients may not call shutdown after writing to socket is completed, so we have to check ourselves if the request is complete
@@ -141,13 +140,8 @@ std::cout << "===data from socket===============================================
       if ( iBytesRead < 0 )
         throw C2SSocketAcceptHandlerException( "C2SSocketAcceptHandler::listen: Error reading from socket!" );
 
-      std::cout << std::string( buffer , iBytesRead );
-
       m_pDataPull->receive( buffer , iBytesRead );
     }
-std::cout << std::endl;
-std::cout << "========================================================================" << std::endl;
-
 
     try
     {
