@@ -43,6 +43,8 @@ namespace c2s
   {
   public:
 
+    virtual ~C2SHttpEntityUnstreamerBase(){};
+
     const C2SHttpMediaType &getAcceptedMediaType() const { return m_acceptedMediaType; }
 
     virtual void unstream( const C2SHttpEntity &entity ) = 0;
