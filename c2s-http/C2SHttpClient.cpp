@@ -155,6 +155,10 @@ namespace c2s
     //send header
     C2SHttpClient::writeToSocket( sRequestData.c_str() , sRequestData.size() , info );
 
+    //writing to socket is finished
+    if ( shutdown( info.SocketDescriptor , SHUT_WR ) )
+      throw C2SHttpClientException( "C2SHttpClient::send: Cannot shutdown socket!" );
+
     C2SHttpResponse response;
 
     //initialize data buffer
@@ -195,10 +199,16 @@ namespace c2s
 #ifdef WINXX
     int n = ::send( info.SocketDescriptor , data , iSize , 0 );
 #else
-    int n = write( info.SocketDescriptor , data , iSize );
+    int iBytesWritten = 0;
+    while ( iBytesWritten < static_cast<int>( iSize ) )
+    {
+      const char *pDataLeft = &data[ iBytesWritten ];
+      unsigned int iSizeLeft = iSize - iBytesWritten;
+      iBytesWritten += write( info.SocketDescriptor , pDataLeft , iSizeLeft );
+      if ( iBytesWritten < 0 )
+        throw C2SHttpClientException( "C2SHttpClient::writeToSocket: ERROR writing to socket" );
+    }
 #endif
-    if (n < 0)
-      throw C2SHttpClientException( "C2SHttpClient::writeToSocket: ERROR writing to socket" );
 
   }
 

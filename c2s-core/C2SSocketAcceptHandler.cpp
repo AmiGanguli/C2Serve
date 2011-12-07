@@ -126,14 +126,16 @@ namespace c2s
 #endif
 
     int iBytesRead = BUFFERSIZE;
-    while ( iBytesRead == BUFFERSIZE )
+//    while ( iBytesRead == BUFFERSIZE )
+    while ( iBytesRead > 0 )
     {
       //read data from buffer
 #ifdef WINXX
       iBytesRead = recv( m_connectionSocketInfo.SocketDescriptor , buffer , BUFFERSIZE , 0 );
 #else
-      iBytesRead = read( m_connectionSocketInfo.SocketDescriptor , buffer , BUFFERSIZE );
+      iBytesRead = recv( m_connectionSocketInfo.SocketDescriptor , buffer , BUFFERSIZE , 0 );
 #endif
+
       if ( iBytesRead < 0 )
         throw C2SSocketAcceptHandlerException( "C2SSocketAcceptHandler::listen: Error reading from socket!" );
 
