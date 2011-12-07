@@ -140,7 +140,15 @@ namespace c2s
       m_pDataPull->receive( buffer , iBytesRead );
     }
 
-    m_pDataPull->flush();
+    try
+    {
+    	m_pDataPull->flush();
+    }
+    catch( const C2SException &e )
+    {
+      //TODO: Should be handled by server type (return appropriate response)
+      std::cerr << "C2SSocketAcceptHandler:accept: ERROR: " << e.what() << std::endl;
+    }
 
     //close socket
 #ifdef WINXX
