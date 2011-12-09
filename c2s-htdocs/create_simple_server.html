@@ -63,7 +63,7 @@
       This function will create a new REST resource.
       You can now add REST methods by calling <code><i class="tn">C2SRestResource</i>::registerMethodPrototype()</code>.
       Finally, you will have to register the REST resource at the http server.
-      Each http requests will be forwarded to one REST resource, identified by the path.
+      Each http request will be forwarded to one REST resource, identified by the path.
       If no resource matches, status 404 is returned (not found).
     
       <div class="code">
@@ -73,6 +73,7 @@
             &nbsp;&nbsp;&nbsp;&nbsp;...<br />
           <br />
           
+          <i class="sw">#include</i> <i class="m">&quot;C2SHttpServer.h&quot;</i><br />
           <i class="sw">#include</i> <i class="m">&quot;C2SRestResourcePrototype.h&quot;</i><br />
           <i class="sw">#include</i> <i class="m">&quot;MyRestMethodImplementation.h&quot;</i><br />
         
@@ -96,12 +97,6 @@
       
       <div class="code">
         <code class="cpp">
-        
-          <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
-          <br />
-          
-          <i class="sw">#include</i> <i class="m">&quot;C2SHttpServer.h&quot;</i><br />
         
           <br />
             &nbsp;&nbsp;&nbsp;&nbsp;...<br />
