@@ -32,7 +32,7 @@
 #ifndef C2STESTSERVERRUNNER_H_
 #define C2STESTSERVERRUNNER_H_
 
-#include "C2SGlobalSettings.h"
+#include "C2SSettings.h"
 #include "Thread.h"
 
 #include <list>
@@ -50,9 +50,9 @@ namespace c2s
     {
     public:
 
-      C2STestServerRunner( unsigned short iPort = C2SGlobalSettings::Settings().iPort );
+      C2STestServerRunner( unsigned short iPort );
 
-      C2STestServerRunner( const std::list<C2SHttpResourcePrototype*> &resources , unsigned short iPort = C2SGlobalSettings::Settings().iPort );
+      C2STestServerRunner( const std::list<C2SHttpResourcePrototype*> &resources , unsigned short iPort );
 
       virtual ~C2STestServerRunner();
 
@@ -65,6 +65,8 @@ namespace c2s
       void createServerRuntime();
 
       void startServerRuntime();
+
+      C2SSettings m_serviceSettings;
 
       C2SHttpServer *m_pHttpServerRuntime;
 

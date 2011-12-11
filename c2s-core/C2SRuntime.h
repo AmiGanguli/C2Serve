@@ -32,15 +32,14 @@
 #ifndef C2SRUNTIME_H_
 #define C2SRUNTIME_H_
 
-#include "C2SGlobalSettings.h"
-
 #include <list>
 
 namespace c2s
 {
-
   class C2SSocketListener;
   class C2SDataHandlingInterface;
+
+  struct C2SSettings;
 
   /**
    *
@@ -51,7 +50,7 @@ namespace c2s
   {
   public:
 
-    C2SRuntime( C2SDataHandlingInterface *pDataHandling );
+    C2SRuntime( const C2SSettings &settings , C2SDataHandlingInterface *pDataHandling );
 
     virtual ~C2SRuntime();
 

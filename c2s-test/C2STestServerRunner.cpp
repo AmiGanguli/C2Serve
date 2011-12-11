@@ -47,7 +47,7 @@ namespace c2s
 
       c2s::thread::Lock lock( &m_mutex );
 
-      C2SGlobalSettings::Settings().iPort = iPort;
+      m_serviceSettings.iPort = iPort;
 
       this->createServerRuntime();
       this->startServerRuntime();
@@ -59,7 +59,7 @@ namespace c2s
     {
       c2s::thread::Lock lock( &m_mutex );
 
-      C2SGlobalSettings::Settings().iPort = iPort;
+      m_serviceSettings.iPort = iPort;
 
       this->createServerRuntime();
 
@@ -94,7 +94,7 @@ namespace c2s
     void C2STestServerRunner::createServerRuntime()
     {
 
-      m_pHttpServerRuntime = new C2SHttpServer();
+      m_pHttpServerRuntime = new C2SHttpServer( m_serviceSettings );
       m_pServerRunThread = new C2STestServerThread( m_pHttpServerRuntime );
       m_pServerThread = new c2s::thread::Thread<c2s::test::C2STestServerThread>( m_pServerRunThread );
 

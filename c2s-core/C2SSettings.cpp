@@ -29,36 +29,16 @@
 
  */
 
-#ifndef C2SGLOBALSETTINGS_H_
-#define C2SGLOBALSETTINGS_H_
-
-#include <string>
+#include "C2SSettings.h"
 
 namespace c2s
 {
 
-  class C2SGlobalSettings
-  {
-  public:
+  std::string C2SSettings::C2SHostName = "localhost";
 
-    unsigned short iPort;
-
-    unsigned short iNumThreads;
-
-    std::string C2SHostName;
-
-    static C2SGlobalSettings &Settings();
-
-  private:
-
-    C2SGlobalSettings( const C2SGlobalSettings & );
-
-    C2SGlobalSettings &operator=( const C2SGlobalSettings & );
-
-    C2SGlobalSettings();
-
-  };
+  C2SSettings::C2SSettings()
+    : iPort( 8180 ),
+      iNumThreads( 4 )
+  {};
 
 }
-
-#endif /* C2SGLOBALSETTINGS_H_ */

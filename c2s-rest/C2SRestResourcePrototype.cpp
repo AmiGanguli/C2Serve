@@ -38,7 +38,7 @@
 #include "C2SHttpRequest.h"
 #include "C2SHttpResponseHandlerInterface.h"
 #include "C2SStringUtils.h"
-#include "C2SGlobalSettings.h"
+#include "C2SSettings.h"
 
 #include "StringUtils.h"
 
@@ -78,7 +78,7 @@ namespace c2s
 
   C2SRestResourcePrototype *C2SRestResourcePrototype::createRestResourceWithContextRoot( const std::string &sContextRootOfRestResource )
   {
-    C2SRestResourcePrototype *pResource = new C2SRestResourcePrototype( C2SGlobalSettings::Settings().C2SHostName , sContextRootOfRestResource );
+    C2SRestResourcePrototype *pResource = new C2SRestResourcePrototype( C2SSettings::C2SHostName , sContextRootOfRestResource );
     return pResource;
   }
 

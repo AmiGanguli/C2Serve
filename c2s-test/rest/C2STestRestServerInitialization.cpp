@@ -35,6 +35,7 @@
 #include "C2STestRestMethodAdd.h"
 #include "C2STestRestMethodAddDuplicate.h"
 
+#include "C2SSettings.h"
 #include "C2SHttpServer.h"
 #include "C2SRestResourcePrototype.h"
 
@@ -56,7 +57,8 @@ namespace c2s
 
     void C2STestRestServerInitialization::runTest()
     {
-      C2SHttpServer httpServer;
+      C2SSettings serverSettings;
+      C2SHttpServer httpServer( serverSettings );
 
       C2SRestResourcePrototype *pRestResource = C2SRestResourcePrototype::createRestResourceWithContextRoot( C2STestRestFixture::sContextRootOfTestResource );
       pRestResource->registerMethodPrototype( new C2STestRestMethodAdd() );

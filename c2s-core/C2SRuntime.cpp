@@ -31,6 +31,7 @@
 
 #include "C2SRuntime.h"
 
+#include "C2SSettings.h"
 #include "C2SException.h"
 #include "C2SSocketInfo.h"
 #include "C2SStatusSetter.h"
@@ -44,17 +45,16 @@
 namespace c2s
 {
 
-  C2SRuntime::C2SRuntime( C2SDataHandlingInterface *pDataHandling )
+  C2SRuntime::C2SRuntime( const C2SSettings &settings , C2SDataHandlingInterface *pDataHandling )
     : m_pDataHandling( pDataHandling ),
       m_bIsRunning( false ),
       m_bIsOnStartup( false ),
       m_bIsOnShutdown( false )
   {
     //TODO: set listeners from outside (allow multiple listeners)
-    const C2SGlobalSettings &gs = C2SGlobalSettings::Settings();
     C2SSocketListenerSettings ls;
-    ls.iPort = gs.iPort;
-    ls.iNumThreads = gs.iNumThreads;
+    ls.iPort = settings.iPort;
+    ls.iNumThreads = settings.iNumThreads;
     m_pSocketListener = new C2SSocketListener( ls , *m_pDataHandling );
   }
 

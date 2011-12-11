@@ -29,7 +29,7 @@
 
  */
 
-#include "C2SGlobalSettings.h"
+#include "C2SSettings.h"
 #include "C2SRestResourcePrototype.h"
 #include "C2SHttpServer.h"
 
@@ -45,8 +45,8 @@ int main( int , char ** )
   using namespace c2s::example;
 
   //define server port
-  C2SGlobalSettings &globalServerSettings = C2SGlobalSettings::Settings();
-  globalServerSettings.iPort = iServerPort;
+  C2SSettings settingsForServer;
+  settingsForServer.iPort = iServerPort;
 
   //create new REST resource
   C2SRestResourcePrototype *pResource = C2SRestResourcePrototype::createRestResourceWithContextRoot( sExampleRESTResourceContextRoot );
@@ -56,7 +56,7 @@ int main( int , char ** )
   //this ensures that different process don't share the same path and query parameters
   pResource->registerMethodPrototype( new C2SExampleRestMethodPrototypeSayHello() );
 
-  C2SHttpServer httpServer;
+  C2SHttpServer httpServer( settingsForServer );
 
   //register REST resource at the http resource manager
   httpServer.registerResourcePrototype( pResource );

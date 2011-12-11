@@ -40,6 +40,8 @@ namespace c2s
   class C2SHttpResourcePrototypeList;
   class C2SHttpResourceManager;
 
+  struct C2SSettings;
+
   /**
    *
    * @brief   C2S http server runtime.
@@ -51,7 +53,7 @@ namespace c2s
   {
   public:
 
-    C2SHttpServer();
+    C2SHttpServer( const C2SSettings &settings );
 
     /**
      *
