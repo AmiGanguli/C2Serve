@@ -21,11 +21,11 @@
       <ul>
       
         <li>
-          Define the port to listen for incoming requests.
+          Create a http server instance.
         </li>
         
         <li>
-          Create the available REST resources and methods.
+          Create the provided REST resources and methods.
         </li>
         
         <li>
@@ -34,28 +34,32 @@
         
       </ul>
       
-      <h2>Define Server Port</h2>
+      <h2>Define Server Port and Create Server Instance</h2>
       
-      The server's port is simply a global integer value, defined in the class <code><i class="tn">C2SGlobalSettings</i></code>.
-      The global instance can be accessed using the public static function <code><i class="tn">C2SGlobalSettings</i>::Settings()</code>:
+      REST uses the http protocol, so you create a http server that listens on a socket for incoming requests.
+      To connect to the socket (and thus to the http server), you have to define a port number.
+      The server's port is specified as a simple integer value, defined in the class <code><i class="tn">C2SGlobalSettings</i></code>.
+      You create an instance of the server settings, define the port number and pass it to the constructor of <code><i class="tn">C2SHttpServer</i></code>:
       
       <div class="code">
         <code class="cpp">
         
-          <i class="sw">#include</i> <i class="m">&quot;C2SGlobalSettings.h&quot;</i><br />
+          <i class="sw">#include</i> <i class="m">&quot;C2SSettings.h&quot;</i><br />
+          <i class="sw">#include</i> <i class="m">&quot;C2SHttpServer.h&quot;</i><br />
           <br />
           <i class="sw">int</i> <i class="fd">main</i>( <i class="sw">int</i>, <i class="sw">char</i> ** )<br />
           {<br />
           &nbsp;&nbsp;<i class="sw">using namespace</i> c2s;<br />
-          &nbsp;&nbsp;<i class="tn">C2SGlobalSettings</i> &globalServerSettings = <i class="tn">C2SGlobalSettings</i>::Settings();<br />
-          &nbsp;&nbsp;globalServerSettings.<i class="m">iPort</i> = 3344;<br />
+          &nbsp;&nbsp;<i class="tn">C2SSettings</i> &settingsOfServer;<br />
+          &nbsp;&nbsp;settingsOfServer.<i class="m">iPort</i> = 3344;<br />
+          &nbsp;&nbsp;<i class="tn">C2SHttpServer</i> httpServer( settingsOfServer );<br />
           <br />
           &nbsp;&nbsp;&nbsp;&nbsp;...<br />
           <br />
         </code>
       </div>
    
-      <h2>Define REST Resource and Methods</h2>
+      <h2>Define REST Resources and Methods</h2>
       
       C2Serve provides a class <code><i class="tn">C2SRestResource</i></code>.
       Each instance of that class represents an actual REST resource at a specific context root of the server.
@@ -73,7 +77,6 @@
             &nbsp;&nbsp;&nbsp;&nbsp;...<br />
           <br />
           
-          <i class="sw">#include</i> <i class="m">&quot;C2SHttpServer.h&quot;</i><br />
           <i class="sw">#include</i> <i class="m">&quot;C2SRestResourcePrototype.h&quot;</i><br />
           <i class="sw">#include</i> <i class="m">&quot;MyRestMethodImplementation.h&quot;</i><br />
         
@@ -84,7 +87,7 @@
           &nbsp;&nbsp;<i class="tn">C2SRestResourcePrototype</i> *pResource =<br />
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="tn">C2SRestResourcePrototype</i>::createRestResourceWithContextRoot( sContextRoot );<br />
           &nbsp;&nbsp;pResource->registerMethodPrototype( <i class="sw">new</i> <i class="tn">MyRestMethodImplementation()</i> );<br />
-          &nbsp;&nbsp;<i class="tn">C2SHttpServer</i>::registerResourcePrototype( pResource );<br />
+          &nbsp;&nbsp;httpServer.registerResourcePrototype( pResource );<br />
           <br />
             &nbsp;&nbsp;&nbsp;&nbsp;...<br />
           <br />
@@ -93,18 +96,30 @@
    
       <h2>Start Socket Listener</h2>
     
-        This is the easiest part. You simply have to call <code><i class="tn">C2SHttpServer</i>::run()</code>:
+        This is the easiest part. You simply have to call <code><i class="tn">C2SHttpServer</i>::run()</code>.
+        This method blocks until the server is shutdown.
       
+        To shutdown a running server instance use the method of <code><i class="tn">C2SHttpServer</i>::shutdown()</code>.
+        This method blocks until the server has been successfully shutdown.
+        Of course, you have to call these methods from a different threads.
+        
       <div class="code">
         <code class="cpp">
         
           <br />
             &nbsp;&nbsp;&nbsp;&nbsp;...<br />
           <br />
-          &nbsp;&nbsp;<i class="tn">C2SHttpServer</i>::run();<br />
+          &nbsp;&nbsp;httpServer.run();<br />
           <br />
             &nbsp;&nbsp;&nbsp;&nbsp;...<br />
           <br />
+          
+          <i class="sw">void</i> <i class="fd">shutdownExampleServer()</i> <br />
+	          { <br />
+	          &nbsp;&nbsp;httpServer.shutdown();<br />
+	          } <br />
+          <br />
+          
         </code>
       </div>
    
