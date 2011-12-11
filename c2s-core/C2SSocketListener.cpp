@@ -66,21 +66,23 @@ namespace c2s
   void C2SSocketListener::run()
   {
     m_bKeepRunning = true;
-    c2s::thread::Mutex acceptMutex;
-    c2s::thread::ThreadQueue<C2SSocketAcceptHandler> tq;
+    c2s::thread::Mutex *pAcceptMutex = new c2s::thread::Mutex();
+    c2s::thread::ThreadQueue<C2SSocketAcceptHandler> *pAcceptThreadQueue = new c2s::thread::ThreadQueue<C2SSocketAcceptHandler>();
 
     for ( unsigned int i = 0; i < m_settings.iNumThreads; ++i )
     {
-      m_acceptHandlers.push_back( new C2SSocketAcceptHandler( *m_pSocketInfo , m_dataHandling , &acceptMutex ) );
-      tq.queue( m_acceptHandlers.back() );
+      m_acceptHandlers.push_back( new C2SSocketAcceptHandler( *m_pSocketInfo , m_dataHandling , pAcceptMutex ) );
+      pAcceptThreadQueue->queue( m_acceptHandlers.back() );
     }
 
     //TODO: check kill signal
     while ( m_bKeepRunning )
-      tq.start();
+      pAcceptThreadQueue->start();
 
-    tq.join();
+    pAcceptThreadQueue->join();
 
+    delete pAcceptThreadQueue;
+    delete pAcceptMutex;
   }
 
   void C2SSocketListener::interrupt()
