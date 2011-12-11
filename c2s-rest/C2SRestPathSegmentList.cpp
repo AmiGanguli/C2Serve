@@ -33,6 +33,7 @@
 #include "C2SRestException.h"
 
 #include <iostream>
+#include <cassert>
 
 namespace c2s
 {
@@ -101,6 +102,27 @@ namespace c2s
       C2SRestPathSegment &segment = *( *it );
       segment.processPathID( sPathID );
     }
+  }
+
+  bool C2SRestPathSegmentList::operator==( const C2SRestPathSegmentList &pathSegmentsToCheck ) const
+  {
+    if ( m_pathSegments.size() != pathSegmentsToCheck.m_pathSegments.size() )
+      return false;
+
+    const_iterator itPathSegmentsTheir = pathSegmentsToCheck.m_pathSegments.begin();
+    const_iterator itPathSegmentsThis = m_pathSegments.begin();
+    const_iterator itPathSegmentsThisEnd = m_pathSegments.end();
+    for ( ; itPathSegmentsThis != itPathSegmentsThisEnd; ++itPathSegmentsTheir , ++itPathSegmentsThis )
+    {
+      assert( itPathSegmentsTheir != pathSegmentsToCheck.m_pathSegments.end() );
+
+      const C2SRestPathSegment &pathSegmentThis = *( *itPathSegmentsThis );
+      const C2SRestPathSegment &pathSegmentTheir = *( *itPathSegmentsTheir );
+      if ( pathSegmentThis != pathSegmentTheir )
+        return false;
+    }
+
+    return true;
   }
 
 }

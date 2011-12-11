@@ -29,48 +29,30 @@
 
  */
 
-#ifndef C2STESTRESTFIXTURE_H_
-#define C2STESTRESTFIXTURE_H_
-
-#include "Mutex.h"
-
-#include <list>
+#ifndef C2STESTRESTSERVERINITIALIZATION_H_
+#define C2STESTRESTSERVERINITIALIZATION_H_
 
 namespace c2s
 {
-
-  class C2SHttpResourcePrototype;
+  class C2SRestMethodPrototype;
+  class C2SRestResourcePrototype;
 
   namespace test
   {
 
-    class C2STestServerRunner;
-
-    class C2STestRestFixture
+    class C2STestRestServerInitialization
     {
     public:
 
-      C2STestRestFixture();
-
-      virtual ~C2STestRestFixture();
-
-      static c2s::thread::Mutex *pGlobalMutex;
-
-      static unsigned int iPortOfTestServer;
-
-      static const std::string sContextRootOfTestResource;
-
-      static const std::string sContextRootOfEmptyResource;
+      static void runTest();
 
     private:
 
-      static std::list<C2SHttpResourcePrototype*> createResources( c2s::thread::Mutex *pGlobalMutex );
+      C2STestRestServerInitialization();
 
-      static const unsigned int iPortOfTestServerRandomStart;
+      virtual ~C2STestRestServerInitialization();
 
-      static const unsigned int iPortOfTestServerRandomRange;
-
-      c2s::test::C2STestServerRunner *m_sr;
+      static void checkExceptionForRegistrationAndDeletePrototype( C2SRestResourcePrototype *pResourcePrototype , C2SRestMethodPrototype *pMethodPrototype );
 
     };
 
@@ -78,4 +60,4 @@ namespace c2s
 
 }
 
-#endif /* C2STESTRESTFIXTURE_H_ */
+#endif /* C2STESTRESTSERVERINITIALIZATION_H_ */

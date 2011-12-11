@@ -39,6 +39,9 @@
 #include "C2STestRestMethodMediaTypeConverter.h"
 
 #include "C2SRestResourcePrototype.h"
+#include "C2SRestException.h"
+
+#include <cstdlib>
 
 namespace c2s
 {
@@ -48,7 +51,9 @@ namespace c2s
 
     c2s::thread::Mutex *C2STestRestFixture::pGlobalMutex = NULL;
 
-    const unsigned int C2STestRestFixture::iPortOfTestServer = 8183;
+    const unsigned int C2STestRestFixture::iPortOfTestServerRandomStart = 8180;
+    const unsigned int C2STestRestFixture::iPortOfTestServerRandomRange = 50;
+    unsigned int C2STestRestFixture::iPortOfTestServer = 8183;
 
     const std::string C2STestRestFixture::sContextRootOfTestResource = "g/forrest/test/rest-check/resource-1";
     const std::string C2STestRestFixture::sContextRootOfEmptyResource = "g/forrest/test/rest-check/resource-2";
@@ -58,6 +63,8 @@ namespace c2s
       if ( !pGlobalMutex )
         pGlobalMutex = new c2s::thread::Mutex();
 
+      srand ( time( NULL ) );
+      iPortOfTestServer = iPortOfTestServerRandomStart + ( rand() % iPortOfTestServerRandomRange );
       m_sr = new c2s::test::C2STestServerRunner( C2STestRestFixture::createResources( pGlobalMutex ) , iPortOfTestServer );
     };
 

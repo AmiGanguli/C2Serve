@@ -64,6 +64,10 @@ namespace c2s
 
     EPathSegmentType getPathSegmentType() const;
 
+    bool operator==( const C2SRestPathSegment &pathSegmentToCheck ) const;
+
+    bool operator!=( const C2SRestPathSegment &pathSegmentToCheck ) const;
+
   private:
 
     C2SRestPathSegment( const C2SRestPathSegment & );

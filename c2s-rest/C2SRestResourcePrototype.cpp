@@ -90,10 +90,16 @@ namespace c2s
     m_registeredMethodPrototypes.push_back( pMethod );
   }
 
-  bool C2SRestResourcePrototype::existsMethodPrototype( const C2SRestMethodPrototype * ) const
+  bool C2SRestResourcePrototype::existsMethodPrototype( const C2SRestMethodPrototype *pMethodPrototypeToCheck ) const
   {
-    //TODO: implement!!
-    std::cout << "C2SRestResourcePrototype::existsMethodPrototype: Not yet implemented" << std::endl;
+    C2SRestMethodPrototypeList::const_iterator registeredMethodsIt = m_registeredMethodPrototypes.begin();
+    C2SRestMethodPrototypeList::const_iterator registeredMethodsEnd = m_registeredMethodPrototypes.end();
+    for ( ; registeredMethodsIt != registeredMethodsEnd; ++registeredMethodsIt )
+    {
+      const C2SRestMethodPrototype *pRegisteredMethodPrototype = *registeredMethodsIt;
+      if ( pRegisteredMethodPrototype->operator==( *pMethodPrototypeToCheck ) )
+        return true;
+    }
     return false;
   }
 

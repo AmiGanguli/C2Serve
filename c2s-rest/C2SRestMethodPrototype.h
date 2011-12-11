@@ -64,6 +64,8 @@ namespace c2s
 
     bool isMethodType( C2SHttpMethod methodType ) const;
 
+    bool operator==( const C2SRestMethodPrototype &methodPrototypeToCheck ) const;
+
   protected:
 
     C2SRestMethodPrototype( C2SHttpMethod methodType , const std::string &sPath );

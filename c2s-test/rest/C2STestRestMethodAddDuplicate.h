@@ -29,48 +29,32 @@
 
  */
 
-#ifndef C2STESTRESTFIXTURE_H_
-#define C2STESTRESTFIXTURE_H_
+#ifndef C2STESTRESTMETHODADDDUPLICATE_H_
+#define C2STESTRESTMETHODADDDUPLICATE_H_
 
-#include "Mutex.h"
-
-#include <list>
+#include "C2SRestMethodPrototypeGET.h"
 
 namespace c2s
 {
 
-  class C2SHttpResourcePrototype;
-
   namespace test
   {
 
-    class C2STestServerRunner;
-
-    class C2STestRestFixture
+    class C2STestRestMethodAddDuplicate : public C2SRestMethodPrototypeGET<unsigned int>
     {
     public:
 
-      C2STestRestFixture();
+      C2STestRestMethodAddDuplicate();
 
-      virtual ~C2STestRestFixture();
+      C2SHttpResponse *process();
 
-      static c2s::thread::Mutex *pGlobalMutex;
-
-      static unsigned int iPortOfTestServer;
-
-      static const std::string sContextRootOfTestResource;
-
-      static const std::string sContextRootOfEmptyResource;
+      C2STestRestMethodAddDuplicate *clone() const;
 
     private:
 
-      static std::list<C2SHttpResourcePrototype*> createResources( c2s::thread::Mutex *pGlobalMutex );
+      unsigned int m_iArg11;
 
-      static const unsigned int iPortOfTestServerRandomStart;
-
-      static const unsigned int iPortOfTestServerRandomRange;
-
-      c2s::test::C2STestServerRunner *m_sr;
+      unsigned int m_iArg22;
 
     };
 
@@ -78,4 +62,4 @@ namespace c2s
 
 }
 
-#endif /* C2STESTRESTFIXTURE_H_ */
+#endif /* C2STESTRESTMETHODADDDUPLICATE_H_ */

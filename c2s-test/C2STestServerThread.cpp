@@ -33,6 +33,8 @@
 
 #include "C2SHttpServer.h"
 
+#include <boost/test/unit_test.hpp>
+
 namespace c2s
 {
   namespace test
@@ -47,7 +49,7 @@ namespace c2s
     void C2STestServerThread::run()
     {
       m_pServiceRuntime->run();
-//          BOOST_MESSAGE( "server is shutdown" );
+      BOOST_MESSAGE( "server is shutdown" );
     }
 
   }

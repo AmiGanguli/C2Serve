@@ -100,4 +100,9 @@ namespace c2s
     return methodType == m_methodType;
   }
 
+  bool C2SRestMethodPrototype::operator==( const C2SRestMethodPrototype &methodPrototypeToCheck ) const
+  {
+    return m_pathSegments == methodPrototypeToCheck.m_pathSegments && m_methodType == methodPrototypeToCheck.m_methodType;
+  }
+
 }

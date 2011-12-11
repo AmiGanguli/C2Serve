@@ -32,6 +32,8 @@
 #include "C2SRestPathSegment.h"
 #include "C2SRestException.h"
 
+#include <iostream>
+
 namespace c2s
 {
 
@@ -58,6 +60,18 @@ namespace c2s
   const std::string &C2SRestPathSegment::getPathID() const { return m_sPathSegmentID; }
 
   C2SRestPathSegment::EPathSegmentType C2SRestPathSegment::getPathSegmentType() const { return m_pathSegmentType; }
+
+  bool C2SRestPathSegment::operator==( const C2SRestPathSegment &pathSegmentToCheck ) const
+  {
+    if ( m_pathSegmentType == ID )
+      return m_sPathSegmentID == pathSegmentToCheck.m_sPathSegmentID;
+    return m_pathSegmentType == pathSegmentToCheck.m_pathSegmentType;
+  }
+
+  bool C2SRestPathSegment::operator!=( const C2SRestPathSegment &pathSegmentToCheck ) const
+  {
+    return !this->operator==( pathSegmentToCheck );
+  }
 
 }
 

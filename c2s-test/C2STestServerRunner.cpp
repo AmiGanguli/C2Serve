@@ -30,7 +30,6 @@
  */
 
 #include "C2STestServerRunner.h"
-
 #include "C2STestServerThread.h"
 
 #include "C2SHttpServer.h"

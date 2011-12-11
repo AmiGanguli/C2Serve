@@ -5,6 +5,7 @@ add_executable( c2s_test_rest
   ../C2STestServerThread
   ../C2STestServerRunner
   C2STestRestMethodAdd
+  C2STestRestMethodAddDuplicate
   C2STestRestMethodQueryFields
   C2STestRestMethodThreading
   C2STestRestMethodMediaTypeConverter
@@ -16,6 +17,7 @@ add_executable( c2s_test_rest
 	C2STestRestFixture
 	C2STestRestCheckServerResponses
 	C2STestRestCheckMultiThreading
+	C2STestRestServerInitialization
   C2STestRest )
 
 target_link_libraries( c2s_test_rest

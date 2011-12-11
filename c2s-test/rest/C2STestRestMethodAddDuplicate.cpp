@@ -29,53 +29,34 @@
 
  */
 
-#ifndef C2STESTRESTFIXTURE_H_
-#define C2STESTRESTFIXTURE_H_
-
-#include "Mutex.h"
-
-#include <list>
+#include "C2STestRestMethodAddDuplicate.h"
+#include "C2STestRestMethodAdd.h"
 
 namespace c2s
 {
 
-  class C2SHttpResourcePrototype;
-
   namespace test
   {
 
-    class C2STestServerRunner;
-
-    class C2STestRestFixture
+    C2STestRestMethodAddDuplicate::C2STestRestMethodAddDuplicate()
+      : C2SRestMethodPrototypeGET<unsigned int>( C2STestRestMethodAdd::sPath ),
+        m_iArg11( 0 ),
+        m_iArg22( 0 )
     {
-    public:
-
-      C2STestRestFixture();
-
-      virtual ~C2STestRestFixture();
-
-      static c2s::thread::Mutex *pGlobalMutex;
-
-      static unsigned int iPortOfTestServer;
-
-      static const std::string sContextRootOfTestResource;
-
-      static const std::string sContextRootOfEmptyResource;
-
-    private:
-
-      static std::list<C2SHttpResourcePrototype*> createResources( c2s::thread::Mutex *pGlobalMutex );
-
-      static const unsigned int iPortOfTestServerRandomStart;
-
-      static const unsigned int iPortOfTestServerRandomRange;
-
-      c2s::test::C2STestServerRunner *m_sr;
-
+      C2SRestMethodPrototypeGET<unsigned int>::addPathParameter( "arg11" , &m_iArg11 );
+      C2SRestMethodPrototypeGET<unsigned int>::addPathParameter( "arg22" , &m_iArg22 );
     };
+
+    C2SHttpResponse *C2STestRestMethodAddDuplicate::process()
+    {
+      return C2SHttpResponse::build( OK );
+    }
+
+    C2STestRestMethodAddDuplicate *C2STestRestMethodAddDuplicate::clone() const
+    {
+      return new C2STestRestMethodAddDuplicate();
+    }
 
   }
 
 }
-
-#endif /* C2STESTRESTFIXTURE_H_ */

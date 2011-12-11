@@ -63,6 +63,8 @@ namespace c2s
     const_iterator begin() const { return m_pathSegments.begin(); }
     const_iterator end() const { return m_pathSegments.end(); }
 
+    bool operator==( const C2SRestPathSegmentList &pathSegmentsToCheck ) const;
+
   private:
 
     typedef std::vector<C2SRestPathSegment*> SegmentListType;

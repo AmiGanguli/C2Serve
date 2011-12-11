@@ -35,6 +35,7 @@
 
 #include "C2STestRestCheckMultiThreading.h"
 #include "C2STestRestCheckServerResponses.h"
+#include "C2STestRestServerInitialization.h"
 
 using namespace boost::unit_test;
 
@@ -43,6 +44,10 @@ BOOST_GLOBAL_FIXTURE( C2STestRestGlobalFixture );
 
 test_suite *init_unit_test_suite( int , char ** const )
 {
+  test_suite* initialization = BOOST_TEST_SUITE( "initialization" );
+  initialization->add( BOOST_TEST_CASE( &c2s::test::C2STestRestServerInitialization::runTest ) );
+  framework::master_test_suite().add( initialization );
+
   test_suite* requests = BOOST_TEST_SUITE( "requests" );
   requests->add( BOOST_TEST_CASE( &c2s::test::C2STestRestCheckServerResponses::runTest ) );
   framework::master_test_suite().add( requests );

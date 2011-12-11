@@ -29,53 +29,50 @@
 
  */
 
-#ifndef C2STESTRESTFIXTURE_H_
-#define C2STESTRESTFIXTURE_H_
+#include "C2STestRestServerInitialization.h"
 
-#include "Mutex.h"
+#include "C2STestRestFixture.h"
+#include "C2STestRestMethodAdd.h"
+#include "C2STestRestMethodAddDuplicate.h"
 
-#include <list>
+#include "C2SHttpServer.h"
+#include "C2SRestResourcePrototype.h"
+
+#include <boost/test/unit_test.hpp>
 
 namespace c2s
 {
 
-  class C2SHttpResourcePrototype;
-
   namespace test
   {
 
-    class C2STestServerRunner;
-
-    class C2STestRestFixture
+    C2STestRestServerInitialization::C2STestRestServerInitialization()
     {
-    public:
+    }
 
-      C2STestRestFixture();
+    C2STestRestServerInitialization::~C2STestRestServerInitialization()
+    {
+    }
 
-      virtual ~C2STestRestFixture();
+    void C2STestRestServerInitialization::runTest()
+    {
+      C2SHttpServer httpServer;
 
-      static c2s::thread::Mutex *pGlobalMutex;
+      C2SRestResourcePrototype *pRestResource = C2SRestResourcePrototype::createRestResourceWithContextRoot( C2STestRestFixture::sContextRootOfTestResource );
+      pRestResource->registerMethodPrototype( new C2STestRestMethodAdd() );
 
-      static unsigned int iPortOfTestServer;
+      checkExceptionForRegistrationAndDeletePrototype( pRestResource , new C2STestRestMethodAdd() );
+      checkExceptionForRegistrationAndDeletePrototype( pRestResource , new C2STestRestMethodAddDuplicate() );
 
-      static const std::string sContextRootOfTestResource;
+      httpServer.registerResourcePrototype( pRestResource );
+    }
 
-      static const std::string sContextRootOfEmptyResource;
-
-    private:
-
-      static std::list<C2SHttpResourcePrototype*> createResources( c2s::thread::Mutex *pGlobalMutex );
-
-      static const unsigned int iPortOfTestServerRandomStart;
-
-      static const unsigned int iPortOfTestServerRandomRange;
-
-      c2s::test::C2STestServerRunner *m_sr;
-
-    };
+    void C2STestRestServerInitialization::checkExceptionForRegistrationAndDeletePrototype( C2SRestResourcePrototype *pResourcePrototype , C2SRestMethodPrototype *pMethodPrototype )
+    {
+      BOOST_CHECK_THROW( pResourcePrototype->registerMethodPrototype( pMethodPrototype ) , C2SRestException );
+      delete pMethodPrototype;
+    }
 
   }
 
 }
-
-#endif /* C2STESTRESTFIXTURE_H_ */
