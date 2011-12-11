@@ -15,7 +15,7 @@ table.menu
 
 table.menu td.item
 {
-  background-color: #f1f3b7;
+  background-color: #eee;
   text-align: center;
   padding: 3px;
   border-style: solid;
@@ -25,14 +25,14 @@ table.menu td.item
 
 table.menu td.item a:link
 {
-  color: #414237;
+  color: #222;
   text-decoration:none;
 }
 
 table.menu td.item a:visited
 {
   text-decoration:none;
-  color: #6B6D5A;
+  color: #777;
 }
 
 table.menu td.item a:focus
@@ -43,12 +43,12 @@ table.menu td.item a:focus
 
 table.menu td.item a:hover
 {
-  color: #B9BA9B;
+  color: #aaa;
   text-decoration:none;
 }
 
 table.menu td.item a:active
 {
-  color: #D6D8B4;
+  color: #ccc;
   text-decoration:underline;
 }

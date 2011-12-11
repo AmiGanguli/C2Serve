@@ -2,7 +2,7 @@
 
 body
 {
-  background-color: #bab088;
+  background-color: #fff;
   text-align: center;
   margin: 0px auto;
   color: #2D313D;
@@ -12,7 +12,7 @@ div
 {
   width: 1000px;
   margin: 0px auto;
-  background-color: #f1f3b7;
+  background-color: #eee;
   border-style: solid;
   border-width: 1px;
   margin-bottom: 50px;
