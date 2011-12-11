@@ -40,8 +40,7 @@ namespace c2s
 {
 
   class C2SSocketListener;
-  class C2SDataPullInterface;
-  class C2SDataPushInterface;
+  class C2SDataHandlingInterface;
 
   /**
    *
@@ -87,11 +86,11 @@ namespace c2s
      */
     void waitForStartup();
 
-    virtual C2SDataPullInterface *createDataHandler( C2SDataPushInterface *pDataCallback ) const = 0;
-
   protected:
 
-    C2SRuntime();
+    C2SRuntime( C2SDataHandlingInterface *pDataHandling );
+
+    C2SDataHandlingInterface *m_pDataHandling;
 
   private:
 

@@ -31,7 +31,7 @@
 
 #include "C2SSocketAcceptHandler.h"
 #include "C2SDataPullInterface.h"
-#include "C2SRuntime.h"
+#include "C2SDataHandlingInterface.h"
 
 #include "Lock.h"
 
@@ -64,13 +64,13 @@ namespace c2s
   }
 
   //pDataHandler will be deleted
-  C2SSocketAcceptHandler::C2SSocketAcceptHandler( const C2SSocketInfo &socketInfo , const C2SRuntime &type , c2s::thread::Mutex *pAcceptMutex )
+  C2SSocketAcceptHandler::C2SSocketAcceptHandler( const C2SSocketInfo &socketInfo , const C2SDataHandlingInterface &dataHandling , c2s::thread::Mutex *pAcceptMutex )
     : m_socketInfo( socketInfo ),
       m_pDataPull( NULL ),
       m_bInterrupted( false ),
       m_acceptMutex( *pAcceptMutex )
   {
-    m_pDataPull = type.createDataHandler( &m_dataPush );
+    m_pDataPull = dataHandling.createDataPullForDataPush( &m_dataPush );
   }
 
   C2SSocketAcceptHandler::~C2SSocketAcceptHandler()

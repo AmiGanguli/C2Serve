@@ -44,8 +44,9 @@
 namespace c2s
 {
 
-  C2SRuntime::C2SRuntime()
-    : m_bIsRunning( false ),
+  C2SRuntime::C2SRuntime( C2SDataHandlingInterface *pDataHandling )
+    : m_pDataHandling( pDataHandling ),
+      m_bIsRunning( false ),
       m_bIsOnStartup( false ),
       m_bIsOnShutdown( false )
   {
@@ -54,7 +55,7 @@ namespace c2s
     C2SSocketListenerSettings ls;
     ls.iPort = gs.iPort;
     ls.iNumThreads = gs.iNumThreads;
-    m_pSocketListener = new C2SSocketListener( ls , *this );
+    m_pSocketListener = new C2SSocketListener( ls , *m_pDataHandling );
   }
 
   C2SRuntime::~C2SRuntime()

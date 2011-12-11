@@ -29,41 +29,33 @@
 
  */
 
-#ifndef C2SHTTPSERVER_H_
-#define C2SHTTPSERVER_H_
 
-#include "C2SRuntime.h"
+#ifndef C2SDATAHANDLINGINTERFACE_H_
+#define C2SDATAHANDLINGINTERFACE_H_
 
 namespace c2s
 {
+  class C2SDataPushInterface;
+  class C2SDataPullInterface;
 
-  class C2SHttpServerType;
-  class C2SHttpResourcePrototype;
-
-  /**
-   *
-   * @brief   C2S http server runtime.
-   *
-   * @see     C2SRuntime
-   *
-   */
-  class C2SHttpServer : public C2SRuntime
+  class C2SDataHandlingInterface
   {
   public:
 
-    C2SHttpServer();
+    virtual ~C2SDataHandlingInterface(){};
 
-    /**
-     *
-     * @brief   Delete http server type instance.
-     *
-     */
-    virtual ~C2SHttpServer();
+    virtual C2SDataPullInterface *createDataPullForDataPush( C2SDataPushInterface *pDataPush ) const = 0;
 
-    void registerResourcePrototype( C2SHttpResourcePrototype *pResourcePrototype );
+  protected:
+
+    C2SDataHandlingInterface(){};
+
+    C2SDataHandlingInterface( const C2SDataHandlingInterface & );
+
+    C2SDataHandlingInterface &operator=( C2SDataHandlingInterface & );
 
   };
 
 }
 
-#endif /* C2SHTTPSERVER_H_ */
+#endif /* C2SDATAHANDLINGINTERFACE_H_ */

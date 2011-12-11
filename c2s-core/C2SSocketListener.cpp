@@ -43,9 +43,9 @@
 namespace c2s
 {
 
-  C2SSocketListener::C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SRuntime &type )
+  C2SSocketListener::C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SDataHandlingInterface &dataHandling )
     : m_settings( settings ),
-      m_type( type ),
+      m_dataHandling( dataHandling ),
       m_pSocketInfo( new C2SSocketInfo() ),
       m_bKeepRunning( false )
   {
@@ -71,7 +71,7 @@ namespace c2s
 
     for ( unsigned int i = 0; i < m_settings.iNumThreads; ++i )
     {
-      m_acceptHandlers.push_back( new C2SSocketAcceptHandler( *m_pSocketInfo , m_type , &acceptMutex ) );
+      m_acceptHandlers.push_back( new C2SSocketAcceptHandler( *m_pSocketInfo , m_dataHandling , &acceptMutex ) );
       tq.queue( m_acceptHandlers.back() );
     }
 

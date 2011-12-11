@@ -30,7 +30,7 @@
  */
 
 #include "C2SHttpServer.h"
-#include "C2SHttpDataPull.h"
+#include "C2SHttpDataHandlingImpl.h"
 #include "C2SHttpResourceManager.h"
 
 #include "C2SRuntime.h"
@@ -41,22 +41,19 @@ namespace c2s
 {
 
   C2SHttpServer::C2SHttpServer()
+    : C2SRuntime( new C2SHttpDataHandlingImpl() )
   {
   }
 
   C2SHttpServer::~C2SHttpServer()
   {
     C2SHttpResourceManager::releaseResourcePrototypes();
+    delete m_pDataHandling;
   }
 
   void C2SHttpServer::registerResourcePrototype( C2SHttpResourcePrototype *pResourcePrototype )
   {
     C2SHttpResourceManager::registerResourcePrototype( pResourcePrototype );
-  }
-
-  C2SDataPullInterface *C2SHttpServer::createDataHandler( C2SDataPushInterface *pDataCallback ) const
-  {
-    return new C2SHttpDataPull( pDataCallback );
   }
 
 }

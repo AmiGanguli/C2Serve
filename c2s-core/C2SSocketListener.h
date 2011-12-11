@@ -40,8 +40,8 @@ namespace c2s
 {
 
   struct C2SSocketInfo;
-  class C2SRuntime;
   class C2SSocketAcceptHandler;
+  class C2SDataHandlingInterface;
 
   struct C2SSocketListenerSettings
   {
@@ -72,7 +72,7 @@ namespace c2s
   {
   public:
 
-    C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SRuntime &type );
+    C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SDataHandlingInterface &dataHandling );
 
     virtual ~C2SSocketListener();
 
@@ -92,7 +92,7 @@ namespace c2s
 
     C2SSocketListenerSettings m_settings;
 
-    const C2SRuntime &m_type;
+    const C2SDataHandlingInterface &m_dataHandling;
 
     C2SSocketAcceptHandlerList m_acceptHandlers;
 
