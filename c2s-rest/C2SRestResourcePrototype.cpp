@@ -36,6 +36,7 @@
 
 #include "C2SMatching.h"
 #include "C2SHttpRequest.h"
+#include "C2SHttpResponseHandlerInterface.h"
 #include "C2SStringUtils.h"
 #include "C2SGlobalSettings.h"
 
@@ -53,7 +54,7 @@ namespace c2s
   }
 
   C2SRestResourcePrototype::C2SRestResourcePrototype( const C2SRestResourcePrototype &r )
-    : C2SHttpResourcePrototype( r ),
+    : C2SHttpResourcePrototype( r.m_sContextRoot ),
       m_resourceDescription( r.m_resourceDescription )
   {
     C2SRestMethodPrototypeList::const_iterator mit = r.m_registeredMethodPrototypes.begin();

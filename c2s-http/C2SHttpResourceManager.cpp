@@ -30,7 +30,11 @@
  */
 
 #include "C2SHttpResourceManager.h"
+#include "C2SHttpResourcePrototypeList.h"
 #include "C2SHttpResponse.h"
+#include "C2SHttpRequest.h"
+#include "C2SHttpResourcePrototype.h"
+#include "C2SHttpResourceManagerResponseHandler.h"
 
 #include "C2SMatching.h"
 #include "Logger.h"
@@ -42,67 +46,24 @@
 
 #define DEFAULT_DOCUMENTS "default/"
 
-#define SEND_DATA_AT_ONCE
-
 namespace c2s
 {
 
-  void release( const std::pair<std::string,C2SHttpResourcePrototype*> &p )
+  C2SHttpResourceManager::C2SHttpResourceManager( C2SDataPushInterface *pDataPush , const C2SHttpResourcePrototypeList &listOfResourcePrototypes )
+    : m_pClonesOfResourcePrototypesList( new C2SHttpResourcePrototypeList( listOfResourcePrototypes ) ),
+      m_pResponseHandler( new C2SHttpResourceManagerResponseHandler( pDataPush ) )
   {
-    delete p.second;
-  }
-
-  void C2SHttpResourceManagerResponseHandler::sendResponse( const C2SHttpResponse &response )
-  {
-#ifdef SEND_DATA_AT_ONCE
-
-    std::string sHeader = response.header().toString();
-    const C2SHttpEntity *pBody = response.getEntity();
-    if ( !pBody )
-      m_pDataPush->push( sHeader.c_str() , sHeader.size() );
-    else
-    {
-      //append body
-      unsigned int iTotalSize = sHeader.size() + pBody->size;
-      char *data = new char[ iTotalSize ];
-      char *curpos = data;
-      memcpy( curpos , sHeader.c_str() , sHeader.size() );
-      curpos += sHeader.size();
-      memcpy( curpos , pBody->data , pBody->size );
-      m_pDataPush->push( data , iTotalSize );
-      delete[] data;
-    }
-
-#else
-
-    //TODO: why doesn't this work???
-    std::string sHeader = response.header().toString();
-    m_pDataPush->handle( sHeader.c_str() , sHeader.size() );
-
-    const C2SHttpBody *pBody = response.getEntity();
-    if ( pBody )
-      m_pDataPush->handle( pBody->data , pBody->size );
-
-#endif
-  }
-
-  C2SHttpResourceManager::C2SHttpResourceManager( C2SDataPushInterface *pDataPush )
-    : m_responseHandler( pDataPush )
-  {
-    //clone registered resources
-    ResourceContainer &Resources = C2SHttpResourceManager::getResourcePrototypes();
-    const_iterator it  = Resources.begin();
-    for ( ; it != Resources.end(); ++it )
-    {
-      C2SHttpResourcePrototype *pResource = it->second->clone();
-      pResource->setResponseHandler( &m_responseHandler );
-      m_resources.insert( std::make_pair( it->first , pResource ) );
-    }
+    C2SHttpResourcePrototypeList::iterator it = m_pClonesOfResourcePrototypesList->begin();
+    C2SHttpResourcePrototypeList::iterator end = m_pClonesOfResourcePrototypesList->end();
+    for ( ; it != end; ++it )
+      it->second->setResponseHandler( m_pResponseHandler );
   }
 
   C2SHttpResourceManager::~C2SHttpResourceManager()
   {
-    std::for_each(  m_resources.begin() , m_resources.end() , release );
+    delete m_pResponseHandler;
+    m_pClonesOfResourcePrototypesList->deleteResourcePrototypesAndClearList();
+    delete m_pClonesOfResourcePrototypesList;
   }
 
   void C2SHttpResourceManager::handleRequest( const C2SHttpRequest &request )
@@ -115,8 +76,8 @@ namespace c2s
       if ( request.header().URI == "/" && request.header().Method == GET )
       {
         //get root resource
-        iterator it = m_resources.find( "/" );
-        if ( it == m_resources.end() )
+        C2SHttpResourcePrototypeList::iterator it = m_pClonesOfResourcePrototypesList->find( "/" );
+        if ( it == m_pClonesOfResourcePrototypesList->end() )
           throw C2SHttpException( "C2SHttpResourceManager::handleRequest: " , "No root resource available" , NotFound );
 
         //redirect URI to index.html
@@ -141,58 +102,27 @@ namespace c2s
 #endif
       C2SHttpResponseHeader header( e.status , e.phrase );
       C2SHttpResponse response( header );
-      m_responseHandler.sendResponse( response );
+      m_pResponseHandler->sendResponse( response );
     }
   }
 
   C2SHttpResourcePrototype *C2SHttpResourceManager::bestMatch( const C2SHttpRequest &request )
   {
-    if ( !m_resources.size() )
+    if ( !m_pClonesOfResourcePrototypesList->size() )
       return NULL;
 
     //find resource with longest match string
-    C2SHttpResourcePrototype *pBestMatch = findLongestMatchString( request.header().URI , m_resources );
+    C2SHttpResourcePrototype *pBestMatch = findLongestMatchString( request.header().URI , *m_pClonesOfResourcePrototypesList );
 
     if ( pBestMatch ) //return resource with longest match string
       return pBestMatch;
 
     //we found no match and will try to handle the request with the root resource
-    iterator it = m_resources.find( "/" );
-    if ( it == m_resources.end() )
+    C2SHttpResourcePrototypeList::iterator it = m_pClonesOfResourcePrototypesList->find( "/" );
+    if ( it == m_pClonesOfResourcePrototypesList->end() )
       throw C2SHttpException( "C2SHttpResourceManager::bestMatch: " , "No root resource available" , NotFound );
 
     return it->second;
-  }
-
-  void C2SHttpResourceManager::registerResourcePrototype( C2SHttpResourcePrototype *pResource )
-  {
-    ResourceContainer &Resources = C2SHttpResourceManager::getResourcePrototypes();
-    if ( Resources.find( pResource->getContextRoot() ) != Resources.end() )
-      throw C2SHttpException( "C2SHttpResourceManager::registerResource:" , "Duplicate context root: '" + pResource->getContextRoot() + "'" , InternalServerError );
-
-    Resources.insert( std::make_pair( pResource->getContextRoot() , pResource ) );
-  }
-
-  void C2SHttpResourceManager::releaseResourcePrototypes()
-  {
-    ResourceContainer &Resources = C2SHttpResourceManager::getResourcePrototypes();
-    std::for_each(  Resources.begin() , Resources.end() , release );
-    Resources.clear();
-  }
-
-  C2SHttpResourceManager::ResourceContainer &C2SHttpResourceManager::getResourcePrototypes()
-  {
-    //TODO: use prototype pattern
-    static ResourceContainer Resources;
-    return Resources;
-//      static ResrouceContainerStatus status;
-//      static ResourceContainer *pResources;
-//      if ( status.bIsCreated )
-//        return *pResources;
-//
-//      pResources = new ResourceContainer();
-//      status.bIsCreated = true;
-//      return *pResources;
   }
 
 }

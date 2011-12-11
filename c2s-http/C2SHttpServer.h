@@ -32,13 +32,13 @@
 #ifndef C2SHTTPSERVER_H_
 #define C2SHTTPSERVER_H_
 
-#include "C2SRuntime.h"
-
 namespace c2s
 {
-
-  class C2SHttpServerType;
+  class C2SRuntime;
+  class C2SHttpDataHandlingImpl;
   class C2SHttpResourcePrototype;
+  class C2SHttpResourcePrototypeList;
+  class C2SHttpResourceManager;
 
   /**
    *
@@ -47,7 +47,7 @@ namespace c2s
    * @see     C2SRuntime
    *
    */
-  class C2SHttpServer : public C2SRuntime
+  class C2SHttpServer
   {
   public:
 
@@ -60,7 +60,21 @@ namespace c2s
      */
     virtual ~C2SHttpServer();
 
+    void run();
+
+    void waitForStartup();
+
+    void shutdown();
+
     void registerResourcePrototype( C2SHttpResourcePrototype *pResourcePrototype );
+
+  private:
+
+    C2SHttpResourcePrototypeList *m_pHttpResourcePrototypes;
+
+    C2SHttpDataHandlingImpl *m_pHttpDataHandling;
+
+    C2SRuntime *m_pServiceRuntime;
 
   };
 

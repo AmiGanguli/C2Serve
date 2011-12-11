@@ -35,7 +35,8 @@
 namespace c2s
 {
 
-  C2SHttpDataHandlingImpl::C2SHttpDataHandlingImpl()
+  C2SHttpDataHandlingImpl::C2SHttpDataHandlingImpl( const C2SHttpResourcePrototypeList &listOfResourcePrototypes )
+    : m_listOfResourcePrototypes( listOfResourcePrototypes )
   {
   }
 
@@ -45,7 +46,7 @@ namespace c2s
 
   C2SDataPullInterface *C2SHttpDataHandlingImpl::createDataPullForDataPush( C2SDataPushInterface *pDataCallback ) const
   {
-    return new C2SHttpDataPull( pDataCallback );
+    return new C2SHttpDataPull( pDataCallback , m_listOfResourcePrototypes );
   }
 
 }

@@ -29,51 +29,54 @@
 
  */
 
-#include "C2SHttpServer.h"
-#include "C2SHttpDataHandlingImpl.h"
-#include "C2SHttpResourcePrototypeList.h"
-#include "C2SHttpResourceManager.h"
-
-#include "C2SRuntime.h"
-
-#include <iostream>
+#include "C2SMatching.h"
 
 namespace c2s
 {
 
-  C2SHttpServer::C2SHttpServer()
+  C2SHttpResourcePrototype *findLongestMatchString( const std::string &sURI , const C2SHttpResourcePrototypeList &listOfResourcePrototypes )
   {
-    m_pHttpResourcePrototypes = new C2SHttpResourcePrototypeList();
-    m_pHttpDataHandling = new C2SHttpDataHandlingImpl( *m_pHttpResourcePrototypes );
-    m_pServiceRuntime = new C2SRuntime( m_pHttpDataHandling );
-  }
+    std::map<unsigned int,C2SHttpResourcePrototype*> matches;
+    typename C2SHttpResourcePrototypeList::const_iterator it = listOfResourcePrototypes.begin();
+    for ( ; it != listOfResourcePrototypes.end(); ++it )
+    {
+      //skip root resource
+      if ( !it->first.size() || it->first == "/" )
+        continue;
 
-  C2SHttpServer::~C2SHttpServer()
-  {
-    delete m_pServiceRuntime;
-    delete m_pHttpDataHandling;
-    m_pHttpResourcePrototypes->deleteResourcePrototypesAndClearList();
-    delete m_pHttpResourcePrototypes;
-  }
+      const char *pRes = it->first.c_str();
+      unsigned int iResSize = it->first.size();
+      const char *pReq = sURI.c_str();
+      unsigned int iReqSize = sURI.size();
 
-  void C2SHttpServer::run()
-  {
-    m_pServiceRuntime->run();
-  }
+      //remove leading '/'
+      while ( *pRes == '/' && iResSize )
+      {
+        ++pRes;
+        --iResSize;
+      }
 
-  void C2SHttpServer::waitForStartup()
-  {
-    m_pServiceRuntime->waitForStartup();
-  }
+      while ( *pReq == '/' && iReqSize )
+      {
+        ++pReq;
+        --iReqSize;
+      }
 
-  void C2SHttpServer::shutdown()
-  {
-    m_pServiceRuntime->shutdown();
-  }
+      if ( startsWith( pReq , iReqSize , pRes , iResSize ) )
+      {
+        if ( iReqSize == iResSize || pReq[ iResSize ] == '/' )
+        {
+          assert( matches.find( iResSize ) == matches.end() );
+          matches[ iResSize ] = it->second;
+        }
+      }
+    }
 
-  void C2SHttpServer::registerResourcePrototype( C2SHttpResourcePrototype *pResourcePrototype )
-  {
-    m_pHttpResourcePrototypes->addResourcePrototype( pResourcePrototype );
+    //return resource with longest match string
+    if ( matches.size() )
+      return matches.rbegin()->second;
+
+    return NULL;
   }
 
 }

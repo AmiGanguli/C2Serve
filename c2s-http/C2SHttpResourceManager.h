@@ -32,11 +32,6 @@
 #ifndef C2SHTTPRESOURCEMANAGER_H_
 #define C2SHTTPRESOURCEMANAGER_H_
 
-#include "C2SHttpRequest.h"
-#include "C2SHttpResourcePrototype.h"
-
-#include "C2SDataPullInterface.h"
-
 #include <map>
 
 namespace io
@@ -46,28 +41,17 @@ namespace io
 
 namespace c2s
 {
-
-  class C2SHttpResourceManagerResponseHandler : public C2SHttpResponseHandlerInterface
-  {
-  public:
-
-    C2SHttpResourceManagerResponseHandler( C2SDataPushInterface *pDataPush )
-      : m_pDataPush( pDataPush )
-    {};
-
-    virtual void sendResponse( const C2SHttpResponse &response );
-
-  private:
-
-    C2SDataPushInterface *m_pDataPush;
-
-  };
+  class C2SHttpRequest;
+  class C2SDataPushInterface;
+  class C2SHttpResourcePrototype;
+  class C2SHttpResourcePrototypeList;
+  class C2SHttpResourceManagerResponseHandler;
 
   class C2SHttpResourceManager
   {
   public:
 
-    C2SHttpResourceManager( C2SDataPushInterface *pDataCallback );
+    C2SHttpResourceManager( C2SDataPushInterface *pDataCallback , const C2SHttpResourcePrototypeList &listOfResourcePrototypes );
 
     virtual ~C2SHttpResourceManager();
 
@@ -75,25 +59,15 @@ namespace c2s
 
     C2SHttpResourcePrototype *bestMatch( const C2SHttpRequest &request );
 
-    static void registerResourcePrototype( C2SHttpResourcePrototype *pResource );
-
-    static void releaseResourcePrototypes();
-
   private:
 
     C2SHttpResourceManager( const C2SHttpResourceManager & );
 
     C2SHttpResourceManager &operator=( const C2SHttpResourceManager & );
 
-    typedef std::map<std::string,C2SHttpResourcePrototype*> ResourceContainer;
-    typedef std::map<std::string,C2SHttpResourcePrototype*>::const_iterator const_iterator;
-    typedef std::map<std::string,C2SHttpResourcePrototype*>::iterator iterator;
+    C2SHttpResourcePrototypeList *m_pClonesOfResourcePrototypesList;
 
-    static ResourceContainer &getResourcePrototypes();
-
-    ResourceContainer m_resources;
-
-    C2SHttpResourceManagerResponseHandler m_responseHandler;
+    C2SHttpResourceManagerResponseHandler *m_pResponseHandler;
 
   };
 

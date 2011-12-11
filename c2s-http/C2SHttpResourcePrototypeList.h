@@ -29,31 +29,57 @@
 
  */
 
-#ifndef C2SHTTPDATAHANDLINGIMPL_H_
-#define C2SHTTPDATAHANDLINGIMPL_H_
+#ifndef C2SHTTPRESOURCEPROTOTYPELIST_H_
+#define C2SHTTPRESOURCEPROTOTYPELIST_H_
 
-#include "C2SDataHandlingInterface.h"
+#include <map>
+#include <string>
 
 namespace c2s
 {
-  class C2SHttpResourcePrototypeList;
+  class C2SHttpResourcePrototype;
 
-  class C2SHttpDataHandlingImpl : public C2SDataHandlingInterface
+  class C2SHttpResourcePrototypeList
   {
   public:
 
-    C2SHttpDataHandlingImpl( const C2SHttpResourcePrototypeList &listOfResourcePrototypes );
+    typedef std::map<std::string,C2SHttpResourcePrototype*>::const_iterator const_iterator;
+    typedef std::map<std::string,C2SHttpResourcePrototype*>::iterator iterator;
 
-    virtual ~C2SHttpDataHandlingImpl();
+    C2SHttpResourcePrototypeList();
 
-    C2SDataPullInterface *createDataPullForDataPush( C2SDataPushInterface *pDataCallback ) const;
+    C2SHttpResourcePrototypeList( const C2SHttpResourcePrototypeList &listOfPrototypesToClone );
+
+    C2SHttpResourcePrototypeList &operator=( const C2SHttpResourcePrototypeList &listOfPrototypesToClone );
+
+    virtual ~C2SHttpResourcePrototypeList();
+
+    void addResourcePrototype( C2SHttpResourcePrototype *pResourcePrototype );
+
+    bool existsResourcePrototypeForContextRoot( const std::string &sContextRootOfResourcePrototype ) const;
+
+    void deleteResourcePrototypesAndClearList();
+
+    const_iterator begin() const;
+    const_iterator end() const;
+    const_iterator find( const std::string &sContextRoot ) const;
+
+    iterator begin();
+    iterator end();
+    iterator find( const std::string &sContextRoot );
+
+    std::size_t size() const;
 
   private:
 
-    const C2SHttpResourcePrototypeList &m_listOfResourcePrototypes;
+    typedef std::map<std::string,C2SHttpResourcePrototype*> ResourcePrototypeContainerType;
+
+    void cloneResourcePrototypes( const ResourcePrototypeContainerType &listOfResourcePrototypesToClone );
+
+    ResourcePrototypeContainerType m_listOfResourcePrototypes;
 
   };
 
 }
 
-#endif /* C2SHTTPDATAHANDLINGIMPL_H_ */
+#endif /* C2SHTTPRESOURCEPROTOTYPELIST_H_ */

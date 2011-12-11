@@ -29,51 +29,28 @@
 
  */
 
-#include "C2SHttpServer.h"
-#include "C2SHttpDataHandlingImpl.h"
-#include "C2SHttpResourcePrototypeList.h"
-#include "C2SHttpResourceManager.h"
 
-#include "C2SRuntime.h"
-
-#include <iostream>
+#ifndef C2SHTTPRESPONSEHANDLERINTERFACE_H_
+#define C2SHTTPRESPONSEHANDLERINTERFACE_H_
 
 namespace c2s
 {
+  class C2SHttpResponse;
 
-  C2SHttpServer::C2SHttpServer()
+  class C2SHttpResponseHandlerInterface
   {
-    m_pHttpResourcePrototypes = new C2SHttpResourcePrototypeList();
-    m_pHttpDataHandling = new C2SHttpDataHandlingImpl( *m_pHttpResourcePrototypes );
-    m_pServiceRuntime = new C2SRuntime( m_pHttpDataHandling );
-  }
+  public:
 
-  C2SHttpServer::~C2SHttpServer()
-  {
-    delete m_pServiceRuntime;
-    delete m_pHttpDataHandling;
-    m_pHttpResourcePrototypes->deleteResourcePrototypesAndClearList();
-    delete m_pHttpResourcePrototypes;
-  }
+    virtual ~C2SHttpResponseHandlerInterface(){};
 
-  void C2SHttpServer::run()
-  {
-    m_pServiceRuntime->run();
-  }
+    virtual void sendResponse( const C2SHttpResponse &response ) = 0;
 
-  void C2SHttpServer::waitForStartup()
-  {
-    m_pServiceRuntime->waitForStartup();
-  }
+  protected:
 
-  void C2SHttpServer::shutdown()
-  {
-    m_pServiceRuntime->shutdown();
-  }
+    C2SHttpResponseHandlerInterface(){};
 
-  void C2SHttpServer::registerResourcePrototype( C2SHttpResourcePrototype *pResourcePrototype )
-  {
-    m_pHttpResourcePrototypes->addResourcePrototype( pResourcePrototype );
-  }
+  };
 
 }
+
+#endif /* C2SHTTPRESPONSEHANDLERINTERFACE_H_ */

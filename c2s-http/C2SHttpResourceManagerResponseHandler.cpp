@@ -29,51 +29,48 @@
 
  */
 
-#include "C2SHttpServer.h"
-#include "C2SHttpDataHandlingImpl.h"
-#include "C2SHttpResourcePrototypeList.h"
-#include "C2SHttpResourceManager.h"
+#include "C2SHttpResourceManagerResponseHandler.h"
+#include "C2SHttpResponse.h"
 
-#include "C2SRuntime.h"
+#include "C2SDataPushInterface.h"
 
-#include <iostream>
+#define SEND_DATA_AT_ONCE
 
 namespace c2s
 {
 
-  C2SHttpServer::C2SHttpServer()
+  void C2SHttpResourceManagerResponseHandler::sendResponse( const C2SHttpResponse &response )
   {
-    m_pHttpResourcePrototypes = new C2SHttpResourcePrototypeList();
-    m_pHttpDataHandling = new C2SHttpDataHandlingImpl( *m_pHttpResourcePrototypes );
-    m_pServiceRuntime = new C2SRuntime( m_pHttpDataHandling );
-  }
+#ifdef SEND_DATA_AT_ONCE
 
-  C2SHttpServer::~C2SHttpServer()
-  {
-    delete m_pServiceRuntime;
-    delete m_pHttpDataHandling;
-    m_pHttpResourcePrototypes->deleteResourcePrototypesAndClearList();
-    delete m_pHttpResourcePrototypes;
-  }
+    std::string sHeader = response.header().toString();
+    const C2SHttpEntity *pBody = response.getEntity();
+    if ( !pBody )
+      m_pDataPush->push( sHeader.c_str() , sHeader.size() );
+    else
+    {
+      //append body
+      unsigned int iTotalSize = sHeader.size() + pBody->size;
+      char *data = new char[ iTotalSize ];
+      char *curpos = data;
+      memcpy( curpos , sHeader.c_str() , sHeader.size() );
+      curpos += sHeader.size();
+      memcpy( curpos , pBody->data , pBody->size );
+      m_pDataPush->push( data , iTotalSize );
+      delete[] data;
+    }
 
-  void C2SHttpServer::run()
-  {
-    m_pServiceRuntime->run();
-  }
+#else
 
-  void C2SHttpServer::waitForStartup()
-  {
-    m_pServiceRuntime->waitForStartup();
-  }
+    //TODO: why doesn't this work???
+    std::string sHeader = response.header().toString();
+    m_pDataPush->push( sHeader.c_str() , sHeader.size() );
 
-  void C2SHttpServer::shutdown()
-  {
-    m_pServiceRuntime->shutdown();
-  }
+    const C2SHttpEntity *pBody = response.getEntity();
+    if ( pBody )
+      m_pDataPush->push( pBody->data , pBody->size );
 
-  void C2SHttpServer::registerResourcePrototype( C2SHttpResourcePrototype *pResourcePrototype )
-  {
-    m_pHttpResourcePrototypes->addResourcePrototype( pResourcePrototype );
+#endif
   }
 
 }

@@ -51,6 +51,8 @@ namespace c2s
   {
   public:
 
+    C2SRuntime( C2SDataHandlingInterface *pDataHandling );
+
     virtual ~C2SRuntime();
 
     /**
@@ -87,8 +89,6 @@ namespace c2s
     void waitForStartup();
 
   protected:
-
-    C2SRuntime( C2SDataHandlingInterface *pDataHandling );
 
     C2SDataHandlingInterface *m_pDataHandling;
 

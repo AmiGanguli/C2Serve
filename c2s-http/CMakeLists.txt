@@ -17,6 +17,8 @@ add_library( c2s_http
   C2SHttpMediaTypeList
   C2SHttpResourceManager
   C2SHttpDataHandlingImpl
+  C2SHttpResourcePrototypeList
+  C2SHttpResourceManagerResponseHandler
  )
 
 add_library( c2s_httpclient

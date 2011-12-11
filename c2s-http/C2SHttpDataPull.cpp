@@ -40,10 +40,10 @@
 namespace c2s
 {
 
-  C2SHttpDataPull::C2SHttpDataPull( C2SDataPushInterface *pDataPush )
+  C2SHttpDataPull::C2SHttpDataPull( C2SDataPushInterface *pDataPush , const C2SHttpResourcePrototypeList &listOfResourcePrototypes )
     : C2SDataPullInterface( pDataPush ),
       m_pRequest( NULL ),
-      m_pResourceManager( new C2SHttpResourceManager( pDataPush ) )
+      m_pResourceManager( new C2SHttpResourceManager( pDataPush , listOfResourcePrototypes ) )
   {
   }
 

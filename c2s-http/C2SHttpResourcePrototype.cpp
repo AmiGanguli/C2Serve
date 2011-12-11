@@ -32,6 +32,7 @@
 #include "C2SHttpResourcePrototype.h"
 
 #include "C2SHttpException.h"
+#include "C2SHttpResponseHandlerInterface.h"
 
 namespace c2s
 {

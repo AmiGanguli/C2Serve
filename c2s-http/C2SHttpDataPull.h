@@ -39,12 +39,13 @@ namespace c2s
 
   class C2SHttpRequest;
   class C2SHttpResourceManager;
+  class C2SHttpResourcePrototypeList;
 
   class C2SHttpDataPull : public C2SDataPullInterface
   {
   public:
 
-    C2SHttpDataPull( C2SDataPushInterface *pDataPush );
+    C2SHttpDataPull( C2SDataPushInterface *pDataPush , const C2SHttpResourcePrototypeList &listOfResourcePrototypes );
 
     virtual ~C2SHttpDataPull();
 

@@ -31,14 +31,14 @@
 
 #include "C2STestServerThread.h"
 
-#include "C2SRuntime.h"
+#include "C2SHttpServer.h"
 
 namespace c2s
 {
   namespace test
   {
 
-    C2STestServerThread::C2STestServerThread( C2SRuntime *pServiceRuntime )
+    C2STestServerThread::C2STestServerThread( C2SHttpServer *pServiceRuntime )
       : m_pServiceRuntime( pServiceRuntime )
     {};
 

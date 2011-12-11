@@ -34,8 +34,7 @@
 
 namespace c2s
 {
-
-  class C2SRuntime;
+  class C2SHttpServer;
 
   namespace test
   {
@@ -44,7 +43,7 @@ namespace c2s
     {
     public:
 
-      C2STestServerThread( C2SRuntime *pServiceRuntime );
+      C2STestServerThread( C2SHttpServer *pServiceRuntime );
 
       virtual ~C2STestServerThread();
 
@@ -52,7 +51,7 @@ namespace c2s
 
     private:
 
-      C2SRuntime *m_pServiceRuntime;
+      C2SHttpServer *m_pServiceRuntime;
 
     };
 

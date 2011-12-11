@@ -36,23 +36,9 @@
 
 namespace c2s
 {
-
   class C2SHttpRequest;
   class C2SHttpResponse;
-
-  class C2SHttpResponseHandlerInterface
-  {
-  public:
-
-    virtual ~C2SHttpResponseHandlerInterface(){};
-
-    virtual void sendResponse( const C2SHttpResponse &response ) = 0;
-
-  protected:
-
-    C2SHttpResponseHandlerInterface(){};
-
-  };
+  class C2SHttpResponseHandlerInterface;
 
   class C2SHttpResourcePrototype
   {
@@ -65,7 +51,7 @@ namespace c2s
 
     virtual ~C2SHttpResourcePrototype(){};
 
-    virtual void processRequest(  const C2SHttpRequest &request ) = 0;
+    virtual void processRequest( const C2SHttpRequest &request ) = 0;
 
     virtual C2SHttpResourcePrototype *clone() const = 0;
 
