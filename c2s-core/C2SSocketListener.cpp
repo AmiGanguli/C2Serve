@@ -31,10 +31,9 @@
 
 #include "C2SSocketListener.h"
 
+#include "C2SRuntime.h"
 #include "C2SSocketInfo.h"
 #include "C2SSocketAcceptHandler.h"
-
-#include "C2SServerTypeInterface.h"
 
 #include "ThreadQueue.h"
 #include "StringUtils.h"
@@ -44,7 +43,7 @@
 namespace c2s
 {
 
-  C2SSocketListener::C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SServerTypeInterface &type )
+  C2SSocketListener::C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SRuntime &type )
     : m_settings( settings ),
       m_type( type ),
       m_pSocketInfo( new C2SSocketInfo() ),
@@ -61,7 +60,7 @@ namespace c2s
 
     delete m_pSocketInfo;
 
-    m_type.release();
+//    m_type.release();
   }
 
   void C2SSocketListener::run()

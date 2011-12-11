@@ -29,30 +29,26 @@
 
  */
 
-#include "C2SHttpServerType.h"
+#include "C2STestServerThread.h"
 
-#include "C2SHttpDataPull.h"
-#include "C2SHttpResourceManager.h"
+#include "C2SRuntime.h"
 
 namespace c2s
 {
-
-  C2SHttpServerType::C2SHttpServerType()
+  namespace test
   {
-  }
 
-  C2SHttpServerType::~C2SHttpServerType()
-  {
-  }
+    C2STestServerThread::C2STestServerThread( C2SRuntime *pServiceRuntime )
+      : m_pServiceRuntime( pServiceRuntime )
+    {};
 
-  C2SDataPullInterface *C2SHttpServerType::createDataHandler( C2SDataPushInterface *pDataCallback ) const
-  {
-    return new C2SHttpDataPull( pDataCallback );
-  }
+    C2STestServerThread::~C2STestServerThread(){};
 
-  void C2SHttpServerType::release() const
-  {
-    C2SHttpResourceManager::releaseResourcePrototypes();
-  }
+    void C2STestServerThread::run()
+    {
+      m_pServiceRuntime->run();
+//          BOOST_MESSAGE( "server is shutdown" );
+    }
 
+  }
 }

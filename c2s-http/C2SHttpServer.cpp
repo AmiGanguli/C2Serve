@@ -30,44 +30,33 @@
  */
 
 #include "C2SHttpServer.h"
-#include "C2SHttpServerType.h"
+#include "C2SHttpDataPull.h"
 #include "C2SHttpResourceManager.h"
 
 #include "C2SRuntime.h"
 
+#include <iostream>
+
 namespace c2s
 {
 
-  C2SHttpServer C2SHttpServer::Instance = C2SHttpServer();
-
   C2SHttpServer::C2SHttpServer()
   {
-    m_st = new C2SHttpServerType();
   }
 
   C2SHttpServer::~C2SHttpServer()
   {
-    delete m_st;
-  }
-
-  void C2SHttpServer::run()
-  {
-    C2SRuntime::run( *( Instance.m_st ) );
-  }
-
-  void C2SHttpServer::waitForStartup()
-  {
-    C2SRuntime::waitForStartup();
-  }
-
-  void C2SHttpServer::shutdown()
-  {
-    C2SRuntime::shutdown();
+    C2SHttpResourceManager::releaseResourcePrototypes();
   }
 
   void C2SHttpServer::registerResourcePrototype( C2SHttpResourcePrototype *pResourcePrototype )
   {
     C2SHttpResourceManager::registerResourcePrototype( pResourcePrototype );
+  }
+
+  C2SDataPullInterface *C2SHttpServer::createDataHandler( C2SDataPushInterface *pDataCallback ) const
+  {
+    return new C2SHttpDataPull( pDataCallback );
   }
 
 }

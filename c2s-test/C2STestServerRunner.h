@@ -32,70 +32,29 @@
 #ifndef C2STESTSERVERRUNNER_H_
 #define C2STESTSERVERRUNNER_H_
 
-#include "C2STestServerThread.h"
 #include "C2SGlobalSettings.h"
-
 #include "Thread.h"
 
-#include <boost/test/unit_test.hpp>
+#include <list>
 
 namespace c2s
 {
+  class C2SHttpServer;
+  class C2SHttpResourcePrototype;
+
   namespace test
   {
+    class C2STestServerThread;
 
     class C2STestServerRunner
     {
     public:
 
-      C2STestServerRunner( unsigned short iPort = C2SGlobalSettings::Settings().iPort )
-        : m_serverThread( &m_serverRunTime )
-      {
-//          BOOST_MESSAGE( "startup server" );
+      C2STestServerRunner( unsigned short iPort = C2SGlobalSettings::Settings().iPort );
 
-        c2s::thread::Lock lock( &m_mutex );
+      C2STestServerRunner( const std::list<C2SHttpResourcePrototype*> &resources , unsigned short iPort = C2SGlobalSettings::Settings().iPort );
 
-        C2SGlobalSettings::Settings().iPort = iPort;
-
-        m_serverThread.start();
-
-        C2SHttpServer::waitForStartup();
-
-//          BOOST_MESSAGE( "startup complete" );
-      }
-
-      C2STestServerRunner( const std::list<C2SHttpResourcePrototype*> &resources , unsigned short iPort = C2SGlobalSettings::Settings().iPort )
-        : m_serverThread( &m_serverRunTime )
-      {
-        c2s::thread::Lock lock( &m_mutex );
-
-        std::list<C2SHttpResourcePrototype*>::const_iterator it = resources.begin();
-        for ( ; it != resources.end(); ++it )
-        {
-//            BOOST_MESSAGE( "add resource \"" + ( *it )->getContextRoot() + "\"" );
-          C2SHttpServer::registerResourcePrototype( *it );
-        }
-
-//          BOOST_MESSAGE( "startup server" );
-
-        C2SGlobalSettings::Settings().iPort = iPort;
-
-        m_serverThread.start();
-
-        C2SHttpServer::waitForStartup();
-
-//          BOOST_MESSAGE( "startup complete" );
-      }
-
-      virtual ~C2STestServerRunner()
-      {
-        c2s::thread::Lock lock( &m_mutex );
-
-        BOOST_MESSAGE( "shutdown server" );
-        C2SHttpServer::shutdown();
-
-        BOOST_MESSAGE( "server is down" );
-      }
+      virtual ~C2STestServerRunner();
 
     private:
 
@@ -103,9 +62,15 @@ namespace c2s
 
       C2STestServerRunner &operator=( const C2STestServerRunner & );
 
-      C2STestServerThread m_serverRunTime;
+      void createServerRuntime();
 
-      c2s::thread::Thread<c2s::test::C2STestServerThread> m_serverThread;
+      void startServerRuntime();
+
+      C2SHttpServer *m_pHttpServerRuntime;
+
+      C2STestServerThread *m_pServerRunThread;
+
+      c2s::thread::Thread<c2s::test::C2STestServerThread> *m_pServerThread;
 
       c2s::thread::Mutex m_mutex;
 

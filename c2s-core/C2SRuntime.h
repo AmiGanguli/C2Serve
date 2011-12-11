@@ -40,7 +40,8 @@ namespace c2s
 {
 
   class C2SSocketListener;
-  class C2SServerTypeInterface;
+  class C2SDataPullInterface;
+  class C2SDataPushInterface;
 
   /**
    *
@@ -50,6 +51,8 @@ namespace c2s
   class C2SRuntime
   {
   public:
+
+    virtual ~C2SRuntime();
 
     /**
      *
@@ -64,7 +67,7 @@ namespace c2s
      * @throws  C2SException
      *
      */
-    static void run( const C2SServerTypeInterface &type );
+    void run();
 
     /**
      *
@@ -73,7 +76,7 @@ namespace c2s
      *          This method blocks until shutdown is complete.
      *
      */
-    static void shutdown();
+    void shutdown();
 
     /**
      *
@@ -82,13 +85,15 @@ namespace c2s
      *          Use that function if you need to wait for startup (very useful for unit testing).
      *
      */
-    static void waitForStartup();
+    void waitForStartup();
+
+    virtual C2SDataPullInterface *createDataHandler( C2SDataPushInterface *pDataCallback ) const = 0;
+
+  protected:
+
+    C2SRuntime();
 
   private:
-
-    C2SRuntime( const C2SServerTypeInterface &type );
-
-    virtual ~C2SRuntime();
 
     C2SRuntime( const C2SRuntime & );
 
@@ -100,13 +105,11 @@ namespace c2s
 
     C2SSocketListener *m_pSocketListener;
 
-    static C2SRuntime *pInstance;
+    volatile bool m_bIsRunning;
 
-    static volatile bool bIsRunning;
+    volatile bool m_bIsOnStartup;
 
-    static volatile bool bIsOnStartup;
-
-    static volatile bool bIsOnShutdown;
+    volatile bool m_bIsOnShutdown;
 
   };
 

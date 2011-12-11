@@ -2,6 +2,8 @@
 cmake_minimum_required(VERSION 2.6)
 
 add_executable( c2s_test_rest
+  ../C2STestServerThread
+  ../C2STestServerRunner
   C2STestRestMethodAdd
   C2STestRestMethodQueryFields
   C2STestRestMethodThreading

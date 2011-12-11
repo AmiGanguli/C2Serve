@@ -56,10 +56,12 @@ int main( int , char ** )
   //this ensures that different process don't share the same path and query parameters
   pResource->registerMethodPrototype( new C2SExampleRestMethodPrototypeSayHello() );
 
+  C2SHttpServer httpServer;
+
   //register REST resource at the http resource manager
-  C2SHttpServer::registerResourcePrototype( pResource );
+  httpServer.registerResourcePrototype( pResource );
 
   //start socket listener
   //this method blocks the program
-  C2SHttpServer::run();
+  httpServer.run();
 }

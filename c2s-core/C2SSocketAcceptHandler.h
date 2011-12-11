@@ -41,7 +41,7 @@
 namespace c2s
 {
 
-  class C2SServerTypeInterface;
+  class C2SRuntime;
   class C2SDataPullInterface;
 
   class C2SSocketAcceptHandlerException : public C2SException
@@ -70,7 +70,7 @@ namespace c2s
   {
   public:
 
-    C2SSocketAcceptHandler( const C2SSocketInfo &socketInfo , const C2SServerTypeInterface &type , c2s::thread::Mutex *pAcceptMutex );
+    C2SSocketAcceptHandler( const C2SSocketInfo &socketInfo , const C2SRuntime &type , c2s::thread::Mutex *pAcceptMutex );
 
     virtual ~C2SSocketAcceptHandler();
 

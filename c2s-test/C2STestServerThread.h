@@ -32,10 +32,10 @@
 #ifndef C2STESTSERVERTHREAD_H_
 #define C2STESTSERVERTHREAD_H_
 
-#include "C2SHttpServer.h"
-
 namespace c2s
 {
+
+  class C2SRuntime;
 
   namespace test
   {
@@ -44,15 +44,15 @@ namespace c2s
     {
     public:
 
-      C2STestServerThread(){};
+      C2STestServerThread( C2SRuntime *pServiceRuntime );
 
-      virtual ~C2STestServerThread(){};
+      virtual ~C2STestServerThread();
 
-      void run()
-      {
-        C2SHttpServer::run();
-//          BOOST_MESSAGE( "server is shutdown" );
-      }
+      void run();
+
+    private:
+
+      C2SRuntime *m_pServiceRuntime;
 
     };
 
