@@ -76,7 +76,7 @@ namespace c2s
 
     virtual ~C2SSocketListener();
 
-    void run();
+    void connectAndRun();
 
     void interrupt();
 

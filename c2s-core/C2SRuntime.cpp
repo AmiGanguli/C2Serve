@@ -92,7 +92,7 @@ namespace c2s
   void C2SRuntime::runInternal()
   {
     m_bIsOnStartup = false;
-    m_pSocketListener->run();
+    m_pSocketListener->connectAndRun();
   }
 
   void C2SRuntime::shutdownInternal()
