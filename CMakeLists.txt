@@ -9,7 +9,7 @@ if ( NOT DISABLE_C2S_SYSTEM_SETTINGS )
   include( System.cmake )
   include( Doxygen.cmake )
 endif ( NOT DISABLE_C2S_SYSTEM_SETTINGS )
-  
+
 ## required system libs #####################################
 
 if( CMAKE_SYSTEM_NAME STREQUAL "Windows" )
@@ -22,6 +22,8 @@ endif( CMAKE_SYSTEM_NAME STREQUAL "Windows" )
 
 set( Boost_USE_STATIC_LIBS ON )
 set( C2S_PROJECT_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} )
+
+include( Install.cmake )
 
 add_subdirectory( c2s-core )
 add_subdirectory( c2s-http )
