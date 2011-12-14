@@ -1,5 +1,5 @@
 
-set( C2S_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include )
+set( C2S_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include/c2s )
 
 file( COPY
   ${C2S_PROJECT_ROOT_DIR}/c2s-util/GlobalDefines.h
