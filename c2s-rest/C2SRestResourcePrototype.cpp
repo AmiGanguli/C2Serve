@@ -34,7 +34,7 @@
 #include "C2SRestException.h"
 #include "C2SRestMatchMethodToRequest.h"
 
-#include "C2SMatching.h"
+#include "C2SHttpMatching.h"
 #include "C2SHttpRequest.h"
 #include "C2SHttpResponseHandlerInterface.h"
 #include "C2SStringUtils.h"

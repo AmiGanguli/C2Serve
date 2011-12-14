@@ -36,7 +36,7 @@
 #include "C2SHttpResourcePrototype.h"
 #include "C2SHttpResourceManagerResponseHandler.h"
 
-#include "C2SMatching.h"
+#include "C2SHttpMatching.h"
 #include "Logger.h"
 #include "StringUtils.h"
 

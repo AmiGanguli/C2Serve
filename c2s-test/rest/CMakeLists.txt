@@ -1,6 +1,14 @@
 
 cmake_minimum_required(VERSION 2.6)
 
+include_directories(
+  ${C2S_PROJECT_ROOT_DIR}/c2s-rest
+  ${C2S_PROJECT_ROOT_DIR}/c2s-http
+  ${C2S_PROJECT_ROOT_DIR}/c2s-core
+  ${C2S_PROJECT_ROOT_DIR}/c2s-util
+  ${C2S_PROJECT_ROOT_DIR}/c2s-util/thread
+)
+
 add_executable( c2s_test_rest
   ../C2STestServerThread
   ../C2STestServerRunner

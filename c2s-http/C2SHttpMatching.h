@@ -29,8 +29,8 @@
 
  */
 
-#ifndef C2SMATCHING_H_
-#define C2SMATCHING_H_
+#ifndef C2SHTTPMATCHING_H_
+#define C2SHTTPMATCHING_H_
 
 #include "C2SStringUtils.h"
 #include "C2SHttpResourcePrototypeList.h"
@@ -46,4 +46,4 @@ namespace c2s
 
 }
 
-#endif /* C2SMATCHING_H_ */
+#endif /* C2SHTTPMATCHING_H_ */
