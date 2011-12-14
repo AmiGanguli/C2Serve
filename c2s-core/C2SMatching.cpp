@@ -37,7 +37,7 @@ namespace c2s
   C2SHttpResourcePrototype *findLongestMatchString( const std::string &sURI , const C2SHttpResourcePrototypeList &listOfResourcePrototypes )
   {
     std::map<unsigned int,C2SHttpResourcePrototype*> matches;
-    typename C2SHttpResourcePrototypeList::const_iterator it = listOfResourcePrototypes.begin();
+    C2SHttpResourcePrototypeList::const_iterator it = listOfResourcePrototypes.begin();
     for ( ; it != listOfResourcePrototypes.end(); ++it )
     {
       //skip root resource
