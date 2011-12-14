@@ -22,7 +22,6 @@ endif( CMAKE_SYSTEM_NAME STREQUAL "Windows" )
 
 set( Boost_USE_STATIC_LIBS ON )
 set( C2S_PROJECT_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} )
-message( ${C2S_PROJECT_ROOT_DIR} )
 
 add_subdirectory( c2s-core )
 add_subdirectory( c2s-http )
