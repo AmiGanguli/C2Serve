@@ -22,6 +22,7 @@ set( C2Serve_FOUND TRUE )
 
 set( C2S_INCLUDE_DIRS_RELATIVE
   c2s-util
+  c2s-util/io
   c2s-core
   c2s-http
   c2s-rest
