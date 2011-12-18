@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>C2Serve - Download and Installation</title>
+<title>C2Serve - Getting Started</title>
 
     <script type="text/javascript" src="Document.js"></script>
     <link rel="stylesheet" type="text/css" href="Basic.css"/>
@@ -14,7 +14,9 @@
   
     <div class="section" style="margin-top: 50px;">
     
-      <h1>Download and Installation</h1>
+      <h1>Getting Started</h1>
+      
+      <h2>Download and Installation</h2>
     
       Download the <a href="https://github.com/c2s/C2Serve/zipball/master">source distribution</a> and unpack the archive.
       Alternatively, you can also clone the repository by running <code>git clone git@github.com:c2s/C2Serve.git</code>.
@@ -32,25 +34,48 @@
       
       Next step is to create the build environment.
       Change into the build directory and run <code>cmake C2S_ROOT_DIR</code>.
-      By default, the libraries, headers and test executables are built into a created <code>install</code> directory within the build directory.
+      By default, the libraries, headers and test executables are built and installed into the directory preferred by <a href="http://www.cmake.org/">CMake</a>.
       You can specify another directory by defining the install prefix: <code>cmake -DINSTALL_PREFIX=MY_INSTALL_DIR</code>.
       
       <br />
       <br />
       
       Now you can build the binaries by running <code>make install</code>.
-      The libraries are built into a <code>lib</code> directory which is created in the <code>install</code> directory.
-      To build the unit tests, you have to install the <a href="http://www.boost.org/">Boost libraries</a> or specify the Boost root directory when initializing the build environment: <code>-DBOOST_ROOT=MY_BOOST_ROOT_DIR</code>.
+      In the destination directory, a <code>lib</code>, an <code>include</code> and a <code>bin</code> directory is created.
+      You will find all components that are needed to use C2Serve there.
       
       <br />
       <br />
       
-      If you are using <a href="http://www.cmake.org/">CMake</a> in your project, you can also easily add the <code>CMakeLists.txt</code> in the C2Serve root directory to your build system:
+      To build the unit tests, you have to install the <a href="http://www.boost.org/">Boost libraries</a> or specify the Boost root directory when initializing the build environment: <br />
+      
+      <code>-DBOOST_ROOT=MY_BOOST_ROOT_DIR</code>.
+        
+      <h2>Integration</h2>
+    
+      In the C2Serve root directory you will find a script named <code>FindC2Serve.cmake</code>.
+      This script is a <a href="http://www.cmake.org/">CMake</a> module script to find components of the C2Serve framework.
+      Use this script to integrate C2Serve into your <a href="http://www.cmake.org/">CMake</a> project.
+      Usage:
+      
+      <div class="code">
+        <code class="cmake-lists">
+          set( C2S_ROOT_DIR "path/to/c2s/root/dir" ) <br />
+          find_package( C2Serve ) <br />
+          if ( C2Serve_FOUND ) <br />
+					&nbsp;&nbsp;include_directories( ${C2Serve_INCLUDE_DIRS} ) <br />
+          &nbsp;&nbsp;add_executable( my_c2s_server MyC2SServerMain.cpp ) <br />
+          &nbsp;&nbsp;target_link_libraries( my_c2s_server ${C2Serve_LIBRARIES} ) <br />
+          endif ( C2Serve_FOUND ) <br />
+        </code>
+      </div>
+      
+      Alternatively, you can also easily add the <code>CMakeLists.txt</code> in the C2Serve root directory to your build system:
       
       <div class="code">
         <code class="cmake-lists">
            set( DISABLE_C2S_SYSTEM_SETTINGS ON ) <br />
-           add_subdirectory( C2S_ROOT_DIR )
+           add_subdirectory( ${C2S_ROOT_DIR} )
         </code>
       </div>
     
