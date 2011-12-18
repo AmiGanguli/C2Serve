@@ -66,6 +66,8 @@ namespace c2s
 
       std::string m_sNameToGreet;
 
+      std::string m_sNameToGreetFrom;
+
     };
 
   }
