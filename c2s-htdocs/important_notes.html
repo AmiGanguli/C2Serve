@@ -18,11 +18,48 @@
       
       <h2>What is C2Serve?</h2>
       
+      C2Serve is a small C++ framework that allows you to easily create your own REST web service.
+      It is designed in a manner that is is possible to provide the basic functionality of a REST service such as methods that handle GET, POST, PUT and DELETE http requests.
+      Furthermore, the framework provides multithreading and is thus able to handle multiple requests concurrently.
+      The focus is on a small set of basic features, implemented properly, instead of providing large functionality.
+      Of course, you are always free to extend the basic functionality to adjust the core framework to your own needs.
+      
+      <br />
+      <br />
+      
+      The core features of C2Serve:
+      
+      <ul>
+      
+        <li>
+          Create socket connection and listen for incoming requests.
+        </li>
+        
+        <li>
+          Parse requests according to the http protocol defined <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html" target="_blank">here</a>. 
+        </li>
+        
+        <li>
+          Match the http requests to REST resources and methods.
+        </li>
+        
+        <li>
+          Provide classes and interfaces to create REST resources, methods.
+        </li>
+        
+        <li>
+          Provide classes and interfaces to read and write http entities.
+        </li>
+        
+      </ul>
+      
+      
       <h2>Important Notes</h2>
       
       C2Serve is in beta phase. This means that there may be still some unknown bugs and memory issues.
       The interface of some basic classes and functions will change in all likelihood.
       Windows is currently not supported, only UNIX systems.
+      We are planning Windows support in the near future.
       Furthermore, the documentation currently only explains the basics of C2Serve.
       A more detailed explanation is planned by the end of 2011.
       
