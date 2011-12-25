@@ -22,6 +22,11 @@
       The template parameter defines the data type to stream the http entity to.
       If you leave the template parameter empty it is assumed that an http entity is not allowed.
       
+      <br />
+      <br />
+      
+      The example explained here can also be found in a very similar form in the C2Serve source directory under <code>c2s-example</code>.
+      
       <h2>Defining Path and Path Parameters</h2>
       
       The constructor of <code><i class="tn">C2SRestMethodPrototypeGET</i></code> gets a string as argument.
@@ -32,12 +37,12 @@
         
           <i class="sw">#include</i> <i class="m">&quot;C2SRestMethodPrototypeGET.h&quot;</i><br />
           <br />
-          <i class="sw">class</i> <i class="tn">SayHelloMethod</i> : <i class="sw">public</i> <i class="tn">C2SRestMethodPrototypeGET&lt;&gt;</i><br />
+          <i class="sw">class</i> <i class="tn">SayHelloMethod</i> : <i class="sw">public</i> <i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET&lt;&gt;</i><br />
           {<br />
           <i class="sw">public:</i> <br />
           <br />
           &nbsp;&nbsp;<i class="fd">SayHelloMethod()</i> <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;: <i class="tn">C2SRestMethodPrototypeGET&lt;&gt;</i>( <i class="m">&quot;say-hello&quot;</i> ) <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;: <i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET&lt;&gt;</i>( <i class="m">&quot;say-hello&quot;</i> ) <br />
           &nbsp;&nbsp;{ <br />
           &nbsp;&nbsp;}; <br />
           <br />
@@ -57,14 +62,14 @@
         
           <i class="sw">#include</i> <i class="m">&quot;C2SRestMethodPrototypeGET.h&quot;</i><br />
           <br />
-          <i class="sw">class</i> <i class="tn">SayHelloMethod</i> : <i class="sw">public</i> <i class="tn">C2SRestMethodPrototypeGET&lt;&gt;</i><br />
+          <i class="sw">class</i> <i class="tn">SayHelloMethod</i> : <i class="sw">public</i> <i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET&lt;&gt;</i><br />
           {<br />
           <i class="sw">public:</i> <br />
           <br />
           &nbsp;&nbsp;<i class="fd">SayHelloMethod()</i> <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;: <i class="tn">C2SRestMethodPrototypeGET&lt;&gt;</i>( <i class="m">&quot;say-hello/to&quot;</i> ) <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;: <i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET&lt;&gt;</i>( <i class="m">&quot;say-hello/to&quot;</i> ) <br />
           &nbsp;&nbsp;{ <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;<i class="tn">C2SRestMethodPrototypeGET</i>&lt;<i class="tn">std</i>::<i class="tn">string</i>&gt;::addPathParameter( <i class="m">&quot;name&quot;</i> , &<i class="m">m_sNameToGreet</i> ); <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET</i>&lt;&gt;::addPathParameter( <i class="m">&quot;name&quot;</i> , &amp;<i class="m">m_sNameToGreet</i> ); <br />
           &nbsp;&nbsp;}; <br />
           <br />
           <i class="sw">private:</i> <br />
@@ -84,9 +89,235 @@
       
       <h2>Adding Query Parameters</h2>
       
-      <h2>Create REST Resource and Instantiate GET Method Prototype</h2>
+      Another way to send parameters to the http server is using http query parameters.
+      These parameters are appended to the URI in the form <code>http://&lt;uri&gt;?&lt;key1&gt;=&lt;value1&gt;&amp;&lt;key2&gt;=&lt;value2&gt;</code>.
+      Adding query parameters is nearly identical to adding path parameters.
+      We add the following to our example:
+      
+      <div class="code">
+        <code class="cpp">
+        
+          <i class="sw">#include</i> <i class="m">&quot;C2SRestMethodPrototypeGET.h&quot;</i><br />
+          <br />
+          <i class="sw">class</i> <i class="tn">SayHelloMethod</i> : <i class="sw">public</i> <i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET&lt;&gt;</i><br />
+          {<br />
+          <i class="sw">public:</i> <br />
+          <br />
+          &nbsp;&nbsp;<i class="fd">SayHelloMethod()</i> <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;: <i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET&lt;&gt;</i>( <i class="m">&quot;say-hello/to&quot;</i> ) <br />
+          &nbsp;&nbsp;{ <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET</i>&lt;&gt;::addPathParameter( <i class="m">&quot;name&quot;</i> , &amp;<i class="m">m_sNameToGreet</i> ); <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET</i>&lt;&gt;::addQueryParameter( <i class="m">&quot;from&quot;</i> , &amp;<i class="m">m_sNameToGreetFrom</i> , <i class="m">&quot;&quot;</i> ); <br />
+          &nbsp;&nbsp;}; <br />
+          <br />
+          <i class="sw">private:</i> <br />
+          <br />
+          &nbsp;&nbsp;<i class="tn">std</i>::<i class="tn">string</i> <i class="m">m_sNameToGreet</i>; <br />
+          &nbsp;&nbsp;<i class="tn">std</i>::<i class="tn">string</i> <i class="m">m_sNameToGreetFrom</i>; <br />
+          <br />
+          };<br />
+          <br />
+        </code>
+      </div>
+      
+      According to the path parameters, query parameters are set automatically by C2Serve.
+      However, the main difference to path parameters is that the name of the query parameter becomes relevant.
+      It is the key to use for the key-value pairs in the http request.
+      Furthermore, it is possible to define default parameters.
+      If the query parameter is not defined by the request then the default parameter is set. 
+      
+      <h2>Processing Requests</h2>
+      
+      By now we have designed the REST resource.
+      No we want to implement it.
+      If you have a look at the class <code><i class="tn">C2SRestMethodPrototype</i></code> you will notice the pure virtual method <code>process</code>.
+      This method is called for each request and has to be implemented.
+      
+      <br />
+      <br />
+      
+      In our example, all we want to do is sending greetings back to the client.
+      So let's start implementing the <code>process</code> method:
+      
+      <div class="code">
+        <code class="cpp">
+        
+          <i class="sw">#include</i> <i class="m">&quot;C2SRestMethodPrototypeGET.h&quot;</i><br />
+          <br />
+          <i class="sw">class</i> <i class="tn">SayHelloMethod</i> : <i class="sw">public</i> <i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET&lt;&gt;</i><br />
+          {<br />
+          <i class="sw">public:</i> <br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+          <br />
+          <i class="sw">protected:</i> <br />
+          <br />
+          &nbsp;&nbsp;<i class="tn">c2s</i>::<i class="tn">C2SHttpResponse</i> *<i class="fd">process</i>()<br />
+          &nbsp;&nbsp;{<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="tn">std</i>::<i class="tn">string</i> sGreetings = <i class="m">&quot;Hello&quot;</i>;<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;sGreetings += <i class="tn">std</i>::<i class="tn">string</i>( <i class="m">" to "</i> ) + <i class="m">m_sNameToGreet</i>;<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="sw">if</i> ( <i class="m">m_sNameToGreetFrom</i>.size() )<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sGreetings += <i class="m">" from "</i> + <i class="m">m_sNameToGreetFrom</i>;<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="m">m_pLogger</i>-&gt;info( sGreetings );<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="sw">return</i> <i class="tn">c2s</i>::<i class="tn">C2SHttpResponse</i>::build( <i class="tn">c2s</i>::<i class="m">OK</i> );<br />
+          &nbsp;&nbsp;}<br />
+          <br />
+          <i class="sw">private:</i> <br />
+          <br />
+          &nbsp;&nbsp;<i class="tn">c2s</i>::<i class="tn">io</i>::<i class="tn">DateTimeLogger</i> *<i class="m">m_pLogger</i>; <br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+          <br />
+          };<br />
+          <br />
+        </code>
+      </div>
+      
+      All we do is evaluating the path and query parameters, creating a message and logging this message.
+      However, the message is only logged to the server's logger, the client is unable to see this message.
+      What we need is a possibility to send data back to the client.
     
       <h2>Creating Data for Response Entity</h2>
+      
+      Http defines a standard way to send data between client and server.
+      The client may create a request with a so-called request entity.
+      A request entity is not allowed for GET requests, so this is not relevant for this example.
+      However, we want to send a string message back to the client.
+      According to the request entity, http defines a response entity.
+      C2Serve uses entity streamer and unstreamer classes to read and write objects from and to a http entity.
+      
+      <br />
+      <br />
+      
+      In our example, we need a http streamer which converts our message string to a http entity.
+      What we do is deriving from the class <code><i class="tn">C2SHttpEntityStreamerBase</i></code>.
+      This class is a template.
+      The template parameter defines the data type to stream to the entity which is <code><i class="tn">std</i>::<i class="tn">string</i></code> in our example.
+      The constructor of <code><i class="tn">C2SHttpEntityStreamerBase</i></code> takes a string as argument.
+      This string defines the content type of the http entity.
+      The most common are <code>text/html</code>, <code>application/xml</code> or <code>application/json</code>.
+      The example will send the message as plain text, so we use <code>text/plain</code>.
+      The implementation may be as follows:
+      
+      <div class="code">
+        <code class="cpp">
+        
+          <i class="sw">#include</i> <i class="m">&quot;C2SHttpEntityStreamerBase.h&quot;</i><br />
+          <br />
+          <i class="sw">class</i> <i class="tn">MyEntityStreamerPlainText</i> : <i class="sw">public</i> <i class="tn">c2s</i>::<i class="tn">C2SHttpEntityStreamerBase&lt;<i class="tn">std</i>::<i class="tn">string</i>&gt;</i><br />
+          {<br />
+          <i class="sw">public:</i> <br />
+          <br />     
+          &nbsp;&nbsp;<i class="fd">MyEntityStreamerPlainText</i>()<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;: <i class="tn">c2s</i>::<i class="tn">C2SHttpEntityStreamerBase</i>&lt;<i class="tn">std</i>::<i class="tn">string</i>&gt;( <i class="m">"text/plain"</i> )<br />
+          &nbsp;&nbsp;{};<br />
+          <br />
+
+          &nbsp;&nbsp;<i class="sw">virtual</i> <i class="tn">c2s</i>::<i class="tn">C2SHttpEntity</i> *<i class="fd">entity</i>( <i class="sw">const</i> <i class="tn">std</i>::<i class="tn">string</i> &sPlainText ) <i class="sw">const</i><br />
+          &nbsp;&nbsp;{<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="sw">return</i> <i class="sw">new</i> <i class="tn">c2s</i>::<i class="tn">C2SHttpEntity</i>( sPlainText.c_str() , sPlainText.size() );<br />
+          &nbsp;&nbsp;}<br />
+          <br />
+          };<br />
+          <br />
+        </code>
+      </div>
+      
+      To let the REST method prototype return a response entity we have to define the data type to stream to and register the entity streamer.
+      The data type to stream to is the template parameter of <code><i class="tn">C2SRestMethodPrototypeGET</i></code>.
+      The response entity streamer must be created using the <code><i class="sw">new</i></code> operator and should be registered in the constructor of the REST method prototype.
+      This leads to the following additions and changes in the code:
+      
+      <div class="code">
+        <code class="cpp">
+        
+          <i class="sw">#include</i> <i class="m">&quot;C2SRestMethodPrototypeGET.h&quot;</i><br />
+          <i class="sw">#include</i> <i class="m">&quot;MyEntityStreamerPlainText.h&quot;</i><br />
+          <br />
+          <i class="sw">class</i> <i class="tn">SayHelloMethod</i> : <i class="sw">public</i> <i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET&lt;<i class="tn">std</i>::<i class="tn">string</i>&gt;</i><br />
+          {<br />
+          <i class="sw">public:</i> <br />
+          <br />
+          &nbsp;&nbsp;<i class="fd">SayHelloMethod()</i> <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;: <i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET&lt;<i class="tn">std</i>::<i class="tn">string</i>&gt;</i>( <i class="m">&quot;say-hello/to&quot;</i> ) <br />
+          &nbsp;&nbsp;{ <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET</i>&lt;<i class="tn">std</i>::<i class="tn">string</i>&gt;::installEntityStreamer( <i class="sw">new</i> <i class="tn">MyEntityStreamerPlainText</i>() );<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET</i>&lt;<i class="tn">std</i>::<i class="tn">string</i>&gt;::addPathParameter( <i class="m">&quot;name&quot;</i> , &amp;<i class="m">m_sNameToGreet</i> ); <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET</i>&lt;<i class="tn">std</i>::<i class="tn">string</i>&gt;::addQueryParameter( <i class="m">&quot;from&quot;</i> , &amp;<i class="m">m_sNameToGreetFrom</i> , <i class="m">&quot;&quot;</i> ); <br />
+          &nbsp;&nbsp;}; <br />
+          <br />
+          <i class="sw">protected:</i> <br />
+          <br />
+          &nbsp;&nbsp;<i class="tn">c2s</i>::<i class="tn">C2SHttpResponse</i> *<i class="fd">process</i>()<br />
+          &nbsp;&nbsp;{<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="tn">std</i>::<i class="tn">string</i> sGreetings = <i class="m">&quot;Hello&quot;</i>;<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;sGreetings += <i class="tn">std</i>::<i class="tn">string</i>( <i class="m">" to "</i> ) + <i class="m">m_sNameToGreet</i>;<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="sw">if</i> ( <i class="m">m_sNameToGreetFrom</i>.size() )<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sGreetings += <i class="m">" from "</i> + <i class="m">m_sNameToGreetFrom</i>;<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="m">m_pLogger</i>-&gt;info( sGreetings );<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="sw">return</i> <i class="tn">c2s</i>::<i class="tn">C2SRestMethodPrototypeGET</i>&lt;<i class="tn">std</i>::<i class="tn">string</i>&gt;::buildResponse( <i class="tn">c2s</i>::<i class="m">OK</i> , sGreetings );<br />          
+          &nbsp;&nbsp;}<br />
+          <br />
+          <i class="sw">private:</i> <br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+          <br />
+          };<br />
+          <br />
+        </code>
+      </div>
+      
+      <h2>Create REST Resource and Instantiate GET Method Prototype</h2>
+      
+      Creating a REST resource is already explained in the <a href="server_startup.html">server startup section</a>.
+      To add our method prototype we simply have to call <code><i class="">C2SRestResourcePrototype</i>::registerMethodPrototype</code>.
+      This will register the a prototype for our method which is cloned for each listener thread.
+      This ensures that parallely processed requests do not affect each other.
+      
+      <br />
+      <br />
+      The server main may look as follows:
+      
+      <div class="code">
+        <code class="cpp">
+        
+          <i class="sw">#include</i> <i class="m">&quot;C2SSettings.h&quot;</i><br />
+          <i class="sw">#include</i> <i class="m">&quot;C2SHttpServer.h&quot;</i><br />
+          <i class="sw">#include</i> <i class="m">&quot;C2SRestResourcePrototype.h&quot;</i><br />
+          <i class="sw">#include</i> <i class="m">&quot;SayHelloMethod.h&quot;</i><br />
+          <br />
+          <i class="sw">int</i> <i class="fd">main</i>( <i class="sw">int</i>, <i class="sw">char</i> ** )<br />
+          {<br />
+          &nbsp;&nbsp;<i class="sw">using namespace</i> c2s;<br />
+          &nbsp;&nbsp;<i class="tn">C2SSettings</i> &settingsOfServer;<br />
+          &nbsp;&nbsp;settingsOfServer.<i class="m">iPort</i> = 3344;<br />
+          &nbsp;&nbsp;<i class="tn">C2SHttpServer</i> httpServer( settingsOfServer );<br />
+          &nbsp;&nbsp;<i class="tn">std</i>::<i class="tn">string</i> sContextRoot = <i class="m">&quot;example/resource&quot;</i>;<br />
+          &nbsp;&nbsp;<i class="tn">C2SRestResourcePrototype</i> *pResource =<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="tn">C2SRestResourcePrototype</i>::createRestResourceWithContextRoot( sContextRoot );<br />
+          &nbsp;&nbsp;pResource->registerMethodPrototype( <i class="sw">new</i> <i class="tn">SayHelloMethod()</i> );<br />
+          &nbsp;&nbsp;httpServer.registerResourcePrototype( pResource );<br />
+          &nbsp;&nbsp;httpServer.run();<br />
+          }<br />
+        </code>
+      </div>
+  
+		  If you have successfully started the web service you can check it using <a href="http://curl.haxx.se/" target="_blank">CURL</a>:
+		  
+		  <div class="code">
+		    <code>
+  		    curl -X GET http://localhost:3344/example/resource/say-hello/to/Richard?from=C2Serve
+  		  </code>
+		  </div>
+		  
+		  The response should be:
+    
+      <div class="code">
+        <code>
+          Hello to Richard from C2Serve
+        </code>
+      </div>
+      
     
    </div> 
   </div>
