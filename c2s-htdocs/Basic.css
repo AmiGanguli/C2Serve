@@ -64,6 +64,10 @@ div.code
   margin: 10px auto;
   padding: 10px;
   background-color: #fff;
+  
+  -webkit-box-shadow: 3px 2px 5px #aaa;
+  -moz-box-shadow: 3px 2px 5px #aaa;
+  box-shadow: 0px 0px 3px 2px #aaa;
 }
 
 code i.sw
