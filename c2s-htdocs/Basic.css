@@ -2,7 +2,7 @@
 
 body
 {
-  background-color: #fff;
+  background-color: #eee;
   text-align: center;
   margin: 0px auto;
   color: #2D313D;
@@ -12,9 +12,6 @@ div
 {
   width: 1000px;
   margin: 0px auto;
-  background-color: #eee;
-  border-style: solid;
-  border-width: 1px;
   margin-bottom: 50px;
 }
 
