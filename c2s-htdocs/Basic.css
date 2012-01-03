@@ -30,7 +30,7 @@ a:visited
 
 a:focus
 {
-	color: red;
+	color: #2146D9;
 	text-decoration:underline;
 }
 
