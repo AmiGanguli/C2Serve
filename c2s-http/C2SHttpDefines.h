@@ -33,6 +33,8 @@
 #ifndef C2SHTTPDEFINES_H_
 #define C2SHTTPDEFINES_H_
 
+#include <string>
+
 namespace c2s
 {
 

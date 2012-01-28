@@ -19,6 +19,7 @@ add_library( c2s_http
   C2SHttpResourcePrototype
   C2SHttpParser
   C2SHttpParseURI
+  C2SHttpParseResource
   C2SHttpParseResponse
   C2SHttpParseQueryFields
   C2SHttpParseQueryFieldAndAddToList

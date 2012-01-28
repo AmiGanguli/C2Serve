@@ -32,6 +32,7 @@
 #include "C2SHttpParser.h"
 
 #include "C2SHttpParseURI.h"
+#include "C2SHttpParseResource.h"
 #include "C2SHttpParseResponse.h"
 #include "C2SHttpParseQueryFields.h"
 
@@ -56,46 +57,6 @@
 
 namespace c2s
 {
-
-  class C2SHttpResourceParser
-  {
-  public:
-
-    C2SHttpResourceParser( C2SHttpRequestHeader *pHeader )
-      : m_pHeader( pHeader ),
-        m_uriParser( pHeader ),
-        m_iArgIdx( 0 )
-    {};
-
-  private:
-
-    C2SHttpRequestHeader *m_pHeader;
-
-    C2SHttpParseURI m_uriParser;
-
-    unsigned int m_iArgIdx;
-
-    template <class Handler>
-    friend void splitNhandle( const char *data , unsigned int size , char separator , Handler *pHandler );
-
-    void operator()( const char *data , unsigned int size )
-    {
-      if ( !m_iArgIdx )
-        splitNhandle( data , size , '?' , &m_uriParser );
-      else if ( m_iArgIdx == 1 )
-      {
-        unsigned int n = sHttpVersionPrefix.size();
-        if ( n > size )
-          throw C2SHttpException( "C2SHttpResourceParser::operator():" , "Cannot parse version string: '" + std::string( data , size ) + "'!" , BadRequest );
-
-        data += n;
-        m_pHeader->Version = c2s::util::toNumber<float>( std::string( data , size - n ) );
-      }
-
-      ++m_iArgIdx;
-    }
-
-  };
 
   class C2SHttpHeaderFieldParser
   {
@@ -257,7 +218,7 @@ namespace c2s
     else
       throw C2SHttpException( "C2SHttpParser::handleFirstLine: " , "Cannot read header: " + std::string( data , size ) , BadRequest );
 
-    C2SHttpResourceParser resource( pHeader );
+    C2SHttpParseResource resource( pHeader );
     splitNhandle( data + iRefSize , ( size - iRefSize ) , ' ' , &resource );
 //      pHeader->URI = resource.sURI;
 //      pHeader->Version = resource.fHttpVerstion;
