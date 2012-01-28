@@ -18,6 +18,7 @@ add_library( c2s_http
   C2SHttpResponseHeader
   C2SHttpResourcePrototype
   C2SHttpParser
+  C2SHttpParseResponse
   C2SHttpStatus
   C2SHttpMatching
   C2SHttpMediaType

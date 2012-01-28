@@ -31,6 +31,9 @@
 
 #include "C2SHttpParser.h"
 
+#include "C2SHttpParseResponse.h"
+
+#include "C2SHttpDefines.h"
 #include "C2SHttpQueryFields.h"
 #include "C2SHttpRequestHeader.h"
 #include "C2SHttpResponseHeader.h"
@@ -49,56 +52,8 @@
 #define FIELD_CONTENT_TYPE "Content-Type: "
 #define FIELD_CONTENT_LENGTH "Content-Length: "
 
-#define HTTP_VERSION_PREFIX "HTTP/"
-
-
 namespace c2s
 {
-
-  class C2SHttpResponseParser
-  {
-  public:
-
-    C2SHttpResponseParser()
-      : fHttpVerstion( 1.1f ),
-        m_iArgIdx( 0 )
-    {};
-
-    float fHttpVerstion;
-
-    C2SHttpStatus Status;
-
-    std::string sReasonPhrase;
-
-  private:
-
-    unsigned int m_iArgIdx;
-
-    template <class Handler>
-    friend void splitNhandle( const char *data , unsigned int size , char separator , Handler *pHandler );
-
-    void operator()( const char *data , unsigned int size )
-    {
-      if ( !m_iArgIdx )
-      {
-        unsigned int n = strlen( HTTP_VERSION_PREFIX );
-        if ( n > size )
-          throw C2SHttpException( "C2SHttpResourceParser::operator():" , "Cannot parse version string: '" + std::string( data , size ) + "'!" , BadRequest );
-
-        data += n;
-        fHttpVerstion = c2s::util::toNumber<float>( std::string( data , size - n ) );
-      }
-      else if ( m_iArgIdx == 1 )
-        Status = fromString( std::string( data , size ) );
-      else if ( m_iArgIdx == 2 )
-        sReasonPhrase = std::string( data , size );
-      else
-        sReasonPhrase += " " + std::string( data , size );
-
-      ++m_iArgIdx;
-    }
-
-  };
 
   class C2SHttpQueryFieldSetter
   {
@@ -246,7 +201,7 @@ namespace c2s
         splitNhandle( data , size , '?' , &m_uriParser );
       else if ( m_iArgIdx == 1 )
       {
-        unsigned int n = strlen( HTTP_VERSION_PREFIX );
+        unsigned int n = sHttpVersionPrefix.size();
         if ( n > size )
           throw C2SHttpException( "C2SHttpResourceParser::operator():" , "Cannot parse version string: '" + std::string( data , size ) + "'!" , BadRequest );
 
@@ -384,7 +339,7 @@ namespace c2s
 
   void handleFirstLine( const char *data , unsigned int size , C2SHttpResponseHeader *pHeader )
   {
-    C2SHttpResponseParser rp;
+    C2SHttpParseResponse rp;
     splitNhandle( data , size , ' ' , &rp );
 
     pHeader->Version = rp.fHttpVerstion;
