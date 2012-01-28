@@ -20,7 +20,7 @@
     
       Download the <a href="https://github.com/c2s/C2Serve/zipball/master" target="_blank">source distribution</a> and unpack the archive.
       Alternatively, you can also clone the repository by running <code>git clone git://github.com/c2s/C2Serve.git</code>.
-      The directory which contains the build and source will be referred in the following as <code>C2S_ROOT_DIR</code>.
+      The directory which contains the build and source will be referred in the following as <code>C2Serve_ROOT_DIR</code>.
       
       <br />
       <br />
@@ -33,7 +33,7 @@
       <br />
       
       Next step is to create the build environment.
-      Change into the build directory and run <code>cmake C2S_ROOT_DIR</code>.
+      Change into the build directory and run <code>cmake C2Serve_ROOT_DIR</code>.
       By default, the libraries, headers and test executables are built and installed into the directory preferred by <a href="http://www.cmake.org/" target="_blank">CMake</a>.
       You can specify another directory by defining the install prefix: <code>cmake -DINSTALL_PREFIX=MY_INSTALL_DIR</code>.
       
@@ -60,7 +60,7 @@
       
       <div class="code">
         <code class="cmake-lists">
-          set( C2S_ROOT_DIR "path/to/c2s/root/dir" ) <br />
+          set( C2Serve_ROOT_DIR "path/to/c2s/root/dir" ) <br />
           find_package( C2Serve ) <br />
           if ( C2Serve_FOUND ) <br />
 					&nbsp;&nbsp;include_directories( ${C2Serve_INCLUDE_DIRS} ) <br />
@@ -74,13 +74,13 @@
       
       <div class="code">
         <code class="cmake-lists">
-           set( DISABLE_C2S_SYSTEM_SETTINGS ON ) <br />
-           add_subdirectory( ${C2S_ROOT_DIR} )
+           set( C2Serve_DISABLE_SYSTEM_SETTINGS ON ) <br />
+           add_subdirectory( ${C2Serve_ROOT_DIR} )
         </code>
       </div>
     
       First of all you should disable the C2Serve system scripts.
-      Afterwards you can add the <code>C2S_ROOT_DIR</code> to your build paths.
+      Afterwards you can add the <code>C2Serve_ROOT_DIR</code> to your build paths.
       If this directory is placed outside of your source tree, <a href="http://www.cmake.org/" target="_blank">CMake</a> needs a binary directory defined to know where to build the binaries.
       Check the <a href="http://cmake.org/cmake/help/cmake-2-8-docs.html" target="_blank">CMake documendation</a> for more information.
   
