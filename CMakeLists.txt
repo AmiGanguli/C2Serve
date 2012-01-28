@@ -32,6 +32,9 @@ add_subdirectory( c2s-core )
 add_subdirectory( c2s-http )
 add_subdirectory( c2s-rest )
 add_subdirectory( c2s-util )
-add_subdirectory( c2s-test )
 add_subdirectory( c2s-example )
+
+if ( NOT C2Serve_DISABLE_TESTING )
+  add_subdirectory( c2s-test )
+endif ( NOT C2Serve_DISABLE_TESTING )
 
