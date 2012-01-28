@@ -2,13 +2,13 @@
 cmake_minimum_required(VERSION 2.6)
 
 
-#Set DISABLE_C2S_SYSTEM_SETTINGS to suppress incorporation of C2Serve system settings
+#Set C2Serve_DISABLE_SYSTEM_SETTINGS to suppress incorporation of C2Serve system settings
 #This may be useful if you want to integrate the C2Serve root CMakeLists.txt into your CMake build structure
-if ( NOT DISABLE_C2S_SYSTEM_SETTINGS )
+if ( NOT C2Serve_DISABLE_SYSTEM_SETTINGS )
   cmake_policy( SET CMP0011 NEW )
   include( System.cmake )
   include( Doxygen.cmake )
-endif ( NOT DISABLE_C2S_SYSTEM_SETTINGS )
+endif ( NOT C2Serve_DISABLE_SYSTEM_SETTINGS )
 
 ## required system libs #####################################
 
