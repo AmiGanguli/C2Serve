@@ -40,6 +40,7 @@
 #include "C2SHttpQueryFields.h"
 #include "C2SHttpRequestHeader.h"
 #include "C2SHttpResponseHeader.h"
+#include "C2SHttpParseHeaderField.h"
 
 #include "StringUtils.h"
 
@@ -57,48 +58,6 @@
 
 namespace c2s
 {
-
-  class C2SHttpHeaderFieldParser
-  {
-  public:
-
-    C2SHttpHeaderFieldParser()
-      : m_iArgIdx( 0 )
-    {};
-
-    std::string sName;
-
-    std::string sValue;
-
-  private:
-
-    unsigned int m_iArgIdx;
-
-    template <class Handler>
-    friend void splitNhandle( const char *data , unsigned int size , char separator , Handler *pHandler );
-
-    void operator()( const char *data , unsigned int size )
-    {
-      if ( !m_iArgIdx )
-        sName = std::string( data , size );
-      else
-      {
-        if ( m_iArgIdx == 1 )
-        {
-          //remove whitespace at the beginning
-          if ( *data == ' ' )
-          {
-            ++data;
-            --size;
-          }
-        }
-        sValue += std::string( data , size );
-      }
-
-      ++m_iArgIdx;
-    }
-
-  };
 
   C2SHttpParser::C2SHttpParser()
     : m_iTotalLines( 0 ),
@@ -228,7 +187,7 @@ namespace c2s
   template <class HeaderType>
   void handleField( const char *data , unsigned int size , HeaderType *pHeader )
   {
-    C2SHttpHeaderFieldParser field;
+    C2SHttpParseHeaderField field;
     splitNhandle( data , size , ':' , &field );
 
     if ( !field.sName.size() )
