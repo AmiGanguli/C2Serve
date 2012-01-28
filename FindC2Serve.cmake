@@ -7,18 +7,22 @@
 #    C2Serve_FOUND        - True if all necessary C2Serve components have been found
 #
 
-if ( NOT DEFINED C2S_ROOT_DIR )
+if ( NOT DEFINED C2Serve_ROOT_DIR )
   #TODO: Search all possible install paths
-  set( C2S_ROOT_DIR /usr/local )
-endif( NOT DEFINED C2S_ROOT_DIR )
+  set( C2Serve_ROOT_DIR /usr/local )
+endif( NOT DEFINED C2Serve_ROOT_DIR )
 
-message( STATUS "C2Serve root directory: " ${C2S_ROOT_DIR} )
+message( STATUS "C2Serve root directory: " ${C2Serve_ROOT_DIR} )
 
 set( C2Serve_FOUND TRUE )
 
 
 #########################################################################
 #################### INCLUDES ###########################################
+
+if ( NOT DEFINED C2Serve_INCLUDE_ROOT_DIR )
+  set( C2Serve_INCLUDE_ROOT_DIR ${C2Serve_ROOT_DIR}/include/c2s )
+endif ( NOT DEFINED C2Serve_INCLUDE_ROOT_DIR )
 
 set( C2S_INCLUDE_DIRS_RELATIVE
   c2s-util
@@ -29,7 +33,7 @@ set( C2S_INCLUDE_DIRS_RELATIVE
 )
 
 foreach( C2S_CURRENT_INCLUDE_DIR_RELATIVE ${C2S_INCLUDE_DIRS_RELATIVE} )
-  set( C2S_CURRENT_INCLUDE_DIR_ABSOLUTE ${C2S_ROOT_DIR}/include/c2s/${C2S_CURRENT_INCLUDE_DIR_RELATIVE} )
+  set( C2S_CURRENT_INCLUDE_DIR_ABSOLUTE ${C2Serve_INCLUDE_ROOT_DIR}/${C2S_CURRENT_INCLUDE_DIR_RELATIVE} )
   if ( NOT EXISTS ${C2S_CURRENT_INCLUDE_DIR_ABSOLUTE} )
     set( C2Serve_FOUND FALSE )
     set( C2S_MISSING_INCLUDES ${C2S_MISSING_INCLUDES} ${C2S_CURRENT_INCLUDE_DIR_ABSOLUTE} )
@@ -43,7 +47,9 @@ endforeach( C2S_CURRENT_INCLUDE_DIR_RELATIVE ${C2S_INCLUDE_DIRS_RELATIVE} )
 #########################################################################
 #################### LIBRARIES ##########################################
 
-set( C2Serve_LINK_LIB_DIR ${C2S_ROOT_DIR}/lib )
+if ( NOT DEFINED C2Serve_LINK_LIB_DIR )
+  set( C2Serve_LINK_LIB_DIR ${C2Serve_ROOT_DIR}/lib )
+endif ( NOT DEFINED C2Serve_LINK_LIB_DIR )
 
 set( C2Serve_LIBRARIES
   c2s_rest
