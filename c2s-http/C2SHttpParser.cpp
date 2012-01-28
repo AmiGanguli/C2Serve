@@ -32,6 +32,7 @@
 #include "C2SHttpParser.h"
 
 #include "C2SHttpParseResponse.h"
+#include "C2SHttpParseQueryFields.h"
 
 #include "C2SHttpDefines.h"
 #include "C2SHttpQueryFields.h"
@@ -55,86 +56,6 @@
 namespace c2s
 {
 
-  class C2SHttpQueryFieldSetter
-  {
-  public:
-
-    C2SHttpQueryFieldSetter( C2SHttpQueryFields *pQueryFields )
-      : m_pQueryFields( pQueryFields ),
-        m_currData( NULL ),
-        m_currSize( 0 ),
-        m_bIsNewField( false )
-    {};
-
-    void setNewField()
-    {
-      m_currData = NULL;
-      m_currSize = 0;
-      m_bIsNewField = true;
-    }
-
-  private:
-
-    C2SHttpQueryFields *m_pQueryFields;
-
-    const char *m_currData;
-
-    unsigned int m_currSize;
-
-    bool m_bIsNewField;
-
-    template <class Handler>
-    friend void splitNhandle( const char *data , unsigned int size , char separator , Handler *pHandler );
-
-    void operator()( const char *data , unsigned int size )
-    {
-      if ( !m_pQueryFields )
-        throw C2SHttpException( "C2SHttpQueryFieldSetter::operator():" , "Query fields are NULL", InternalServerError );
-
-      if ( m_bIsNewField )
-      {
-        m_currData = data;
-        m_currSize = size;
-      }
-      else
-      {
-        if ( !m_currSize )
-          throw C2SHttpException( "C2SHttpQueryFieldSetter::operator():" , "Cannot parse URI string, detected empty query field name", BadRequest );
-
-        m_pQueryFields->addField( std::string( m_currData , m_currSize ) , c2s::util::urlDecode( std::string( data , size ) ) );
-      }
-
-      m_bIsNewField = false;
-    }
-
-  };
-
-  class C2SHttpQueryFieldParser
-  {
-  public:
-
-    C2SHttpQueryFieldParser( C2SHttpQueryFields *pQueryFields )
-      : m_QueryFields( pQueryFields ),
-        m_setter( pQueryFields )
-    {};
-
-  private:
-
-    C2SHttpQueryFields *m_QueryFields;
-
-    C2SHttpQueryFieldSetter m_setter;
-
-    template <class Handler>
-    friend void splitNhandle( const char *data , unsigned int size , char separator , Handler *pHandler );
-
-    void operator()( const char *data , unsigned int size )
-    {
-      m_setter.setNewField();
-      splitNhandle( data , size , '=' , &m_setter );
-    }
-
-  };
-
   class C2SHttpURIParser
   {
 
@@ -150,7 +71,7 @@ namespace c2s
 
     C2SHttpRequestHeader *m_pHeader;
 
-    C2SHttpQueryFieldParser m_fieldParser;
+    C2SHttpParseQueryFields m_fieldParser;
 
     unsigned int m_iArgIdx;
 

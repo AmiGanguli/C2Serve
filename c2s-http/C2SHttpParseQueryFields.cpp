@@ -29,34 +29,21 @@
 
  */
 
-#ifndef C2SHTTPPARSERESPONSE_H_
-#define C2SHTTPPARSERESPONSE_H_
+#include "C2SHttpParseQueryFields.h"
 
-#include "C2SHttpStatus.h"
+#include "C2SStringUtils.h"
 
 namespace c2s
 {
 
-  class C2SHttpParseResponse
+  C2SHttpParseQueryFields::C2SHttpParseQueryFields( C2SHttpQueryFields *pQueryFields )
+    : m_QueryFields( pQueryFields ),
+      m_parseQueryFieldsAndAddToList( pQueryFields )
+  {};
+
+  void C2SHttpParseQueryFields::operator()( const char *data , unsigned int size )
   {
-  public:
-
-    C2SHttpParseResponse();
-
-    float fHttpVerstion;
-
-    C2SHttpStatus Status;
-
-    std::string sReasonPhrase;
-
-    void operator()( const char *data , unsigned int size );
-
-  private:
-
-    unsigned int m_iArgIdx;
-
-  };
-
+    m_parseQueryFieldsAndAddToList.setNewField();
+    splitNhandle( data , size , '=' , &m_parseQueryFieldsAndAddToList );
+  }
 }
-
-#endif /* C2SHTTPPARSERESPONSE_H_ */

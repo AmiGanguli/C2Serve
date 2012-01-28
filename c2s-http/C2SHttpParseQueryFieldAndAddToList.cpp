@@ -29,34 +29,48 @@
 
  */
 
-#ifndef C2SHTTPPARSERESPONSE_H_
-#define C2SHTTPPARSERESPONSE_H_
+#include "C2SHttpParseQueryFieldAndAddToList.h"
+#include "C2SHttpQueryFields.h"
+#include "C2SHttpException.h"
 
-#include "C2SHttpStatus.h"
+#include "StringUtils.h"
 
 namespace c2s
 {
 
-  class C2SHttpParseResponse
+  C2SHttpParseQueryFieldAndAddToList::C2SHttpParseQueryFieldAndAddToList( C2SHttpQueryFields *pQueryFields )
+    : m_pQueryFields( pQueryFields ),
+      m_currData( NULL ),
+      m_currSize( 0 ),
+      m_bIsNewField( false )
+  {};
+
+  void C2SHttpParseQueryFieldAndAddToList::setNewField()
   {
-  public:
+    m_currData = NULL;
+    m_currSize = 0;
+    m_bIsNewField = true;
+  }
 
-    C2SHttpParseResponse();
+  void C2SHttpParseQueryFieldAndAddToList::operator()( const char *data , unsigned int size )
+  {
+    if ( !m_pQueryFields )
+      throw C2SHttpException( "C2SHttpQueryFieldSetter::operator():" , "Query fields are NULL", InternalServerError );
 
-    float fHttpVerstion;
+    if ( m_bIsNewField )
+    {
+      m_currData = data;
+      m_currSize = size;
+    }
+    else
+    {
+      if ( !m_currSize )
+        throw C2SHttpException( "C2SHttpQueryFieldSetter::operator():" , "Cannot parse URI string, detected empty query field name", BadRequest );
 
-    C2SHttpStatus Status;
+      m_pQueryFields->addField( std::string( m_currData , m_currSize ) , c2s::util::urlDecode( std::string( data , size ) ) );
+    }
 
-    std::string sReasonPhrase;
-
-    void operator()( const char *data , unsigned int size );
-
-  private:
-
-    unsigned int m_iArgIdx;
-
-  };
+    m_bIsNewField = false;
+  }
 
 }
-
-#endif /* C2SHTTPPARSERESPONSE_H_ */
