@@ -31,6 +31,7 @@
 
 #include "C2SHttpParser.h"
 
+#include "C2SHttpParseURI.h"
 #include "C2SHttpParseResponse.h"
 #include "C2SHttpParseQueryFields.h"
 
@@ -56,45 +57,6 @@
 namespace c2s
 {
 
-  class C2SHttpURIParser
-  {
-
-  public:
-
-    C2SHttpURIParser( C2SHttpRequestHeader *pHeader )
-      : m_pHeader( pHeader ),
-        m_fieldParser( &( pHeader->QueryFields ) ),
-        m_iArgIdx( 0 )
-    {};
-
-  private:
-
-    C2SHttpRequestHeader *m_pHeader;
-
-    C2SHttpParseQueryFields m_fieldParser;
-
-    unsigned int m_iArgIdx;
-
-    template <class Handler>
-    friend void splitNhandle( const char *data , unsigned int size , char separator , Handler *pHandler );
-
-    void operator()( const char *data , unsigned int size )
-    {
-      if ( !m_iArgIdx )
-        m_pHeader->URI = std::string( data , size );
-      else
-      {
-        if ( m_iArgIdx > 1 )
-          throw C2SHttpException( "C2SHttpURIParser::operator():" , "Cannot parse URI string", BadRequest );
-
-        splitNhandle( data , size , '&' , &m_fieldParser );
-      }
-
-      ++m_iArgIdx;
-    }
-
-  };
-
   class C2SHttpResourceParser
   {
   public:
@@ -109,7 +71,7 @@ namespace c2s
 
     C2SHttpRequestHeader *m_pHeader;
 
-    C2SHttpURIParser m_uriParser;
+    C2SHttpParseURI m_uriParser;
 
     unsigned int m_iArgIdx;
 
