@@ -52,6 +52,7 @@ if ( NOT DEFINED C2Serve_LINK_LIB_DIR )
 endif ( NOT DEFINED C2Serve_LINK_LIB_DIR )
 
 set( C2Serve_LIBRARIES
+  c2s_httpclient
   c2s_rest
   c2s_http
   c2s_core
