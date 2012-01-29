@@ -55,10 +55,22 @@ table.menu td.item a:link
   text-decoration:none;
 }
 
+table.menu td.item a.selected:link
+{
+  color: #fff;
+  text-decoration:none;
+}
+
 table.menu td.item a:visited
 {
   text-decoration:none;
   color: #999;
+}
+
+table.menu td.item a.selected:visited
+{
+  color: #fff;
+  text-decoration:none;
 }
 
 table.menu td.item a:focus
