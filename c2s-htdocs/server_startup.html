@@ -6,9 +6,26 @@
 
     <script type="text/javascript" src="Document.js"></script>
     <link rel="stylesheet" type="text/css" href="Basic.css"/>
+    <link rel="stylesheet" type="text/css" href="Menu.css"/>
       
 </head>
 <body onload="if (parent.adjustIFrameSize) parent.adjustIFrameSize(window);">
+
+  <div class="menu">
+  
+    <table class="menu"><tr>
+       
+       <td class="item"><a href="overview.html">overview</a></td>
+       <td class="item"><a href="license.html">license</a></td>
+       <td class="item"><a href="getting_started.html">getting started</a></td>
+       <td class="item"><a href="server_startup.html">server startup</a></td>
+       <td class="item"><a href="example_get.html">GET example</a></td>
+       
+     </tr></table>
+  
+  </div>
+  
+  <div class="menu-underline"></div>
 
   <div>
 
@@ -101,7 +118,7 @@
       
         To shutdown a running server instance use the method of <code><i class="tn">C2SHttpServer</i>::shutdown()</code>.
         This method blocks until the server has been successfully shutdown.
-        Of course, you have to call these methods from a different threads.
+        Of course, you have to call these methods from a different thread.
         
       <div class="code">
         <code class="cpp">

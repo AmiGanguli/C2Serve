@@ -2,13 +2,30 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>C2Serve - Important Notes</title>
+  <title>C2Serve - Overview</title>
 
-    <script type="text/javascript" src="Document.js"></script>
-    <link rel="stylesheet" type="text/css" href="Basic.css"/>
+  <script type="text/javascript" src="Document.js"></script>
+  <link rel="stylesheet" type="text/css" href="Basic.css"/>
+  <link rel="stylesheet" type="text/css" href="Menu.css"/>
       
 </head>
 <body onload="if (parent.adjustIFrameSize) parent.adjustIFrameSize(window);">
+
+  <div class="menu">
+  
+    <table class="menu"><tr>
+       
+       <td class="item"><a href="overview.html">overview</a></td>
+       <td class="item"><a href="license.html">license</a></td>
+       <td class="item"><a href="getting_started.html">getting started</a></td>
+       <td class="item"><a href="server_startup.html">server startup</a></td>
+       <td class="item"><a href="example_get.html">GET example</a></td>
+       
+     </tr></table>
+  
+  </div>
+  
+  <div class="menu-underline"></div>
 
   <div>
   
@@ -61,20 +78,24 @@
       Windows is currently not supported, only UNIX systems.
       We are planning Windows support in the near future.
       Furthermore, the documentation currently only explains the basics of C2Serve.
-      A more detailed explanation is planned by the end of 2011.
       
       <br />
       <br />
           
       To figure out how C2Serve works you can start with the example in directory <code>c2s-example</code>.
-      This example shows how to create REST resources and methods and start the socket listener.
+      This example shows how to create REST resources and methods and how to start the socket listener.
       A more detailed look into C2Serve is provided by the tests in <code>c2s-test</code>, especially <code>c2s-test/rest</code>.
+      The getting started section explains how to build the C2Serve libraries from source.
+      Alternatively you can also integrate the C2Serve's CMakeLists.txt into your build environment. 
+      
       The following section also explains the basic steps to create a web service using C2Serve.
-    
     
     </div>
     
   </div>
+
+  <script type="text/javascript" src="http://fc.webmasterpro.de/counter.php?name=c2serve"></script>
+  <noscript><div><img src="http://fc.webmasterpro.de/as_noscript.php?name=c2serve" style="width:1px;height:1px;" alt="" /></div></noscript>
 
 </body>
 </html>
