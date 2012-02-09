@@ -105,3 +105,10 @@ h2
   margin-top: 50px;
   font-size: 14pt;
 }
+
+h3
+{
+  text-align: left;
+  margin-top: 20px;
+  font-size: 12pt;
+}
