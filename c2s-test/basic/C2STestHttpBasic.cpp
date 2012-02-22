@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST2 )
   c2s::C2SHttpRequestHeader header;
 
   std::string sChunk1 = "\n\nPOST /c2s/test/http-parser/ HTTP/1.1\r\nAccept: text/html,";
-  std::string sChunk2 = "application/xhtml+xml,application/xml;q=0.9,*/*;q=0.834\r\nContent-Length: 44\nContent-Type: application/x-www";
+  std::string sChunk2 = "application/xhtml+xml;charset=UTF-8,application/xml;q=0.9,*/*;q=0.834\r\nContent-Length: 44\nContent-Type: application/x-www";
   std::string sChunk3 = "-form-urlencoded\r";
   std::string sChunk4 = "\n\r\nThisIsMyContent\n\n\nThis is my content part II";
   parser.parse( sChunk1.c_str() , sChunk1.size() , &header );
@@ -188,6 +188,8 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST2 )
   BOOST_REQUIRE( !header.Fields.isAccept( c2s::C2SHttpMediaType::application__x_www_form_urlencoded ) );
 
   BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::text__html ).fQ == 1.f );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::text__html ).Charset == "ISO-8859-1" );
+  BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::application__xhtml_xml ).Charset == "UTF-8" );
   BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::application__xml ).fQ == 0.9f );
   BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::wildcard ).fQ == 0.834f );
 

@@ -49,6 +49,8 @@ namespace c2s
 
     std::string Type;
 
+    std::string Charset;
+
     float fQ;
 
     void detect( const char *data , unsigned int size );
@@ -81,6 +83,12 @@ namespace c2s
     void detectMediaType( const char *data , unsigned int size );
 
     void detectQualityValue( const char *data , unsigned int size );
+
+    void detectCharset( const char *data , unsigned int size );
+
+    bool isCharSet( const char *data , unsigned int size );
+
+    static const std::string sCharSetID;
 
     unsigned int iArgIdx;
 

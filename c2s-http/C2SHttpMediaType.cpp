@@ -48,6 +48,8 @@ namespace c2s
   const std::string C2SHttpMediaType::application__json = "application/json";
   const std::string C2SHttpMediaType::application__x_www_form_urlencoded = "application/x-www-form-urlencoded";
 
+  const std::string C2SHttpMediaType::sCharSetID = "charset";
+
   struct C2SHttpQualityInterpreter
   {
 
@@ -70,14 +72,37 @@ namespace c2s
 
   };
 
+  struct C2SHttpCharsetInterpreter
+  {
+
+    C2SHttpCharsetInterpreter()
+      : iArgIdx( 0 )
+    {};
+
+    void operator()( const char *data , unsigned int size )
+    {
+      if ( iArgIdx )
+        sCharset = std::string( data , size );
+
+      ++iArgIdx;
+    }
+
+    unsigned int iArgIdx;
+
+    std::string sCharset;
+
+  };
+
   C2SHttpMediaType::C2SHttpMediaType( const std::string &sType )
     : Type( sType ),
+      Charset( "ISO-8859-1" ),
       fQ( MEDIA_TYPE_QUALITY_DEFAULT ),
       iArgIdx( 0 )
   {};
 
   C2SHttpMediaType::C2SHttpMediaType()
     : Type( C2SHttpMediaType::wildcard ),
+      Charset( "ISO-8859-1" ),
       fQ( MEDIA_TYPE_QUALITY_DEFAULT ),
       iArgIdx( 0 )
   {};
@@ -91,7 +116,14 @@ namespace c2s
       throw C2SHttpException( "C2SHttpMediaType::operator():" , "Maximum arguments for media type is 2!" , BadRequest );
 
     if ( iArgIdx )
-      this->detectQualityValue( data , size );
+    {
+      if ( this->isCharSet( data , size ) )
+      {
+        this->detectCharset( data , size );
+      }
+      else
+        this->detectQualityValue( data , size );
+    }
 
     ++iArgIdx;
   }
@@ -117,6 +149,33 @@ namespace c2s
     C2SHttpQualityInterpreter qv;
     splitNhandle( data , size , '=' , &qv );
     fQ = qv.fValue;
+  }
+
+  void C2SHttpMediaType::detectCharset( const char *data , unsigned int size )
+  {
+    C2SHttpCharsetInterpreter charSetInterpreter;
+    splitNhandle( data , size , '=' , &charSetInterpreter );
+    Charset = charSetInterpreter.sCharset;
+  }
+
+  bool C2SHttpMediaType::isCharSet( const char *data , unsigned int size )
+  {
+    while ( size && *data == ' ' )
+    {
+      --size;
+      ++data;
+    }
+
+    if ( size < sCharSetID.size() )
+      return false;
+
+    for ( unsigned int i = 0; i < sCharSetID.size(); ++i, ++data )
+    {
+      if ( sCharSetID[ i ] != *data )
+        return false;
+    }
+
+    return true;
   }
 
 }
