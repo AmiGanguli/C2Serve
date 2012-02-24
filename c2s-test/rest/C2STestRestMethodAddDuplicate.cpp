@@ -45,6 +45,7 @@ namespace c2s
     {
       C2SRestMethodPrototypeGET<unsigned int>::addPathParameter( "arg11" , &m_iArg11 );
       C2SRestMethodPrototypeGET<unsigned int>::addPathParameter( "arg22" , &m_iArg22 );
+      C2SRestMethodPrototypeGET<unsigned int>::addQueryParameter( "arg33" , &m_iArg33 , "arg33_default" );
     };
 
     C2SHttpResponse *C2STestRestMethodAddDuplicate::process()

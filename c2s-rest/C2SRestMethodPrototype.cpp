@@ -80,6 +80,11 @@ namespace c2s
     return this->process();
   }
 
+  void C2SRestMethodPrototype::addQueryParameter( const std::string &sParameterID , std::string *pParameterObjectToWrite , const char *pParameterDefaultValue )
+  {
+    this->addQueryParameter( sParameterID , pParameterObjectToWrite , std::string( pParameterDefaultValue ) );
+  }
+
   C2SHttpResponse *C2SRestMethodPrototype::buildResponse( C2SHttpStatus status ) const
   {
     return C2SHttpResponse::build( status );

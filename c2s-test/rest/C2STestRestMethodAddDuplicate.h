@@ -56,6 +56,8 @@ namespace c2s
 
       unsigned int m_iArg22;
 
+      std::string m_iArg33;
+
     };
 
   }

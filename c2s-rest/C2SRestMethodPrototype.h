@@ -78,6 +78,8 @@ namespace c2s
     template <class Type>
     void addQueryParameter( const std::string &sParameterID , Type *pParameterObjectToWrite , const Type &parameterDefaultValue );
 
+    void addQueryParameter( const std::string &sParameterID , std::string *pParameterObjectToWrite , const char *pParameterDefaultValue );
+
     template <class Type>
     void addQueryParameter( const std::string &sParameterID , Type *pParameterObjectToWrite );
 
