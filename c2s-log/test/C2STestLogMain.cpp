@@ -34,17 +34,25 @@
 
 #include "C2STestLogPublication.h"
 
-#include "C2SLogInterface.h"
+#include "C2SLogBase.h"
 #include "C2SLogSimpleMessageFactory.h"
 
 using namespace c2s;
 using namespace c2s::test;
 
-BOOST_AUTO_TEST_CASE( URLCoding )
+void checkLogSimpleMessageForLogLevel( ELogLevel logLevelToUse )
 {
-  C2STestLogPublication simpleMessageTestPublication;
+  C2SLogBase::LogLevel = logLevelToUse;
+  C2STestLogPublication simpleMessageTestPublication( logLevelToUse );
   C2SLogSimpleMessageFactory simpleMessageFactory( simpleMessageTestPublication );
   C2SLogInterface *pTestLog = simpleMessageFactory.createLogInstance();
   pTestLog->error( "ERROR" );
+  pTestLog->warning( "WARNING" );
   delete pTestLog;
+}
+
+BOOST_AUTO_TEST_CASE( LogSimpleMessage )
+{
+  checkLogSimpleMessageForLogLevel( Error );
+  checkLogSimpleMessageForLogLevel( Warning );
 }

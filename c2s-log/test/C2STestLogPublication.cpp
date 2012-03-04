@@ -40,7 +40,8 @@ namespace c2s
   namespace test
   {
 
-    C2STestLogPublication::C2STestLogPublication()
+    C2STestLogPublication::C2STestLogPublication( ELogLevel logLevelUsed )
+      : m_logLevelUsed( logLevelUsed )
     {
     }
 
@@ -51,6 +52,13 @@ namespace c2s
     void C2STestLogPublication::publishMessage( const std::string &sMessage ) const
     {
       BOOST_MESSAGE( "Published '" << sMessage << "'" );
+      this->checkIfMessageIsAllowedToBePublished( sMessage );
+    }
+
+    void C2STestLogPublication::checkIfMessageIsAllowedToBePublished( const std::string &sMessage ) const
+    {
+      if ( m_logLevelUsed < Warning )
+        BOOST_CHECK( sMessage != "WARNING" );
     }
 
   }

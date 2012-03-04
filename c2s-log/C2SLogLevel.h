@@ -29,42 +29,20 @@
 
  */
 
-#include "C2SLogBase.h"
-
-#include "C2SLogMutex.h"
-#include "C2SLogPublicationInterface.h"
-
-#include "Lock.h"
+#ifndef C2SLOGLEVEL_H_
+#define C2SLOGLEVEL_H_
 
 namespace c2s
 {
 
-  ELogLevel C2SLogBase::LogLevel = Warning;
-
-  C2SLogBase::C2SLogBase( const C2SLogPublicationInterface &logPublication )
-    : m_logPublication( logPublication ),
-      m_pLogMutex( new C2SLogMutex() )
+  typedef enum
   {
-  }
 
-  C2SLogBase::~C2SLogBase()
-  {
-    delete m_pLogMutex;
-  }
+    Error = 0,
+    Warning = 1
 
-  void C2SLogBase::error( const std::string &sLogMessage ) const
-  {
-    thread::Lock<C2SLogMutex> m_lock( m_pLogMutex );
-    m_logPublication.publishMessage( sLogMessage );
-  }
-
-  void C2SLogBase::warning( const std::string &sLogMessage ) const
-  {
-    if ( LogLevel >= Warning )
-    {
-      thread::Lock<C2SLogMutex> m_lock( m_pLogMutex );
-      m_logPublication.publishMessage( sLogMessage );
-    }
-  }
+  } ELogLevel;
 
 }
+
+#endif /* C2SLOGLEVEL_H_ */

@@ -33,6 +33,7 @@
 #define C2STESTLOGPUBLICATION_H_
 
 #include "C2SLogPublicationInterface.h"
+#include "C2SLogLevel.h"
 
 namespace c2s
 {
@@ -44,11 +45,17 @@ namespace c2s
     {
     public:
 
-      C2STestLogPublication();
+      C2STestLogPublication( ELogLevel logLevelUsed );
 
       virtual ~C2STestLogPublication();
 
       virtual void publishMessage( const std::string &sMessage ) const;
+
+    private:
+
+      void checkIfMessageIsAllowedToBePublished( const std::string &sMessage ) const;
+
+      ELogLevel m_logLevelUsed;
 
     };
 

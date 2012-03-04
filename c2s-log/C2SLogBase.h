@@ -33,6 +33,7 @@
 #define C2SLOGBASE_H_
 
 #include "C2SLogInterface.h"
+#include "C2SLogLevel.h"
 
 namespace c2s
 {
@@ -46,6 +47,10 @@ namespace c2s
     virtual ~C2SLogBase();
 
     virtual void error( const std::string &sLogMessage ) const;
+
+    virtual void warning( const std::string &sLogMessage ) const;
+
+    static ELogLevel LogLevel;
 
   protected:
 
