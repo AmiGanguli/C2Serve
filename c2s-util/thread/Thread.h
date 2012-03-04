@@ -133,7 +133,7 @@ namespace c2s
     inline void Thread<Runnable>::run()
     {
 #ifdef USE_BOOST_THREADS
-      Lock lock( m_pMutex );
+      Lock<Mutex> lock( m_pMutex );
 #endif
 
       assert( m_runnable != NULL );
@@ -154,7 +154,7 @@ namespace c2s
       Thread *pThread = reinterpret_cast<Thread*>( data );
 
       {
-        Lock lock( pThread->m_pMutex );
+        Lock<Mutex> lock( pThread->m_pMutex );
 
         pThread->run();
       }
@@ -167,7 +167,7 @@ namespace c2s
     {
       if ( m_pthread )
       {
-        Lock lock( m_pMutex );
+        Lock<Mutex> lock( m_pMutex );
 
         int status = pthread_detach( m_pthread );
         if ( status )
@@ -186,7 +186,7 @@ namespace c2s
     template <class Runnable>
     inline void Thread<Runnable>::start()
     {
-      Lock lock( m_pMutex );
+      Lock<Mutex> lock( m_pMutex );
 
       boost::thread athread( *this );
     }

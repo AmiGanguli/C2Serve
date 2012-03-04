@@ -15,6 +15,7 @@ target_link_libraries( c2s_test_http_basic
   c2s_rest
   c2s_http
   c2s_core
+  c2s_log
   c2s_util
   ${Boost_LIBRARIES}
   ${C2S_SYSLIBS}

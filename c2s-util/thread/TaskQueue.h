@@ -93,13 +93,13 @@ namespace c2s
 
       void join()
       {
-        Lock lock( &m_runningMutex );
+        Lock<Mutex> lock( &m_runningMutex );
         m_workers.join();
       }
 
       void queue( TaskBase *task )
       {
-        Lock lock( &m_mutex );
+        Lock<Mutex> lock( &m_mutex );
         m_tasks.push_back( task );
         if ( !m_bIsRunning )
         {
@@ -136,7 +136,7 @@ namespace c2s
 
       TaskBase *detach()
       {
-        Lock lock( &m_mutex );
+        Lock<Mutex> lock( &m_mutex );
 
         assert( m_tasks.size() );
 

@@ -45,7 +45,7 @@ namespace c2s
     {
 //          BOOST_MESSAGE( "startup server" );
 
-      c2s::thread::Lock lock( &m_mutex );
+      c2s::thread::Lock<c2s::thread::Mutex> lock( &m_mutex );
 
       m_serviceSettings.iPort = iPort;
 
@@ -57,7 +57,7 @@ namespace c2s
 
     C2STestServerRunner::C2STestServerRunner( const std::list<C2SHttpResourcePrototype*> &resources , unsigned short iPort )
     {
-      c2s::thread::Lock lock( &m_mutex );
+      c2s::thread::Lock<c2s::thread::Mutex> lock( &m_mutex );
 
       m_serviceSettings.iPort = iPort;
 
@@ -78,7 +78,7 @@ namespace c2s
 
     C2STestServerRunner::~C2STestServerRunner()
     {
-      c2s::thread::Lock lock( &m_mutex );
+      c2s::thread::Lock<c2s::thread::Mutex> lock( &m_mutex );
 
       BOOST_MESSAGE( "shutdown server" );
       m_pHttpServerRuntime->shutdown();

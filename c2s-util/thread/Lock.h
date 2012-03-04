@@ -40,19 +40,20 @@ namespace c2s
   namespace thread
   {
 
+    template <class Lockable>
     class Lock
     {
     public:
 
-      Lock( Mutex *pMutex )
-        : m_mutex( *pMutex )
+      Lock( Lockable *pLockable )
+        : m_lockable( *pLockable )
       {
-        m_mutex.lock();
+        m_lockable.lock();
       }
 
       virtual ~Lock()
       {
-        m_mutex.unlock();
+        m_lockable.unlock();
       }
 
     private:
@@ -61,7 +62,7 @@ namespace c2s
 
       Lock &operator=( const Lock &lock );
 
-      Mutex &m_mutex;
+      Lockable &m_lockable;
 
     };
 

@@ -56,6 +56,7 @@ set( C2Serve_LIBRARIES
   c2s_rest
   c2s_http
   c2s_core
+  c2s_log
   c2s_util
 )
 

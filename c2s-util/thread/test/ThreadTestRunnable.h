@@ -74,7 +74,7 @@ namespace c2s
 
         void run()
         {
-          c2s::thread::Lock lock( &m_mutex );
+          c2s::thread::Lock<c2s::thread::Mutex> lock( &m_mutex );
 
           m_globalMutex.lock();
           BOOST_CHECK( !m_bRunning );
@@ -98,7 +98,7 @@ namespace c2s
 
         int runs()
         {
-          c2s::thread::Lock lock( &m_mutex );
+          c2s::thread::Lock<c2s::thread::Mutex> lock( &m_mutex );
           return m_iRunCounter;
         }
 

@@ -93,7 +93,7 @@ namespace c2s
 #endif
 
     {
-      c2s::thread::Lock lock( &m_acceptMutex );
+      c2s::thread::Lock<c2s::thread::Mutex> lock( &m_acceptMutex );
 
       if ( m_bInterrupted )
         return;

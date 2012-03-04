@@ -38,6 +38,7 @@ namespace c2s
 {
   class C2SSocketListener;
   class C2SDataHandlingInterface;
+  class C2SLogAbstractFactory;
 
   struct C2SSettings;
 
@@ -102,6 +103,8 @@ namespace c2s
     void shutdownInternal();
 
     C2SSocketListener *m_pSocketListener;
+
+    C2SLogAbstractFactory *m_pLogFactory;
 
     volatile bool m_bIsRunning;
 

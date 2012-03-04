@@ -72,7 +72,7 @@ namespace c2s
     void C2STestRestCheckMultiThreading::run()
     {
       c2s::C2SHttpResponse response = m_request.process();
-      c2s::thread::Lock lock( c2s::test::C2STestRestFixture::pGlobalMutex );
+      c2s::thread::Lock<c2s::thread::Mutex> lock( c2s::test::C2STestRestFixture::pGlobalMutex );
       response_check.check( response );
     }
 

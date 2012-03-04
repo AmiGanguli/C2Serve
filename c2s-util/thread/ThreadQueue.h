@@ -153,7 +153,7 @@ namespace c2s
     template <class Runnable>
     void ThreadQueue<Runnable>::queue( Runnable *pRunnable )
     {
-      Lock writeLock( &m_writeMutex );
+      Lock<Mutex> writeLock( &m_writeMutex );
       ++m_iSize;
       m_threads.push_back( new ThreadQueueRunner( pRunnable , this ) );
     }
@@ -164,7 +164,7 @@ namespace c2s
       //TODO: This won't block on windows
       m_occupiedMutex.lock();
 
-      Lock writeLock( &m_writeMutex );
+      Lock<Mutex> writeLock( &m_writeMutex );
 
 #ifdef DEBUG
       assert( !m_bLocked );
@@ -201,13 +201,13 @@ namespace c2s
     template <class Runnable>
     void ThreadQueue<Runnable>::join()
     {
-      Lock lock( &m_busyMutex );
+      Lock<Mutex> lock( &m_busyMutex );
     }
 
     template <class Runnable>
     void ThreadQueue<Runnable>::reregister( ThreadQueueRunner *pRunner )
     {
-      Lock writeLock( &m_writeMutex );
+      Lock<Mutex> writeLock( &m_writeMutex );
 
 #ifdef DEBUG
       assert( !m_bLocked );
@@ -246,7 +246,7 @@ namespace c2s
     template <class Runnable>
     void ThreadQueue<Runnable>::ThreadQueueRunner::run()
     {
-      Lock lock( &m_mutex );
+      Lock<Mutex> lock( &m_mutex );
 
       m_runnable.run();
       assert( m_pQueue );

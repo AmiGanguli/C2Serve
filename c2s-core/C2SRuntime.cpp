@@ -36,6 +36,7 @@
 #include "C2SSocketInfo.h"
 #include "C2SStatusSetter.h"
 #include "C2SSocketListener.h"
+#include "C2SLogSimpleMessageFactory.h"
 
 #include "ThreadQueue.h"
 #include "FileUtils.h"
@@ -47,6 +48,8 @@ namespace c2s
 
   C2SRuntime::C2SRuntime( const C2SSettings &settings , C2SDataHandlingInterface *pDataHandling )
     : m_pDataHandling( pDataHandling ),
+//      m_pLogFactory( new C2SLogSimpleMessageFactory() ),
+      m_pLogFactory( NULL ),
       m_bIsRunning( false ),
       m_bIsOnStartup( false ),
       m_bIsOnShutdown( false )
@@ -61,6 +64,7 @@ namespace c2s
   C2SRuntime::~C2SRuntime()
   {
     delete m_pSocketListener;
+    delete m_pLogFactory;
   }
 
   void C2SRuntime::run()
