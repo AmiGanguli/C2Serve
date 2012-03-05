@@ -43,16 +43,34 @@ using namespace c2s::test;
 void checkLogSimpleMessageForLogLevel( ELogLevel logLevelToUse )
 {
   C2SLogBase::LogLevel = logLevelToUse;
+  BOOST_MESSAGE( "-- Checking log level '" << logLevel2String( logLevelToUse ) << "' --" );
   C2STestLogPublication simpleMessageTestPublication( logLevelToUse );
   C2SLogSimpleMessageFactory simpleMessageFactory( simpleMessageTestPublication );
   C2SLogInterface *pTestLog = simpleMessageFactory.createLogInstance();
   pTestLog->error( "ERROR" );
   pTestLog->warning( "WARNING" );
+  pTestLog->note( "NOTE" );
+  pTestLog->info( "INFO" );
+  pTestLog->debug( "DEBUG" );
+  pTestLog->verbose( "VERBOSE" );
   delete pTestLog;
+}
+
+BOOST_AUTO_TEST_CASE( Basic )
+{
+  BOOST_CHECK( Warning > Error );
+  BOOST_CHECK( Note > Warning );
+  BOOST_CHECK( Info > Note );
+  BOOST_CHECK( Debug > Info );
+  BOOST_CHECK( Verbose > Debug );
 }
 
 BOOST_AUTO_TEST_CASE( LogSimpleMessage )
 {
   checkLogSimpleMessageForLogLevel( Error );
   checkLogSimpleMessageForLogLevel( Warning );
+  checkLogSimpleMessageForLogLevel( Note );
+  checkLogSimpleMessageForLogLevel( Info );
+  checkLogSimpleMessageForLogLevel( Debug );
+  checkLogSimpleMessageForLogLevel( Verbose );
 }

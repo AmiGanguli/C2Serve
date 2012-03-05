@@ -8,6 +8,7 @@ include_directories(
 
 add_library( c2s_log
   C2SLogBase
+  C2SLogLevel
   C2SLogImplSimpleMessage
   C2SLogSimpleMessageFactory
  )

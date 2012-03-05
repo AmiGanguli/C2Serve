@@ -32,6 +32,8 @@
 #ifndef C2SLOGLEVEL_H_
 #define C2SLOGLEVEL_H_
 
+#include <string>
+
 namespace c2s
 {
 
@@ -39,9 +41,15 @@ namespace c2s
   {
 
     Error = 0,
-    Warning = 1
+    Warning = 1,
+    Note = 2,
+    Info = 3,
+    Debug = 4,
+    Verbose = 5
 
   } ELogLevel;
+
+  std::string logLevel2String( ELogLevel logLevel );
 
 }
 

@@ -50,11 +50,21 @@ namespace c2s
 
     virtual void warning( const std::string &sLogMessage ) const;
 
+    virtual void note( const std::string &sLogMessage ) const;
+
+    virtual void info( const std::string &sLogMessage ) const;
+
+    virtual void debug( const std::string &sLogMessage ) const;
+
+    virtual void verbose( const std::string &sLogMessage ) const;
+
     static ELogLevel LogLevel;
 
   protected:
 
     C2SLogBase( const C2SLogPublicationInterface &logPublication );
+
+    void publishMessageSynchronized( const std::string &sLogMessage ) const;
 
     const C2SLogPublicationInterface &m_logPublication;
 

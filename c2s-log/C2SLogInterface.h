@@ -48,6 +48,14 @@ namespace c2s
 
     virtual void warning( const std::string &sLogMessage ) const = 0;
 
+    virtual void note( const std::string &sLogMessage ) const = 0;
+
+    virtual void info( const std::string &sLogMessage ) const = 0;
+
+    virtual void debug( const std::string &sLogMessage ) const = 0;
+
+    virtual void verbose( const std::string &sLogMessage ) const = 0;
+
   protected:
 
     C2SLogInterface(){};

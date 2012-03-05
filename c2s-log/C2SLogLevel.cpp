@@ -29,53 +29,29 @@
 
  */
 
-#include "C2STestLogPublication.h"
-
-#include <iostream>
-#include <boost/test/unit_test.hpp>
+#include "C2SLogLevel.h"
 
 namespace c2s
 {
 
-  namespace test
+  std::string logLevel2String( ELogLevel logLevel )
   {
+    if ( logLevel == Error )
+      return "Error";
 
-    C2STestLogPublication::C2STestLogPublication( ELogLevel logLevelUsed )
-      : m_logLevelUsed( logLevelUsed )
-    {
-    }
+    if ( logLevel == Warning )
+      return "Warning";
 
-    C2STestLogPublication::~C2STestLogPublication()
-    {
-    }
+    if ( logLevel == Note )
+      return "Note";
 
-    void C2STestLogPublication::publishMessage( const std::string &sMessage ) const
-    {
-      BOOST_MESSAGE( "Published '" << sMessage << "'" );
-      this->checkIfMessageIsAllowedToBePublished( sMessage );
-    }
+    if ( logLevel == Info )
+      return "Info";
 
-    void C2STestLogPublication::checkIfMessageIsAllowedToBePublished( const std::string &sMessage ) const
-    {
-      if ( m_logLevelUsed < Warning )
-        BOOST_CHECK( sMessage != "WARNING" );
+    if ( logLevel == Debug )
+      return "Debug";
 
-      if ( m_logLevelUsed < Note )
-        BOOST_CHECK( sMessage != "NOTE" );
-
-      if ( m_logLevelUsed < Info )
-        BOOST_CHECK( sMessage != "INFO" );
-
-      if ( m_logLevelUsed < Warning )
-        BOOST_CHECK( sMessage != "WARNING" );
-
-      if ( m_logLevelUsed < Debug )
-        BOOST_CHECK( sMessage != "DEBUG" );
-
-      if ( m_logLevelUsed < Verbose )
-        BOOST_CHECK( sMessage != "VERBOSE" );
-    }
-
+    return "Verbose";
   }
 
 }

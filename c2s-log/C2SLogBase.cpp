@@ -54,17 +54,43 @@ namespace c2s
 
   void C2SLogBase::error( const std::string &sLogMessage ) const
   {
-    thread::Lock<C2SLogMutex> m_lock( m_pLogMutex );
-    m_logPublication.publishMessage( sLogMessage );
+    this->publishMessageSynchronized( sLogMessage );
   }
 
   void C2SLogBase::warning( const std::string &sLogMessage ) const
   {
     if ( LogLevel >= Warning )
-    {
-      thread::Lock<C2SLogMutex> m_lock( m_pLogMutex );
-      m_logPublication.publishMessage( sLogMessage );
-    }
+      this->publishMessageSynchronized( sLogMessage );
+  }
+
+  void C2SLogBase::note( const std::string &sLogMessage ) const
+  {
+    if ( LogLevel >= Note )
+      this->publishMessageSynchronized( sLogMessage );
+  }
+
+  void C2SLogBase::info( const std::string &sLogMessage ) const
+  {
+    if ( LogLevel >= Info )
+      this->publishMessageSynchronized( sLogMessage );
+  }
+
+  void C2SLogBase::debug( const std::string &sLogMessage ) const
+  {
+    if ( LogLevel >= Debug )
+      this->publishMessageSynchronized( sLogMessage );
+  }
+
+  void C2SLogBase::verbose( const std::string &sLogMessage ) const
+  {
+    if ( LogLevel >= Verbose )
+      this->publishMessageSynchronized( sLogMessage );
+  }
+
+  void C2SLogBase::publishMessageSynchronized( const std::string &sLogMessage ) const
+  {
+    thread::Lock<C2SLogMutex> m_lock( m_pLogMutex );
+    m_logPublication.publishMessage( sLogMessage );
   }
 
 }
