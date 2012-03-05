@@ -39,7 +39,11 @@
 namespace c2s
 {
 
-  ELogLevel C2SLogBase::LogLevel = Warning;
+#ifdef _DEBUG
+  ELogLevel C2SLogBase::LogLevel = Debug;
+#else
+  ELogLevel C2SLogBase::LogLevel = Info;
+#endif
 
   C2SLogBase::C2SLogBase( const C2SLogPublicationInterface &logPublication )
     : m_logPublication( logPublication ),
@@ -90,7 +94,7 @@ namespace c2s
   void C2SLogBase::publishMessageSynchronized( const std::string &sLogMessage ) const
   {
     thread::Lock<C2SLogMutex> m_lock( m_pLogMutex );
-    m_logPublication.publishMessage( sLogMessage );
+    m_logPublication.writeLine( sLogMessage );
   }
 
 }

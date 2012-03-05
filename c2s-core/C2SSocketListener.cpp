@@ -34,6 +34,7 @@
 #include "C2SRuntime.h"
 #include "C2SSocketInfo.h"
 #include "C2SSocketAcceptHandler.h"
+#include "C2SLogInterface.h"
 
 #include "ThreadQueue.h"
 #include "StringUtils.h"
@@ -43,11 +44,12 @@
 namespace c2s
 {
 
-  C2SSocketListener::C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SDataHandlingInterface &dataHandling )
+  C2SSocketListener::C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SDataHandlingInterface &dataHandling , const C2SLogInterface &logInstance )
     : m_settings( settings ),
       m_dataHandling( dataHandling ),
       m_pSocketInfo( new C2SSocketInfo() ),
-      m_bKeepRunning( false )
+      m_bKeepRunning( false ),
+      m_logInstance( logInstance )
   {
   }
 
@@ -87,9 +89,7 @@ namespace c2s
 
   void C2SSocketListener::interrupt()
   {
-#ifdef DEBUG
-    std::cout << "Shutdown socket lister, port: " << m_settings.iPort << std::endl;
-#endif
+    m_logInstance.note( "Shutdown socket lister, port " + c2s::util::toString( m_settings.iPort ) );
 
     m_bKeepRunning = false;
 
@@ -133,10 +133,7 @@ namespace c2s
     if ( m_pSocketInfo->SocketDescriptor == INVALID_SOCKET )
       throw C2SSocketListenerException( "C2SSocketListener::connect: Could not create socket! Error: " + c2s::util::toString( WSAGetLastError() ) );
 
-#ifdef DEBUG
-    //m_pLogger->debug( "Bind socket; port: " + c2s::util::toString( m_settings.iPort ) );
-    std::cout << "Bind socket; port: " << m_settings.iPort << std::endl;
-#endif
+    m_logInstance.note( "Binding socket, port " + c2s::util::toString( m_settings.iPort ) );
 
     memset( &addr , 0 , sizeof( SOCKADDR_IN ) );
     addr.sin_family = AF_INET;
@@ -147,10 +144,7 @@ namespace c2s
     if( ret == SOCKET_ERROR )
       throw C2SSocketListenerException( "C2SSocketListener::connect: Could not bind socket! Error: " + c2s::util::toString( WSAGetLastError() ) );
 
-#ifdef DEBUG
-    //m_pLogger->debug( "Create listener; size of backlog queue: " + c2s::util::toString<int>( m_settings.iSizeBacklogQueue ) );
-    std::cout << "Create listener; size of backlog queue: " << m_settings.iSizeBacklogQueue << std::endl;
-#endif
+    m_logInstance.note( "Creating socket listener (size of backlog queue: " + c2s::util::toString( m_settings.iSizeBacklogQueue ) + ")" );
 
     ret = listen( m_pSocketInfo->SocketDescriptor , m_settings.iSizeBacklogQueue );
     if ( ret == SOCKET_ERROR )
@@ -189,18 +183,14 @@ namespace c2s
     //htons: convert port number in host byte order to port number in network byte order
     serverAddress.sin_port = htons( m_settings.iPort );
 
-#ifdef DEBUG
-    std::cout << "Binding socket; port: " << m_settings.iPort << std::endl;
-#endif
+    m_logInstance.note( "Binding socket, port " + c2s::util::toString( m_settings.iPort ) );
 
     //bind socket to address
     //TODO: check error codes(??)
     if ( bind( m_pSocketInfo->SocketDescriptor , reinterpret_cast<struct sockaddr*>( &serverAddress ) , sizeof( serverAddress ) ) < 0 )
       throw C2SSocketListenerException( "C2SSocketConnectorUNIX::connect: Error binding socket!" );
 
-#ifdef DEBUG
-    std::cout << "Creating listener; size of backlog queue: " << m_settings.iSizeBacklogQueue << std::endl;
-#endif
+    m_logInstance.note( "Creating socket listener (size of backlog queue: " + c2s::util::toString( m_settings.iSizeBacklogQueue ) + ")" );
 
     //listen for connections on socket
     //second argument: size of the backlog queue(number of connections allowed waiting while process is handling a particular connection)

@@ -49,7 +49,7 @@ namespace c2s
     {
     }
 
-    void C2STestLogPublication::publishMessage( const std::string &sMessage ) const
+    void C2STestLogPublication::writeLine( const std::string &sMessage ) const
     {
       BOOST_MESSAGE( "Published '" << sMessage << "'" );
       this->checkIfMessageIsAllowedToBePublished( sMessage );

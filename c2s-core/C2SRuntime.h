@@ -39,6 +39,7 @@ namespace c2s
   class C2SSocketListener;
   class C2SDataHandlingInterface;
   class C2SLogAbstractFactory;
+  class C2SLogInterface;
 
   struct C2SSettings;
 
@@ -51,7 +52,7 @@ namespace c2s
   {
   public:
 
-    C2SRuntime( const C2SSettings &settings , C2SDataHandlingInterface *pDataHandling );
+    C2SRuntime( const C2SSettings &settings , C2SDataHandlingInterface *pDataHandling , C2SLogAbstractFactory *pLogFactory = NULL );
 
     virtual ~C2SRuntime();
 
@@ -105,6 +106,8 @@ namespace c2s
     C2SSocketListener *m_pSocketListener;
 
     C2SLogAbstractFactory *m_pLogFactory;
+
+    C2SLogInterface *m_pLogInstance;
 
     volatile bool m_bIsRunning;
 

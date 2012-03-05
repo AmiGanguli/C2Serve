@@ -11,6 +11,7 @@ add_library( c2s_log
   C2SLogLevel
   C2SLogImplSimpleMessage
   C2SLogSimpleMessageFactory
+  C2SLogPublicationImplStandardOutput
  )
 
 install( TARGETS 

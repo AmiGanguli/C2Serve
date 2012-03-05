@@ -42,6 +42,7 @@ namespace c2s
   struct C2SSocketInfo;
   class C2SSocketAcceptHandler;
   class C2SDataHandlingInterface;
+  class C2SLogInterface;
 
   struct C2SSocketListenerSettings
   {
@@ -72,7 +73,7 @@ namespace c2s
   {
   public:
 
-    C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SDataHandlingInterface &dataHandling );
+    C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SDataHandlingInterface &dataHandling , const C2SLogInterface &logInstance );
 
     virtual ~C2SSocketListener();
 
@@ -99,6 +100,8 @@ namespace c2s
     C2SSocketInfo *m_pSocketInfo;
 
     volatile bool m_bKeepRunning;
+
+    const C2SLogInterface &m_logInstance;
 
   };
 

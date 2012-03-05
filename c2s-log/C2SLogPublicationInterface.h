@@ -44,7 +44,7 @@ namespace c2s
 
     virtual ~C2SLogPublicationInterface(){};
 
-    virtual void publishMessage( const std::string &sMessage ) const = 0;
+    virtual void writeLine( const std::string &sMessage ) const = 0;
 
   protected:
 

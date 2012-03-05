@@ -49,7 +49,7 @@ namespace c2s
 
       virtual ~C2STestLogPublication();
 
-      virtual void publishMessage( const std::string &sMessage ) const;
+      virtual void writeLine( const std::string &sMessage ) const;
 
     private:
 

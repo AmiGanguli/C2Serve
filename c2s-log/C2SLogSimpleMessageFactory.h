@@ -33,14 +33,16 @@
 #define C2SLOGSIMPLEMESSAGEFACTORY_H_
 
 #include "C2SLogAbstractFactory.h"
+#include "C2SLogPublicationImplStandardOutput.h"
 
 namespace c2s
 {
-  class C2SLogPublicationInterface;
 
   class C2SLogSimpleMessageFactory : public C2SLogAbstractFactory
   {
   public:
+
+    C2SLogSimpleMessageFactory();
 
     C2SLogSimpleMessageFactory( const C2SLogPublicationInterface &logPublication );
 
@@ -49,6 +51,8 @@ namespace c2s
     virtual C2SLogInterface *createLogInstance() const;
 
   private:
+
+    static const C2SLogPublicationImplStandardOutput defaultLogPublication;
 
     const C2SLogPublicationInterface &m_logPublication;
 

@@ -36,6 +36,7 @@
 #include "C2SSocketInfo.h"
 #include "C2SStatusSetter.h"
 #include "C2SSocketListener.h"
+#include "C2SLogInterface.h"
 #include "C2SLogSimpleMessageFactory.h"
 
 #include "ThreadQueue.h"
@@ -46,25 +47,28 @@
 namespace c2s
 {
 
-  C2SRuntime::C2SRuntime( const C2SSettings &settings , C2SDataHandlingInterface *pDataHandling )
+  C2SRuntime::C2SRuntime( const C2SSettings &settings , C2SDataHandlingInterface *pDataHandling , C2SLogAbstractFactory *pLogFactory )
     : m_pDataHandling( pDataHandling ),
-//      m_pLogFactory( new C2SLogSimpleMessageFactory() ),
-      m_pLogFactory( NULL ),
+      m_pLogFactory( pLogFactory ),
       m_bIsRunning( false ),
       m_bIsOnStartup( false ),
       m_bIsOnShutdown( false )
   {
+    if ( !m_pLogFactory )
+      m_pLogFactory = new C2SLogSimpleMessageFactory();
+    m_pLogInstance = m_pLogFactory->createLogInstance();
     //TODO: set listeners from outside (allow multiple listeners)
     C2SSocketListenerSettings ls;
     ls.iPort = settings.iPort;
     ls.iNumThreads = settings.iNumThreads;
-    m_pSocketListener = new C2SSocketListener( ls , *m_pDataHandling );
+    m_pSocketListener = new C2SSocketListener( ls , *m_pDataHandling , *m_pLogInstance );
   }
 
   C2SRuntime::~C2SRuntime()
   {
     delete m_pSocketListener;
     delete m_pLogFactory;
+    delete m_pLogInstance;
   }
 
   void C2SRuntime::run()

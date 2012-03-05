@@ -29,32 +29,22 @@
 
  */
 
-#include "C2SLogSimpleMessageFactory.h"
-#include "C2SLogImplSimpleMessage.h"
+#include "C2SLogPublicationImplStandardOutput.h"
 
 namespace c2s
 {
 
-  const C2SLogPublicationImplStandardOutput C2SLogSimpleMessageFactory::defaultLogPublication = C2SLogPublicationImplStandardOutput();
-
-  C2SLogSimpleMessageFactory::C2SLogSimpleMessageFactory()
-    : m_logPublication( defaultLogPublication )
-  {
-
-  }
-
-  C2SLogSimpleMessageFactory::C2SLogSimpleMessageFactory( const C2SLogPublicationInterface &logPublication )
-    : m_logPublication( logPublication )
+  C2SLogPublicationImplStandardOutput::C2SLogPublicationImplStandardOutput()
   {
   }
 
-  C2SLogSimpleMessageFactory::~C2SLogSimpleMessageFactory()
+  C2SLogPublicationImplStandardOutput::~C2SLogPublicationImplStandardOutput()
   {
   }
 
-  C2SLogInterface *C2SLogSimpleMessageFactory::createLogInstance() const
+  void C2SLogPublicationImplStandardOutput::writeLine( const std::string &sMessage ) const
   {
-    return new C2SLogImplSimpleMessage( m_logPublication );
+    std::cout << sMessage << std::endl;
   }
 
 }
