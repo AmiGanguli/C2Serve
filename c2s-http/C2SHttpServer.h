@@ -32,6 +32,8 @@
 #ifndef C2SHTTPSERVER_H_
 #define C2SHTTPSERVER_H_
 
+#include <cstdlib>
+
 namespace c2s
 {
   class C2SRuntime;
@@ -39,6 +41,7 @@ namespace c2s
   class C2SHttpResourcePrototype;
   class C2SHttpResourcePrototypeList;
   class C2SHttpResourceManager;
+  class C2SLogAbstractFactory;
 
   struct C2SSettings;
 
@@ -53,7 +56,7 @@ namespace c2s
   {
   public:
 
-    C2SHttpServer( const C2SSettings &settings );
+    C2SHttpServer( const C2SSettings &settings , C2SLogAbstractFactory *pLogFactory = NULL );
 
     /**
      *

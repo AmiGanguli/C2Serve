@@ -41,11 +41,11 @@
 namespace c2s
 {
 
-  C2SHttpServer::C2SHttpServer( const C2SSettings &settings )
+  C2SHttpServer::C2SHttpServer( const C2SSettings &settings , C2SLogAbstractFactory *pLogFactory )
   {
     m_pHttpResourcePrototypes = new C2SHttpResourcePrototypeList();
     m_pHttpDataHandling = new C2SHttpDataHandlingImpl( *m_pHttpResourcePrototypes );
-    m_pServiceRuntime = new C2SRuntime( settings , m_pHttpDataHandling );
+    m_pServiceRuntime = new C2SRuntime( settings , m_pHttpDataHandling , pLogFactory );
   }
 
   C2SHttpServer::~C2SHttpServer()
