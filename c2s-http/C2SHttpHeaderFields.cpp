@@ -63,7 +63,9 @@ namespace c2s
     if ( sFieldName == FIELD_ACCEPT )
       m_accept = C2SHttpMediaTypeList::detect( sFieldValue.c_str() , sFieldValue.size() );
     else if ( sFieldName == FIELD_CONTENT_TYPE )
-      m_contentType.detect( sFieldValue.c_str() , sFieldValue.size() );
+    {
+      splitNhandle( sFieldValue.c_str() , sFieldValue.size() , ';' , &m_contentType );
+    }
     else if ( sFieldName == FIELD_CONTENT_LENGTH )
       m_iContentLength = c2s::util::toNumber<unsigned int>( sFieldValue );
   }

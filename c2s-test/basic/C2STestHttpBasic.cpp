@@ -131,8 +131,8 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST1 )
   c2s::C2SHttpRequestHeader header;
 
   std::string sChunk1 = "\n\nPOST /c2s/test/http-parser HTTP/1.1\r";
-  std::string sChunk2 = "\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.834\r\nContent-Length: 44\nContent-Type: application/x-www";
-  std::string sChunk3 = "-form-urlencoded\r\n\r\nThisIsMyContent\n\n\n";
+  std::string sChunk2 = "\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.834\r\nContent-Length: 44\nContent-Type: applicatio";
+  std::string sChunk3 = "n/json; charset=UTF-8\r\n\r\nThisIsMyContent\n\n\n";
   std::string sChunk4 = "This is my content part II";
   parser.parse( sChunk1.c_str() , sChunk1.size() , &header );
   parser.parse( sChunk2.c_str() , sChunk2.size() , &header );
@@ -153,7 +153,8 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST1 )
   BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::application__xml ).fQ == 0.9f );
   BOOST_CHECK( header.Fields.getAccept( c2s::C2SHttpMediaType::wildcard ).fQ == 0.834f );
 
-  BOOST_CHECK( header.Fields.getContentType().Type == c2s::C2SHttpMediaType::application__x_www_form_urlencoded );
+  BOOST_CHECK( header.Fields.getContentType().Type == c2s::C2SHttpMediaType::application__json );
+  BOOST_CHECK( header.Fields.getContentType().Charset == "UTF-8" );
   BOOST_CHECK( header.Fields.getContentType().fQ == 1.f );
 
   BOOST_REQUIRE( header.Fields.getContentLength() == 44 );
