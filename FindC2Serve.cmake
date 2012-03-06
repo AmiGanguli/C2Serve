@@ -25,6 +25,7 @@ if ( NOT DEFINED C2Serve_INCLUDE_ROOT_DIR )
 endif ( NOT DEFINED C2Serve_INCLUDE_ROOT_DIR )
 
 set( C2S_INCLUDE_DIRS_RELATIVE
+  c2s-log
   c2s-util
   c2s-util/io
   c2s-core
