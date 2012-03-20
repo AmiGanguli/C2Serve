@@ -38,6 +38,7 @@
 #include "C2STestRestMethodQueryFields.h"
 #include "C2STestRestMethodInvalidEntity.h"
 #include "C2STestRestMethodMediaTypeConverter.h"
+#include "C2STestRestMethodDELETE.h"
 
 #include "C2SRestResourcePrototype.h"
 #include "C2SRestException.h"
@@ -86,6 +87,7 @@ namespace c2s
       pRestResource1->registerMethodPrototype( new C2STestRestMethodMediaTypeConverter() );
       pRestResource1->registerMethodPrototype( new C2STestRestMethodInvalidEntity() );
       pRestResource1->registerMethodPrototype( new C2STestRestMethodThreading( pGlobalMutex ) );
+      pRestResource1->registerMethodPrototype( new C2STestRestMethodDELETE() );
       resources.push_back( pRestResource1 );
 
       resources.push_back( c2s::C2SRestResourcePrototype::createRestResourceWithContextRoot( "/" + sContextRootOfEmptyResource ) );

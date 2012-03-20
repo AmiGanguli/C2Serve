@@ -19,6 +19,7 @@ add_executable( c2s_test_rest
   C2STestRestMethodThreading
   C2STestRestMethodMediaTypeConverter
   C2STestRestMethodInvalidEntity
+  C2STestRestMethodDELETE
   C2STestRestEntityUnstreamerXML
   C2STestRestEntityUnstreamerJSON
   C2STestRestRequest

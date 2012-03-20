@@ -70,6 +70,7 @@ namespace c2s
       static void checkForWrongContentType();
       static void checkForMethodTypePOSTWithDuplicateGET();
       static void checkForWrongMethodTypePUT();
+      static void checkForMethodTypeDELETE();
       static void checkForWrongMethodTypeDELETE();
       static void checkPathParametersAndQueryParametersWithXMLResponseEntity();
       static void checkPathParametersAndQueryParametersWithJSONResponseEntity();
