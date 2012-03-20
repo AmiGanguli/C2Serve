@@ -33,6 +33,7 @@
 #define C2SRUNTIME_H_
 
 #include <list>
+#include <cstdlib>
 
 namespace c2s
 {
