@@ -43,7 +43,8 @@ namespace c2s
   C2SRestMatchMethodToRequest::C2SRestMatchMethodToRequest( const std::string &sContextRootOfResource , const C2SRestMethodPrototypeList &listOfAvailableMethodPrototypes , const C2SHttpRequest &requestToMatch )
     : m_sContextRootOfResource( sContextRootOfResource ),
       m_listOfAvailableMethodPrototypes( listOfAvailableMethodPrototypes ),
-      m_requestToMatch( requestToMatch )
+      m_requestToMatch( requestToMatch ),
+      m_bIsAvailableAsDifferentMethodType( false )
   {
   }
 
@@ -51,7 +52,27 @@ namespace c2s
   {
   }
 
-  C2SRestPathIDList C2SRestMatchMethodToRequest::createPathIDListFromRequest() const
+  C2SRestMethodPrototype *C2SRestMatchMethodToRequest::getPrototypeWithBestMatchAndPrepareFromURI()
+  {
+    if ( !m_listOfAvailableMethodPrototypes.size() )
+      return NULL;
+
+    C2SRestPathIDList pathList = this->createPathIDListFromRequest();
+    std::map<int,C2SRestMethodPrototype*> listOfMethodCandidatesSortedByDistanceToPathIDs = this->getMethodCandidatesSortedByDistanceToPathIDs( pathList );
+
+    if ( !listOfMethodCandidatesSortedByDistanceToPathIDs.size() )
+    {
+      if ( m_bIsAvailableAsDifferentMethodType )
+        throw C2SRestException( "C2SRestMatchMethodToRequest::getPrototypeWithBestMatchAndPrepareFromURI: " , "Method not allowed" , MethodNotAllowed );
+      return NULL;
+    }
+
+    C2SRestMethodPrototype *pPrototypeWithBestMatch = this->getPrototypeClosestToRequestByConsideringMediaType( listOfMethodCandidatesSortedByDistanceToPathIDs );
+    pPrototypeWithBestMatch->processPathIDs( pathList );
+    return pPrototypeWithBestMatch;
+  }
+
+  C2SRestPathIDList C2SRestMatchMethodToRequest::createPathIDListFromRequest()
   {
     const std::string &sCompleteRequestURI = m_requestToMatch.header().URI;
     int iSkipIdx = c2s::uriSkip( sCompleteRequestURI.c_str() , sCompleteRequestURI.size() , m_sContextRootOfResource.c_str() , m_sContextRootOfResource.size() , false );
@@ -62,7 +83,7 @@ namespace c2s
     return c2s::util::splitString( sCompleteRequestURI.substr( iSkipIdx , sCompleteRequestURI.size() ) , '/' , true );
   }
 
-  std::map<int,C2SRestMethodPrototype*> C2SRestMatchMethodToRequest::getMethodCandidatesSortedByDistanceToPathIDs( const C2SRestPathIDList &listOfRequestPathIDs ) const
+  std::map<int,C2SRestMethodPrototype*> C2SRestMatchMethodToRequest::getMethodCandidatesSortedByDistanceToPathIDs( const C2SRestPathIDList &listOfRequestPathIDs )
   {
     std::map<int,C2SRestMethodPrototype*> listOfMethodCandidatesSortedByDistanceToPathIDs;
     C2SRestMethodPrototypeList::const_iterator methodPrototypeIt = m_listOfAvailableMethodPrototypes.begin();
@@ -70,10 +91,16 @@ namespace c2s
     for ( ; methodPrototypeIt != methodPrototypeEnd; ++methodPrototypeIt )
     {
       C2SRestMethodPrototype *pCurrenMethodPrototypeObserved = *methodPrototypeIt;
-      int iDistanceToListOfPathIDs = pCurrenMethodPrototypeObserved->getDistanceToPathIDs( listOfRequestPathIDs );
 
+      int iDistanceToListOfPathIDs = pCurrenMethodPrototypeObserved->getDistanceToPathIDs( listOfRequestPathIDs );
       if ( iDistanceToListOfPathIDs < 0 ) //mismatch
         continue;
+
+      if ( pCurrenMethodPrototypeObserved->isMethodType( m_requestToMatch.header().Method ) == false )
+      {
+        m_bIsAvailableAsDifferentMethodType = true;
+        continue;
+      }
 
       //this must be prevented when adding methods to a resource
       if ( listOfMethodCandidatesSortedByDistanceToPathIDs.find( iDistanceToListOfPathIDs ) != listOfMethodCandidatesSortedByDistanceToPathIDs.end() )
@@ -99,22 +126,6 @@ namespace c2s
     }
 
     throw C2SRestException( "C2SRestMatchMethodToRequest::getPrototypeClosestToRequestByConsideringMediaType: " , "Method not allowed" , MethodNotAllowed );
-  }
-
-  C2SRestMethodPrototype *C2SRestMatchMethodToRequest::getPrototypeWithBestMatchAndPrepareFromURI() const
-  {
-    if ( !m_listOfAvailableMethodPrototypes.size() )
-      return NULL;
-
-    C2SRestPathIDList pathList = this->createPathIDListFromRequest();
-    std::map<int,C2SRestMethodPrototype*> listOfMethodCandidatesSortedByDistanceToPathIDs = this->getMethodCandidatesSortedByDistanceToPathIDs( pathList );
-
-    if ( !listOfMethodCandidatesSortedByDistanceToPathIDs.size() )
-      return NULL;
-
-    C2SRestMethodPrototype *pPrototypeWithBestMatch = this->getPrototypeClosestToRequestByConsideringMediaType( listOfMethodCandidatesSortedByDistanceToPathIDs );
-    pPrototypeWithBestMatch->processPathIDs( pathList );
-    return pPrototypeWithBestMatch;
   }
 
 }

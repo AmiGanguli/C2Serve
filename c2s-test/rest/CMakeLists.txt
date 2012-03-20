@@ -14,6 +14,7 @@ add_executable( c2s_test_rest
   ../C2STestServerRunner
   C2STestRestMethodAdd
   C2STestRestMethodAddDuplicate
+  C2STestRestMethodAddDuplicatePOST
   C2STestRestMethodQueryFields
   C2STestRestMethodThreading
   C2STestRestMethodMediaTypeConverter

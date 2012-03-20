@@ -81,7 +81,7 @@ namespace c2s
       checkPathParametersWithXMLResponseEntityAsDefault();
       checkForUndefinedContentType();
       checkForWrongContentType();
-      checkForWrongMethodTypePOST();
+      checkForMethodTypePOSTWithDuplicateGET();
       checkForWrongMethodTypePUT();
       checkForWrongMethodTypeDELETE();
       checkPathParametersAndQueryParametersWithXMLResponseEntity();
@@ -105,6 +105,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkContextRootForGET()
     {
+      BOOST_MESSAGE( "checkContextRootForGET" );
       checkResponse(
 
           c2s::test::C2STestRestRequest::
@@ -118,6 +119,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkContextRootForGETWithLeadingSlash()
     {
+      BOOST_MESSAGE( "checkContextRootForGETWithLeadingSlash" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -131,6 +133,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkContextRootForPOST()
     {
+      BOOST_MESSAGE( "checkContextRootForPOST" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -144,6 +147,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkContextRootForPUT()
     {
+      BOOST_MESSAGE( "checkContextRootForPUT" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -157,6 +161,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkContextRootForDELETE()
     {
+      BOOST_MESSAGE( "checkContextRootForDELETE" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -170,6 +175,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkResourceNotFound()
     {
+      BOOST_MESSAGE( "checkResourceNotFound" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -183,6 +189,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkResourceNotFoundDueToMissingSlash()
     {
+      BOOST_MESSAGE( "checkResourceNotFoundDueToMissingSlash" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -196,6 +203,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkResourceNotFoundDueToMissingPathParameters()
     {
+      BOOST_MESSAGE( "checkResourceNotFoundDueToMissingPathParameters" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -209,6 +217,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkResourceNotFoundDueToForbiddenPathParameters()
     {
+      BOOST_MESSAGE( "checkResourceNotFoundDueToForbiddenPathParameters" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -222,6 +231,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkEncodingAndDecodingOfQueryFields()
     {
+      BOOST_MESSAGE( "checkEncodingAndDecodingOfQueryFields" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -237,6 +247,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkEncodingAndDecodingOfQueryFieldsMissingQueryParameter()
     {
+      BOOST_MESSAGE( "checkEncodingAndDecodingOfQueryFieldsMissingQueryParameter" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -250,6 +261,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkInvalidEntityType()
     {
+      BOOST_MESSAGE( "checkInvalidEntityType" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -262,6 +274,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkPathParametersWithXMLResponseEntity()
     {
+      BOOST_MESSAGE( "checkPathParametersWithXMLResponseEntity" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -276,6 +289,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkPathParametersWithJSONResponseEntity()
     {
+      BOOST_MESSAGE( "checkPathParametersWithJSONResponseEntity" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -290,6 +304,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkPathParametersWithXMLResponseEntityAsDefault()
     {
+      BOOST_MESSAGE( "checkPathParametersWithXMLResponseEntityAsDefault" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -304,6 +319,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkForUndefinedContentType()
     {
+      BOOST_MESSAGE( "checkForUndefinedContentType" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -316,6 +332,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkForWrongContentType()
     {
+      BOOST_MESSAGE( "checkForWrongContentType" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -327,21 +344,24 @@ namespace c2s
         );
     }
 
-    void C2STestRestCheckServerResponses::checkForWrongMethodTypePOST()
+    void C2STestRestCheckServerResponses::checkForMethodTypePOSTWithDuplicateGET()
     {
+      BOOST_MESSAGE( "checkForMethodTypePOSTWithDuplicateGET" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
           build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
-          accept( c2s::C2SHttpMediaType::application__xml )
+          accept( c2s::C2SHttpMediaType::application__json )
           ,
-          c2s::test::C2STestRestResponse::build( c2s::MethodNotAllowed )
+          c2s::test::C2STestRestResponse::build( c2s::Created ).
+          entity( c2s::C2SHttpMediaType::application__json , "{6}" )
 
         );
     }
 
     void C2STestRestCheckServerResponses::checkForWrongMethodTypePUT()
     {
+      BOOST_MESSAGE( "checkForWrongMethodTypePUT" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -355,6 +375,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkForWrongMethodTypeDELETE()
     {
+      BOOST_MESSAGE( "checkForWrongMethodTypeDELETE" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -368,6 +389,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkPathParametersAndQueryParametersWithXMLResponseEntity()
     {
+      BOOST_MESSAGE( "checkPathParametersAndQueryParametersWithXMLResponseEntity" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -383,6 +405,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkPathParametersAndQueryParametersWithJSONResponseEntity()
     {
+      BOOST_MESSAGE( "checkPathParametersAndQueryParametersWithJSONResponseEntity" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -398,6 +421,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkPathParametersAndQueryParametersWithWrongQueryParameterType()
     {
+      BOOST_MESSAGE( "checkPathParametersAndQueryParametersWithWrongQueryParameterType" );
       //TODO: check '2k' (???)
       checkResponse (
 
@@ -413,6 +437,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkPathParametersAndQueryParametersWithWrongPathParameterType()
     {
+      BOOST_MESSAGE( "checkPathParametersAndQueryParametersWithWrongPathParameterType" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -427,6 +452,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkEmptyResourceContextRoot()
     {
+      BOOST_MESSAGE( "checkEmptyResourceContextRoot" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -440,6 +466,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkEmptyResourceContextRootWithLeadingSlash()
     {
+      BOOST_MESSAGE( "checkEmptyResourceContextRootWithLeadingSlash" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -453,6 +480,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkEmptyResourceMethodNotFound()
     {
+      BOOST_MESSAGE( "checkEmptyResourceMethodNotFound" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::
@@ -466,6 +494,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkXMLRequestEntityToJSONResponseEntity()
     {
+      BOOST_MESSAGE( "checkXMLRequestEntityToJSONResponseEntity" );
       std::string sEntityContent = "my content";
       std::string sEntityDataToSend = "<" + C2STestRestEntityUnstreamerXML::sRootElementID + ">";
       sEntityDataToSend += sEntityContent;
@@ -489,6 +518,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkJSONRequestEntityToXMLResponseEntity()
     {
+      BOOST_MESSAGE( "checkJSONRequestEntityToXMLResponseEntity" );
       std::string sEntityContent = "my content";
       std::string sEntityDataReceivedExpected = "<" + C2STestRestEntityStreamerXML<std::string>::sRootElement + ">";
       sEntityDataReceivedExpected += sEntityContent;
@@ -512,6 +542,7 @@ namespace c2s
 
     void C2STestRestCheckServerResponses::checkHTMLRequestEntityToJSONResponseEntityUnsupportedMediaTypeResponse()
     {
+      BOOST_MESSAGE( "checkHTMLRequestEntityToJSONResponseEntityUnsupportedMediaTypeResponse" );
       checkResponse (
 
           c2s::test::C2STestRestRequest::

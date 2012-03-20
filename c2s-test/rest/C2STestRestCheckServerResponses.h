@@ -68,7 +68,7 @@ namespace c2s
       static void checkPathParametersWithXMLResponseEntityAsDefault();
       static void checkForUndefinedContentType();
       static void checkForWrongContentType();
-      static void checkForWrongMethodTypePOST();
+      static void checkForMethodTypePOSTWithDuplicateGET();
       static void checkForWrongMethodTypePUT();
       static void checkForWrongMethodTypeDELETE();
       static void checkPathParametersAndQueryParametersWithXMLResponseEntity();

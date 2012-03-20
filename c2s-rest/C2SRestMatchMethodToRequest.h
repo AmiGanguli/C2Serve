@@ -51,13 +51,13 @@ namespace c2s
 
     virtual ~C2SRestMatchMethodToRequest();
 
-    C2SRestMethodPrototype *getPrototypeWithBestMatchAndPrepareFromURI() const;
+    C2SRestMethodPrototype *getPrototypeWithBestMatchAndPrepareFromURI();
 
   private:
 
-    C2SRestPathIDList createPathIDListFromRequest() const;
+    C2SRestPathIDList createPathIDListFromRequest();
 
-    std::map<int,C2SRestMethodPrototype*> getMethodCandidatesSortedByDistanceToPathIDs( const C2SRestPathIDList &listOfRequestPathIDs ) const;
+    std::map<int,C2SRestMethodPrototype*> getMethodCandidatesSortedByDistanceToPathIDs( const C2SRestPathIDList &listOfRequestPathIDs );
 
     C2SRestMethodPrototype *getPrototypeClosestToRequestByConsideringMediaType( const std::map<int,C2SRestMethodPrototype*> &listOfMethodCandidatesSortedByDistanceToPathIDs ) const;
 
@@ -66,6 +66,8 @@ namespace c2s
     const C2SRestMethodPrototypeList &m_listOfAvailableMethodPrototypes;
 
     const C2SHttpRequest &m_requestToMatch;
+
+    bool m_bIsAvailableAsDifferentMethodType;
 
   };
 

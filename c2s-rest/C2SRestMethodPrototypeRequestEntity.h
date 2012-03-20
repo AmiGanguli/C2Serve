@@ -38,6 +38,7 @@
 #include "C2SHttpEntityUnstreamerBase.h"
 
 #include <map>
+#include <iostream>
 
 namespace c2s
 {
@@ -91,12 +92,16 @@ namespace c2s
   void C2SRestMethodPrototypeRequestEntity<ResponseEntityType>::unstreamRequestEntity( const C2SHttpRequest &request )
   {
     C2SHttpEntityUnstreamerBase *pRequestEntityMediaTypeUnstreamer = this->detectRequestEntityUnstreamerForMediaType( request.header().Fields.getContentType() );
-    pRequestEntityMediaTypeUnstreamer->unstream( request.entity() );
+    if ( pRequestEntityMediaTypeUnstreamer )
+      pRequestEntityMediaTypeUnstreamer->unstream( request.entity() );
   }
 
   template <class ResponseEntityType>
   C2SHttpEntityUnstreamerBase *C2SRestMethodPrototypeRequestEntity<ResponseEntityType>::detectRequestEntityUnstreamerForMediaType( const C2SHttpMediaType &requestEntityMediaType )
   {
+    if ( m_requestEntityStreamersByMediaType.size() == 0 && requestEntityMediaType.Type == C2SHttpMediaType::wildcard )
+      return NULL;
+
     if ( !this->isMediaTypeInstalled( requestEntityMediaType ) )
       throw C2SRestException( "C2SRestMethodPrototypeRequestEntity::detectRequestEntityUnstreamerForMediaType: " , "Request media type cannot be handled by server" , UnsupportedMediaType );
 
