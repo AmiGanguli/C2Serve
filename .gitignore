@@ -1,5 +1,6 @@
 .DS_Store
 .cproject
 .project
+.metadata
 build/
 .svn/
