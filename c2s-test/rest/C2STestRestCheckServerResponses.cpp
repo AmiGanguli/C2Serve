@@ -520,7 +520,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPath ).
+          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPathToMethod + "/" + C2STestRestMethodMediaTypeConverter::sPathSegment ).
           accept( c2s::C2SHttpMediaType::application__json ).
           entity( c2s::C2SHttpMediaType::application__xml , sEntityDataToSend )
           ,
@@ -544,7 +544,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPath ).
+          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPathToMethod + "/" + C2STestRestMethodMediaTypeConverter::sPathSegment ).
           accept( c2s::C2SHttpMediaType::application__xml ).
           entity( c2s::C2SHttpMediaType::application__json , sEntityDataToSend )
           ,
@@ -561,7 +561,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPath ).
+          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPathToMethod + "/" + C2STestRestMethodMediaTypeConverter::sPathSegment ).
           accept( c2s::C2SHttpMediaType::application__xml ).
           entity( c2s::C2SHttpMediaType::text__html , "<html>my content</html>" )
           ,

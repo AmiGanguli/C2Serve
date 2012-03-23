@@ -52,7 +52,9 @@ namespace c2s
 
       virtual C2SRestMethodPrototype *clone() const;
 
-      static const std::string sPath;
+      static const std::string sPathToMethod;
+
+      static const std::string sPathSegment;
 
     protected:
 

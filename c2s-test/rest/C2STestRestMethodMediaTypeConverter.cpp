@@ -43,13 +43,15 @@ namespace c2s
   namespace test
   {
 
-    const std::string C2STestRestMethodMediaTypeConverter::sPath = "media-type/convert";
+    const std::string C2STestRestMethodMediaTypeConverter::sPathToMethod = "media-type";
+    const std::string C2STestRestMethodMediaTypeConverter::sPathSegment = "convert";
 
     C2STestRestMethodMediaTypeConverter::C2STestRestMethodMediaTypeConverter()
-      : C2SRestMethodPrototypePOST<std::string>( sPath ),
+      : C2SRestMethodPrototypePOST<std::string>( sPathToMethod ),
         m_pRequestEntityUnstreamerXML( new C2STestRestEntityUnstreamerXML() ),
         m_pRequestEntityUnstreamerJSON( new C2STestRestEntityUnstreamerJSON() )
     {
+      C2SRestMethodPrototypePOST<std::string>::addPathSegment( sPathSegment );
       C2SRestMethodPrototypePOST<std::string>::installRequestEntityUnstreamer( m_pRequestEntityUnstreamerXML );
       C2SRestMethodPrototypePOST<std::string>::installRequestEntityUnstreamer( m_pRequestEntityUnstreamerJSON );
       C2SRestMethodPrototypePOST<std::string>::installEntityStreamer( new C2STestRestEntityStreamerXML<std::string>() );

@@ -80,6 +80,11 @@ namespace c2s
     return this->process();
   }
 
+  void C2SRestMethodPrototype::addPathSegment( const std::string &sPathSegment )
+  {
+    m_pathSegments.appendPathSegment( new C2SRestPathSegment( sPathSegment ) );
+  }
+
   void C2SRestMethodPrototype::addQueryParameter( const std::string &sParameterID , std::string *pParameterObjectToWrite , const char *pParameterDefaultValue )
   {
     this->addQueryParameter( sParameterID , pParameterObjectToWrite , std::string( pParameterDefaultValue ) );

@@ -72,6 +72,8 @@ namespace c2s
 
     virtual C2SHttpResponse *process() = 0;
 
+    void addPathSegment( const std::string &sPathSegment );
+
     template <class Type>
     void addPathParameter( const std::string &sParameterID , Type *pParameterObjectToWrite );
 
