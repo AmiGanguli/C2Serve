@@ -64,9 +64,8 @@ namespace c2s
 //    m_type.release();
   }
 
-  void C2SSocketListener::connectAndRun()
+  void C2SSocketListener::run()
   {
-    this->connect();
     m_bKeepRunning = true;
     c2s::thread::Mutex *pAcceptMutex = new c2s::thread::Mutex();
     c2s::thread::ThreadQueue<C2SSocketAcceptHandler> *pAcceptThreadQueue = new c2s::thread::ThreadQueue<C2SSocketAcceptHandler>();
@@ -85,6 +84,12 @@ namespace c2s
 
     delete pAcceptThreadQueue;
     delete pAcceptMutex;
+  }
+
+  void C2SSocketListener::connectAndRun()
+  {
+    this->connect();
+    this->run();
   }
 
   void C2SSocketListener::interrupt()

@@ -29,37 +29,39 @@
 
  */
 
-#ifndef C2SLOGSIMPLEMESSAGEFACTORY_H_
-#define C2SLOGSIMPLEMESSAGEFACTORY_H_
+#ifndef C2STESTSOCKETLISTENERDATAPULL_H_
+#define C2STESTSOCKETLISTENERDATAPULL_H_
 
-#include "C2SLogAbstractFactory.h"
-#include "C2SLogPublicationImplStandardOutput.h"
+#include "C2SDataPullInterface.h"
 
 namespace c2s
 {
-
-  class C2SLogSimpleMessageFactory : public C2SLogAbstractFactory
+  namespace test
   {
-  public:
 
-    C2SLogSimpleMessageFactory();
+    class C2STestSocketListenerDataPull : public C2SDataPullInterface
+    {
+    public:
 
-    C2SLogSimpleMessageFactory( const C2SLogPublicationInterface &logPublication );
+      C2STestSocketListenerDataPull( C2SDataPushInterface *pDataPush );
 
-    virtual ~C2SLogSimpleMessageFactory();
+      virtual ~C2STestSocketListenerDataPull();
 
-    virtual C2SLogInterface *createLogInstance() const;
+      virtual void reset();
 
-    static C2SLogInterface *createLogInstanceWithDefaultPublication();
+      virtual void receive( char *data , unsigned int size );
 
-  private:
+      virtual void flush();
 
-    static const C2SLogPublicationImplStandardOutput defaultLogPublication;
+      virtual bool isComplete() const;
 
-    const C2SLogPublicationInterface &m_logPublication;
+    private:
 
-  };
+      static unsigned int iNumberOfCompletedDataTransmissions;
 
+    };
+
+  }
 }
 
-#endif /* C2SLOGSIMPLEMESSAGEFACTORY_H_ */
+#endif /* C2STESTSOCKETLISTENERDATAPULL_H_ */

@@ -18,3 +18,5 @@ install( TARGETS
 	c2s_core
 	DESTINATION lib
 )
+
+add_subdirectory( test )

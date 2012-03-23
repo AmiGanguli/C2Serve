@@ -87,7 +87,7 @@ namespace c2s
     if ( !m_bIsRunning )
       throw C2SException( "C2SRuntime::shutdown: Server is currently not running!" );
 
-    C2SStatusSetter running( &m_bIsOnStartup , true );
+    C2SStatusSetter running( &m_bIsOnShutdown , true );
     this->shutdownInternal();
   }
 

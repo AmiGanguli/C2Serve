@@ -29,37 +29,61 @@
 
  */
 
-#ifndef C2SLOGSIMPLEMESSAGEFACTORY_H_
-#define C2SLOGSIMPLEMESSAGEFACTORY_H_
-
-#include "C2SLogAbstractFactory.h"
-#include "C2SLogPublicationImplStandardOutput.h"
+#ifndef C2STESTSOCKETLISTENER_H_
+#define C2STESTSOCKETLISTENER_H_
 
 namespace c2s
 {
+  class C2SSocketListener;
+  class C2SLogInterface;
 
-  class C2SLogSimpleMessageFactory : public C2SLogAbstractFactory
+  namespace thread
   {
-  public:
+    template <class Runnable>
+    class Thread;
+  }
 
-    C2SLogSimpleMessageFactory();
+  namespace test
+  {
+    class C2STestSocketListenerDataHandling;
 
-    C2SLogSimpleMessageFactory( const C2SLogPublicationInterface &logPublication );
+    class C2STestSocketListener
+    {
+    public:
 
-    virtual ~C2SLogSimpleMessageFactory();
+      static void runTest();
 
-    virtual C2SLogInterface *createLogInstance() const;
+      void run();
 
-    static C2SLogInterface *createLogInstanceWithDefaultPublication();
+    private:
 
-  private:
+      C2STestSocketListener();
 
-    static const C2SLogPublicationImplStandardOutput defaultLogPublication;
+      virtual ~C2STestSocketListener();
 
-    const C2SLogPublicationInterface &m_logPublication;
+      void startSocketListener();
 
-  };
+      void shutdownSocketListener();
 
+      static const unsigned int iPortIntervalStart;
+
+      static const unsigned int iPortIntervalSize;
+
+      C2SLogInterface *m_pLogInstance;
+
+      C2STestSocketListenerDataHandling *m_pSocketDataHandling;
+
+      C2SSocketListener *m_pSocketListener;
+
+      bool m_bIsOnStartup;
+
+      bool m_bIsRunning;
+
+      c2s::thread::Thread<C2STestSocketListener> *m_pSocketListenerThread;
+
+    };
+
+  }
 }
 
-#endif /* C2SLOGSIMPLEMESSAGEFACTORY_H_ */
+#endif /* C2STESTSOCKETLISTENER_H_ */

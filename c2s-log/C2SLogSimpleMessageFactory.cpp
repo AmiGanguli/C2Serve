@@ -57,4 +57,9 @@ namespace c2s
     return new C2SLogImplSimpleMessage( m_logPublication );
   }
 
+  C2SLogInterface *C2SLogSimpleMessageFactory::createLogInstanceWithDefaultPublication()
+  {
+    return new C2SLogImplSimpleMessage( defaultLogPublication );
+  }
+
 }

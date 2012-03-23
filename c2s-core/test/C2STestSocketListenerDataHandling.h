@@ -29,37 +29,29 @@
 
  */
 
-#ifndef C2SLOGSIMPLEMESSAGEFACTORY_H_
-#define C2SLOGSIMPLEMESSAGEFACTORY_H_
+#ifndef C2STESTSOCKETLISTENERDATAHANDLING_H_
+#define C2STESTSOCKETLISTENERDATAHANDLING_H_
 
-#include "C2SLogAbstractFactory.h"
-#include "C2SLogPublicationImplStandardOutput.h"
+#include "C2SDataHandlingInterface.h"
 
 namespace c2s
 {
-
-  class C2SLogSimpleMessageFactory : public C2SLogAbstractFactory
+  namespace test
   {
-  public:
 
-    C2SLogSimpleMessageFactory();
+    class C2STestSocketListenerDataHandling : public C2SDataHandlingInterface
+    {
+    public:
 
-    C2SLogSimpleMessageFactory( const C2SLogPublicationInterface &logPublication );
+      C2STestSocketListenerDataHandling();
 
-    virtual ~C2SLogSimpleMessageFactory();
+      virtual ~C2STestSocketListenerDataHandling();
 
-    virtual C2SLogInterface *createLogInstance() const;
+      virtual C2SDataPullInterface *createDataPullForDataPush( C2SDataPushInterface *pDataPush ) const;
 
-    static C2SLogInterface *createLogInstanceWithDefaultPublication();
+    };
 
-  private:
-
-    static const C2SLogPublicationImplStandardOutput defaultLogPublication;
-
-    const C2SLogPublicationInterface &m_logPublication;
-
-  };
-
+  }
 }
 
-#endif /* C2SLOGSIMPLEMESSAGEFACTORY_H_ */
+#endif /* C2STESTSOCKETLISTENERDATAHANDLING_H_ */

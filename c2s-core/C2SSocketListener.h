@@ -77,13 +77,15 @@ namespace c2s
 
     virtual ~C2SSocketListener();
 
+    void connect();
+
+    void run();
+
     void connectAndRun();
 
     void interrupt();
 
   private:
-
-    void connect();
 
     C2SSocketListener( const C2SSocketListener & );
 

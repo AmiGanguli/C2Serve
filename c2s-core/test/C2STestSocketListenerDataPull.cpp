@@ -29,37 +29,47 @@
 
  */
 
-#ifndef C2SLOGSIMPLEMESSAGEFACTORY_H_
-#define C2SLOGSIMPLEMESSAGEFACTORY_H_
+#include "C2STestSocketListenerDataPull.h"
 
-#include "C2SLogAbstractFactory.h"
-#include "C2SLogPublicationImplStandardOutput.h"
+#include <boost/test/unit_test.hpp>
 
 namespace c2s
 {
-
-  class C2SLogSimpleMessageFactory : public C2SLogAbstractFactory
+  namespace test
   {
-  public:
 
-    C2SLogSimpleMessageFactory();
+    unsigned int C2STestSocketListenerDataPull::iNumberOfCompletedDataTransmissions = 0;
 
-    C2SLogSimpleMessageFactory( const C2SLogPublicationInterface &logPublication );
+    C2STestSocketListenerDataPull::C2STestSocketListenerDataPull( C2SDataPushInterface *pDataPush )
+      : C2SDataPullInterface( pDataPush )
+    {
+    }
 
-    virtual ~C2SLogSimpleMessageFactory();
+    C2STestSocketListenerDataPull::~C2STestSocketListenerDataPull()
+    {
+//      BOOST_CHECK( iNumberOfCompletedDataTransmissions == 1 );
+    }
 
-    virtual C2SLogInterface *createLogInstance() const;
+    void C2STestSocketListenerDataPull::reset()
+    {
 
-    static C2SLogInterface *createLogInstanceWithDefaultPublication();
+    }
 
-  private:
+    void C2STestSocketListenerDataPull::receive( char *data , unsigned int size )
+    {
 
-    static const C2SLogPublicationImplStandardOutput defaultLogPublication;
+    }
 
-    const C2SLogPublicationInterface &m_logPublication;
+    void C2STestSocketListenerDataPull::flush()
+    {
+      //check
+      ++iNumberOfCompletedDataTransmissions;
+    }
 
-  };
+    bool C2STestSocketListenerDataPull::isComplete() const
+    {
+      return false;
+    }
 
+  }
 }
-
-#endif /* C2SLOGSIMPLEMESSAGEFACTORY_H_ */
