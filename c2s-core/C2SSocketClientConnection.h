@@ -29,63 +29,36 @@
 
  */
 
-#ifndef C2STESTSOCKETLISTENER_H_
-#define C2STESTSOCKETLISTENER_H_
+#ifndef C2SSOCKETCLIENTCONNECTION_H_
+#define C2SSOCKETCLIENTCONNECTION_H_
 
 #include <string>
 
 namespace c2s
 {
-  class C2SSocketListener;
-  class C2SLogInterface;
-  class C2SSocketListenerThread;
-  class C2SSocketClient;
+  class C2SSocketInfo;
 
-  namespace test
+  class C2SSocketClientConnection
   {
-    class C2STestSocketListenerDataHandling;
+  public:
 
-    class C2STestSocketListener
-    {
-    public:
+    C2SSocketClientConnection( const std::string &sHost , unsigned int iPort );
 
-      static void runTest();
+    virtual ~C2SSocketClientConnection();
 
-      void run();
+  private:
 
-    private:
+    void connectSocket();
 
-      C2STestSocketListener();
+    void closeSocket();
 
-      virtual ~C2STestSocketListener();
+    std::string m_sHost;
 
-      void createTestMessageToSendThroughSocket();
+    unsigned int m_iPort;
 
-      void startSocketListener();
+    C2SSocketInfo *m_pSocketInfo;
 
-      void sendTestMessageThroughSocket();
+  };
 
-      void shutdownSocketListener();
-
-      static const unsigned int iPortIntervalStart;
-
-      static const unsigned int iPortIntervalSize;
-
-      C2SLogInterface *m_pLogInstance;
-
-      C2STestSocketListenerDataHandling *m_pSocketDataHandling;
-
-      C2SSocketListener *m_pSocketListener;
-
-      C2SSocketListenerThread *m_pSocketListenerThread;
-
-      C2SSocketClient *m_pSocketClient;
-
-      std::string m_sTestMessageToSendThroughSocket;
-
-    };
-
-  }
-}
-
-#endif /* C2STESTSOCKETLISTENER_H_ */
+} /* namespace c2s */
+#endif /* C2SSOCKETCLIENTCONNECTION_H_ */

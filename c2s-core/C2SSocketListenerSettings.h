@@ -1,6 +1,6 @@
 /**
 
-	Copyright (c) 2011, C2Serve (http://www.c2serve.eu)
+	Copyright (c) 2012, C2Serve (http://www.c2serve.eu)
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without
@@ -29,72 +29,31 @@
 
  */
 
-#ifndef C2SSOCKETLISTENER_H_
-#define C2SSOCKETLISTENER_H_
 
-#include "C2SSocketListenerSettings.h"
-#include "C2SSocketException.h"
-
-#include <list>
+#ifndef C2SSOCKETLISTENERSETTINGS_H_
+#define C2SSOCKETLISTENERSETTINGS_H_
 
 namespace c2s
 {
 
-  struct C2SSocketInfo;
-  class C2SSocketAcceptHandler;
-  class C2SDataHandlingInterface;
-  class C2SLogInterface;
-
-  class C2SSocketListenerException : public C2SSocketException
+  struct C2SSocketListenerSettings
   {
-  public:
 
-    C2SSocketListenerException( const std::string &msg ) : C2SSocketException( msg ) {};
+    C2SSocketListenerSettings()
+      : iPort( 8180 ),
+        iNumThreads( 4 ),
+        iSizeBacklogQueue( 5 )
+    {};
 
-  };
+    unsigned short iPort;
 
-  class C2SSocketListener
-  {
-  public:
+    unsigned short iNumThreads;
 
-    C2SSocketListener( const C2SSocketListenerSettings &settings , const C2SDataHandlingInterface &dataHandling , const C2SLogInterface &logInstance );
-
-    virtual ~C2SSocketListener();
-
-    void connect();
-
-    void run();
-
-    void connectAndRun();
-
-    void interrupt();
-
-    bool isListening() const;
-
-  private:
-
-    C2SSocketListener( const C2SSocketListener & );
-
-    C2SSocketListener &operator=( const C2SSocketListener & );
-
-    typedef std::list<C2SSocketAcceptHandler*> C2SSocketAcceptHandlerList;
-
-    C2SSocketListenerSettings m_settings;
-
-    const C2SDataHandlingInterface &m_dataHandling;
-
-    C2SSocketAcceptHandlerList m_acceptHandlers;
-
-    C2SSocketInfo *m_pSocketInfo;
-
-    volatile bool m_bKeepRunning;
-
-    bool m_bIsListening;
-
-    const C2SLogInterface &m_logInstance;
+    unsigned short iSizeBacklogQueue;
 
   };
 
 }
 
-#endif /* C2SSOCKETLISTENER_H_ */
+
+#endif /* C2SSOCKETLISTENERSETTINGS_H_ */

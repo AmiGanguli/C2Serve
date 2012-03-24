@@ -29,63 +29,52 @@
 
  */
 
-#ifndef C2STESTSOCKETLISTENER_H_
-#define C2STESTSOCKETLISTENER_H_
-
-#include <string>
+#include "C2SSocketClientConnection.h"
+#include "C2SSocketClientException.h"
+#include "C2SSocketInfo.h"
 
 namespace c2s
 {
-  class C2SSocketListener;
-  class C2SLogInterface;
-  class C2SSocketListenerThread;
-  class C2SSocketClient;
 
-  namespace test
+  C2SSocketClientConnection::C2SSocketClientConnection( const std::string &sHost , unsigned int iPort )
+    : m_sHost( sHost ),
+      m_iPort( iPort ),
+      m_pSocketInfo( new C2SSocketInfo() )
   {
-    class C2STestSocketListenerDataHandling;
-
-    class C2STestSocketListener
-    {
-    public:
-
-      static void runTest();
-
-      void run();
-
-    private:
-
-      C2STestSocketListener();
-
-      virtual ~C2STestSocketListener();
-
-      void createTestMessageToSendThroughSocket();
-
-      void startSocketListener();
-
-      void sendTestMessageThroughSocket();
-
-      void shutdownSocketListener();
-
-      static const unsigned int iPortIntervalStart;
-
-      static const unsigned int iPortIntervalSize;
-
-      C2SLogInterface *m_pLogInstance;
-
-      C2STestSocketListenerDataHandling *m_pSocketDataHandling;
-
-      C2SSocketListener *m_pSocketListener;
-
-      C2SSocketListenerThread *m_pSocketListenerThread;
-
-      C2SSocketClient *m_pSocketClient;
-
-      std::string m_sTestMessageToSendThroughSocket;
-
-    };
-
+    this->connectSocket();
   }
-}
 
-#endif /* C2STESTSOCKETLISTENER_H_ */
+  C2SSocketClientConnection::~C2SSocketClientConnection()
+  {
+    this->closeSocket();
+    delete m_pSocketInfo;
+  }
+
+  void C2SSocketClientConnection::connectSocket()
+  {
+    struct sockaddr_in serverAddress;
+    struct hostent *server;
+
+    m_pSocketInfo->SocketDescriptor = socket( AF_INET , SOCK_STREAM , 0 );
+    if ( m_pSocketInfo->SocketDescriptor < 0 )
+      throw C2SSocketClientException( "C2SSocketClient::connectToSocket: ERROR opening socket" );
+
+    server = gethostbyname( m_sHost.c_str() );
+    if ( server == NULL )
+      throw C2SSocketClientException( "C2SSocketClient::connectToSocket: ERROR, no such host" );
+
+    bzero( reinterpret_cast<char *>( &serverAddress ) , sizeof( serverAddress ) );
+    serverAddress.sin_family = AF_INET;
+    bcopy( ( char * ) server->h_addr , ( char * ) &serverAddress.sin_addr.s_addr , server->h_length );
+
+    serverAddress.sin_port = htons( m_iPort );
+    if ( connect( m_pSocketInfo->SocketDescriptor , ( struct sockaddr *) &serverAddress , sizeof( serverAddress ) ) < 0 )
+      throw C2SSocketClientException( "C2SSocketClient::connectToSocket: ERROR connecting to socket" );
+  }
+
+  void C2SSocketClientConnection::closeSocket()
+  {
+    close( m_pSocketInfo->SocketDescriptor );
+  }
+
+}
