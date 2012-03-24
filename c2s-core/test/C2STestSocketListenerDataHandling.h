@@ -33,6 +33,7 @@
 #define C2STESTSOCKETLISTENERDATAHANDLING_H_
 
 #include "C2SDataHandlingInterface.h"
+#include <string>
 
 namespace c2s
 {
@@ -43,11 +44,17 @@ namespace c2s
     {
     public:
 
-      C2STestSocketListenerDataHandling();
+      C2STestSocketListenerDataHandling( const std::string &sMessageExpectedToReadFromSocket , const std::string &sMessageToSendBackToClient );
 
       virtual ~C2STestSocketListenerDataHandling();
 
       virtual C2SDataPullInterface *createDataPullForDataPush( C2SDataPushInterface *pDataPush ) const;
+
+    private:
+
+      std::string m_sMessageExpectedToReadFromSocket;
+
+      std::string m_sMessageToSendBackToClient;
 
     };
 

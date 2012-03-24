@@ -29,25 +29,37 @@
 
  */
 
-#include "C2SSocketClient.h"
-#include "C2SSocketClientConnection.h"
+#ifndef C2STESTSOCKETCLIENT_H_
+#define C2STESTSOCKETCLIENT_H_
+
+#include <string>
 
 namespace c2s
 {
-
-  C2SSocketClient::C2SSocketClient( const std::string &sHost , unsigned int iPort )
-    : m_sHost( sHost ),
-      m_iPort( iPort )
+  namespace test
   {
-  }
 
-  C2SSocketClient::~C2SSocketClient()
-  {
-  }
+    class C2STestSocketClient
+    {
+    public:
 
-  void C2SSocketClient::sendDataThroughSocket( const char *pDataToSendThroughSocket , unsigned int iDataLength ) const
-  {
-    C2SSocketClientConnection socketConnection( m_sHost , m_iPort );
-  }
+      C2STestSocketClient( const std::string &sHost , unsigned int iPort );
 
+      virtual ~C2STestSocketClient();
+
+      std::string writeToSocket( const std::string &sMessageToSendThroughSocket ) const;
+
+    private:
+
+      static const unsigned int iSizeOfBufferForReadingFromSocket;
+
+      std::string m_sHost;
+
+      unsigned int m_iPort;
+
+    };
+
+  }
 }
+
+#endif /* C2STESTSOCKETCLIENT_H_ */

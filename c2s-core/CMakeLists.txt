@@ -10,7 +10,6 @@ include_directories(
 add_library( c2s_core
   C2SRuntime
   C2SSettings
-  C2SSocketClient
   C2SSocketListener
   C2SSocketAcceptHandler
   C2SSocketListenerThread

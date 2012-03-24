@@ -37,7 +37,9 @@ namespace c2s
   namespace test
   {
 
-    C2STestSocketListenerDataHandling::C2STestSocketListenerDataHandling()
+    C2STestSocketListenerDataHandling::C2STestSocketListenerDataHandling( const std::string &sMessageExpectedToReadFromSocket , const std::string &sMessageToSendBackToClient )
+      : m_sMessageExpectedToReadFromSocket( sMessageExpectedToReadFromSocket ),
+        m_sMessageToSendBackToClient( sMessageToSendBackToClient )
     {
     }
 
@@ -47,7 +49,7 @@ namespace c2s
 
     C2SDataPullInterface *C2STestSocketListenerDataHandling::createDataPullForDataPush( C2SDataPushInterface *pDataPush ) const
     {
-      return new C2STestSocketListenerDataPull( pDataPush );
+      return new C2STestSocketListenerDataPull( pDataPush , m_sMessageExpectedToReadFromSocket , m_sMessageToSendBackToClient );
     }
 
   }

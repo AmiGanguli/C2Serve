@@ -40,14 +40,16 @@ namespace c2s
 
     unsigned int C2STestSocketListenerDataPull::iNumberOfCompletedDataTransmissions = 0;
 
-    C2STestSocketListenerDataPull::C2STestSocketListenerDataPull( C2SDataPushInterface *pDataPush )
-      : C2SDataPullInterface( pDataPush )
+    C2STestSocketListenerDataPull::C2STestSocketListenerDataPull( C2SDataPushInterface *pDataPush , const std::string &sMessageExpectedToReadFromSocket , const std::string &sMessageToSendBackToClient )
+      : C2SDataPullInterface( pDataPush ),
+        m_sMessageExpectedToReadFromSocket( sMessageExpectedToReadFromSocket ),
+        m_sMessageToSendBackToClient( sMessageToSendBackToClient )
     {
     }
 
     C2STestSocketListenerDataPull::~C2STestSocketListenerDataPull()
     {
-//      BOOST_CHECK( iNumberOfCompletedDataTransmissions == 1 );
+      BOOST_CHECK( iNumberOfCompletedDataTransmissions == 2 );
     }
 
     void C2STestSocketListenerDataPull::reset()
@@ -57,13 +59,16 @@ namespace c2s
 
     void C2STestSocketListenerDataPull::receive( char *data , unsigned int size )
     {
-
+      m_sMessageReadFromSocket += std::string( data , size );
     }
 
     void C2STestSocketListenerDataPull::flush()
     {
       //check
       ++iNumberOfCompletedDataTransmissions;
+      BOOST_MESSAGE( "Server socket received:\n" << m_sMessageReadFromSocket );
+      BOOST_CHECK( m_sMessageReadFromSocket == m_sMessageExpectedToReadFromSocket );
+      m_dataPush.push( m_sMessageToSendBackToClient.c_str() , m_sMessageToSendBackToClient.size() );
     }
 
     bool C2STestSocketListenerDataPull::isComplete() const

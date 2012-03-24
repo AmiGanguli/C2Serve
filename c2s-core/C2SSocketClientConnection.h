@@ -46,6 +46,10 @@ namespace c2s
 
     virtual ~C2SSocketClientConnection();
 
+    void writeToSocket( const char *pDataToWriteToSocket , unsigned int iDataLength );
+
+    unsigned int readFromSocket( char *pBufferToWriteDataReadFromSocket , unsigned int iBufferSize );
+
   private:
 
     void connectSocket();

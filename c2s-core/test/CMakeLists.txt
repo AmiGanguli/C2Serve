@@ -12,6 +12,7 @@ if ( Boost_FOUND )
 	
 	add_executable( c2s_test_core
     C2STestCore
+    C2STestSocketClient
     C2STestSocketListener
     C2STestSocketListenerDataPull
     C2STestSocketListenerDataHandling

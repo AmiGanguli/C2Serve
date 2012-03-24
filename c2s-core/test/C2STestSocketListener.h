@@ -39,10 +39,10 @@ namespace c2s
   class C2SSocketListener;
   class C2SLogInterface;
   class C2SSocketListenerThread;
-  class C2SSocketClient;
 
   namespace test
   {
+    class C2STestSocketClient;
     class C2STestSocketListenerDataHandling;
 
     class C2STestSocketListener
@@ -60,6 +60,8 @@ namespace c2s
       virtual ~C2STestSocketListener();
 
       void createTestMessageToSendThroughSocket();
+
+      void createTestMessageExpectedToReceiveFromSocket();
 
       void startSocketListener();
 
@@ -79,9 +81,11 @@ namespace c2s
 
       C2SSocketListenerThread *m_pSocketListenerThread;
 
-      C2SSocketClient *m_pSocketClient;
+      C2STestSocketClient *m_pSocketClient;
 
       std::string m_sTestMessageToSendThroughSocket;
+
+      std::string m_sTestMessageExpectedToReceiveFromSocket;
 
     };
 

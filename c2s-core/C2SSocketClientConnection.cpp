@@ -33,6 +33,8 @@
 #include "C2SSocketClientException.h"
 #include "C2SSocketInfo.h"
 
+#include <iostream>
+
 namespace c2s
 {
 
@@ -48,6 +50,30 @@ namespace c2s
   {
     this->closeSocket();
     delete m_pSocketInfo;
+  }
+
+  void C2SSocketClientConnection::writeToSocket( const char *pDataToWriteToSocket , unsigned int iDataLength )
+  {
+    int iBytesWrittenToSocket = 0;
+    while ( iBytesWrittenToSocket < static_cast<int>( iDataLength ) )
+    {
+      const char *pDataLeftToWriteToSocket = &pDataToWriteToSocket[ iBytesWrittenToSocket ];
+      unsigned int iDataLengthLeftToWriteToSocket = iDataLength - iBytesWrittenToSocket;
+      iBytesWrittenToSocket += write( m_pSocketInfo->SocketDescriptor , pDataLeftToWriteToSocket , iDataLengthLeftToWriteToSocket );
+      if ( iBytesWrittenToSocket < 0 )
+        throw C2SSocketClientException( "C2SSocketClientConnection::writeToSocket: ERROR writing to socket" );
+    }
+    if ( shutdown( m_pSocketInfo->SocketDescriptor , SHUT_WR ) )
+      throw C2SSocketClientException( "C2SSocketClientConnection::writeToSocket: Cannot shutdown socket!" );
+  }
+
+  unsigned int C2SSocketClientConnection::readFromSocket( char *pBufferToWriteDataReadFromSocket , unsigned int iBufferSize )
+  {
+    long iNumberOfBytesReadFromSocket = iBufferSize;
+    iNumberOfBytesReadFromSocket = read( m_pSocketInfo->SocketDescriptor , pBufferToWriteDataReadFromSocket , iBufferSize );
+    if ( iNumberOfBytesReadFromSocket < 0 )
+      throw C2SSocketClientException( "C2SSocketClientConnection::readFromSocket: Error reading from socket!" );
+    return iNumberOfBytesReadFromSocket;
   }
 
   void C2SSocketClientConnection::connectSocket()

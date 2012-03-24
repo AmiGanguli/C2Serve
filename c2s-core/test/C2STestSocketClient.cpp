@@ -29,32 +29,40 @@
 
  */
 
-#ifndef C2SSOCKETCLIENT_H_
-#define C2SSOCKETCLIENT_H_
-
-#include <string>
+#include "C2STestSocketClient.h"
+#include "C2SSocketClientConnection.h"
 
 namespace c2s
 {
-
-  class C2SSocketClient
+  namespace test
   {
-  public:
 
-    C2SSocketClient( const std::string &sHost , unsigned int iPort );
+    const unsigned int C2STestSocketClient::iSizeOfBufferForReadingFromSocket = 8;
 
-    virtual ~C2SSocketClient();
+    C2STestSocketClient::C2STestSocketClient( const std::string &sHost , unsigned int iPort )
+      : m_sHost( sHost ),
+        m_iPort( iPort )
+    {
+    }
 
-    void sendDataThroughSocket( const char *pDataToSendThroughSocket , unsigned int iDataLength ) const;
+    C2STestSocketClient::~C2STestSocketClient()
+    {
+    }
 
-  private:
+    std::string C2STestSocketClient::writeToSocket( const std::string &sMessageToSendThroughSocket ) const
+    {
+      C2SSocketClientConnection socketConnection( m_sHost , m_iPort );
+      socketConnection.writeToSocket( sMessageToSendThroughSocket.c_str() , sMessageToSendThroughSocket.size() );
+      std::string sMessageReceived;
+      char *pBufferForReadingFromSocket = new char[ iSizeOfBufferForReadingFromSocket ];
+      unsigned int iNumberOfBytesReadFromSocket = iSizeOfBufferForReadingFromSocket;
+      while( iNumberOfBytesReadFromSocket == iSizeOfBufferForReadingFromSocket )
+      {
+        iNumberOfBytesReadFromSocket = socketConnection.readFromSocket( pBufferForReadingFromSocket , iSizeOfBufferForReadingFromSocket );
+        sMessageReceived += std::string( pBufferForReadingFromSocket , iNumberOfBytesReadFromSocket );
+      }
+      return sMessageReceived;
+    }
 
-    std::string m_sHost;
-
-    unsigned int m_iPort;
-
-  };
-
+  }
 }
-
-#endif /* C2SSOCKETCLIENT_H_ */

@@ -33,6 +33,7 @@
 #define C2STESTSOCKETLISTENERDATAPULL_H_
 
 #include "C2SDataPullInterface.h"
+#include <string>
 
 namespace c2s
 {
@@ -43,7 +44,7 @@ namespace c2s
     {
     public:
 
-      C2STestSocketListenerDataPull( C2SDataPushInterface *pDataPush );
+      C2STestSocketListenerDataPull( C2SDataPushInterface *pDataPush , const std::string &sMessageExpectedToReadFromSocket , const std::string &sMessageToSendBackToClient );
 
       virtual ~C2STestSocketListenerDataPull();
 
@@ -58,6 +59,12 @@ namespace c2s
     private:
 
       static unsigned int iNumberOfCompletedDataTransmissions;
+
+      std::string m_sMessageExpectedToReadFromSocket;
+
+      std::string m_sMessageToSendBackToClient;
+
+      std::string m_sMessageReadFromSocket;
 
     };
 

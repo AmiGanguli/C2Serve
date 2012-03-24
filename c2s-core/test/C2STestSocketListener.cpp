@@ -33,10 +33,12 @@
 #include "C2STestSocketListenerDataHandling.h"
 
 #include "C2SLogInterface.h"
-#include "C2SSocketClient.h"
+#include "C2STestSocketClient.h"
 #include "C2SSocketListener.h"
 #include "C2SSocketListenerThread.h"
 #include "C2SLogSimpleMessageFactory.h"
+
+#include <boost/test/unit_test.hpp>
 
 namespace c2s
 {
@@ -50,13 +52,15 @@ namespace c2s
     C2STestSocketListener::C2STestSocketListener()
     {
       m_pLogInstance = C2SLogSimpleMessageFactory::createLogInstanceWithDefaultPublication();
-      m_pSocketDataHandling = new C2STestSocketListenerDataHandling();
+      this->createTestMessageToSendThroughSocket();
+      this->createTestMessageExpectedToReceiveFromSocket();
+      m_pSocketDataHandling = new C2STestSocketListenerDataHandling( m_sTestMessageToSendThroughSocket , m_sTestMessageExpectedToReceiveFromSocket );
       C2SSocketListenerSettings socketListenerSettings;
       srand( time( NULL ) );
       socketListenerSettings.iPort = iPortIntervalStart + rand() % iPortIntervalSize;
       m_pSocketListener = new C2SSocketListener( socketListenerSettings , *m_pSocketDataHandling , *m_pLogInstance );
       m_pSocketListenerThread = new C2SSocketListenerThread( m_pSocketListener );
-      m_pSocketClient = new C2SSocketClient( "localhost" , socketListenerSettings.iPort );
+      m_pSocketClient = new C2STestSocketClient( "localhost" , socketListenerSettings.iPort );
     }
 
     C2STestSocketListener::~C2STestSocketListener()
@@ -71,7 +75,9 @@ namespace c2s
     void C2STestSocketListener::runTest()
     {
       C2STestSocketListener testSocketListener;
+      BOOST_CHECK_THROW( testSocketListener.sendTestMessageThroughSocket() , C2SSocketException );
       testSocketListener.startSocketListener();
+      testSocketListener.sendTestMessageThroughSocket();
       testSocketListener.sendTestMessageThroughSocket();
       testSocketListener.shutdownSocketListener();
     }
@@ -79,6 +85,11 @@ namespace c2s
     void C2STestSocketListener::createTestMessageToSendThroughSocket()
     {
       m_sTestMessageToSendThroughSocket = "0123456789\nabcdefghijklmnopqrstuvwxyz\nABCDEFGHIJKLMOPQRSTUVWXYZ";
+    }
+
+    void C2STestSocketListener::createTestMessageExpectedToReceiveFromSocket()
+    {
+      m_sTestMessageExpectedToReceiveFromSocket = "ABCDEFGHIJKLMOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789";
     }
 
     void C2STestSocketListener::startSocketListener()
@@ -89,7 +100,10 @@ namespace c2s
 
     void C2STestSocketListener::sendTestMessageThroughSocket()
     {
-      m_pSocketClient->sendDataThroughSocket( m_sTestMessageToSendThroughSocket.c_str() , m_sTestMessageToSendThroughSocket.size() );
+      BOOST_MESSAGE( "Send test message through socket.." );
+      std::string sMessageReceivedFromSocket = m_pSocketClient->writeToSocket( m_sTestMessageToSendThroughSocket );
+      BOOST_MESSAGE( "Send test message through socket.. done! Received:\n" << sMessageReceivedFromSocket );
+      BOOST_CHECK( sMessageReceivedFromSocket == m_sTestMessageExpectedToReceiveFromSocket );
     }
 
     void C2STestSocketListener::shutdownSocketListener()
