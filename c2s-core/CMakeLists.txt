@@ -12,6 +12,7 @@ add_library( c2s_core
   C2SSettings
   C2SSocketListener
   C2SSocketAcceptHandler
+  C2SSocketListenerThread
 )
 
 install( TARGETS 

@@ -22,7 +22,5 @@ endif ( NOT C2Serve_DISABLE_TESTING )
 
 
 endif( NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" )
-    
-add_subdirectory( boost )
 
 endif ( Boost_FOUND )

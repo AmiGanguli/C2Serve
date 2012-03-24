@@ -34,10 +34,8 @@
 
 #include "C2SLogInterface.h"
 #include "C2SSocketListener.h"
+#include "C2SSocketListenerThread.h"
 #include "C2SLogSimpleMessageFactory.h"
-
-#include "Thread.h"
-#include "C2SStatusSetter.h"
 
 namespace c2s
 {
@@ -49,8 +47,6 @@ namespace c2s
     const unsigned int C2STestSocketListener::iPortIntervalSize = 30;
 
     C2STestSocketListener::C2STestSocketListener()
-      : m_bIsOnStartup( false ),
-        m_bIsRunning( false )
     {
       m_pLogInstance = C2SLogSimpleMessageFactory::createLogInstanceWithDefaultPublication();
       m_pSocketDataHandling = new C2STestSocketListenerDataHandling();
@@ -58,7 +54,7 @@ namespace c2s
       srand( time( NULL ) );
       socketListenerSettins.iPort = iPortIntervalStart + rand() % iPortIntervalSize;
       m_pSocketListener = new C2SSocketListener( socketListenerSettins , *m_pSocketDataHandling , *m_pLogInstance );
-      m_pSocketListenerThread = new c2s::thread::Thread<C2STestSocketListener>( this );
+      m_pSocketListenerThread = new C2SSocketListenerThread( m_pSocketListener );
     }
 
     C2STestSocketListener::~C2STestSocketListener()
@@ -78,26 +74,13 @@ namespace c2s
 
     void C2STestSocketListener::startSocketListener()
     {
-      m_bIsOnStartup = true;
       m_pSocketListener->connect();
-      C2SStatusSetter running( &m_bIsRunning , true );
-      m_pSocketListenerThread->start();
-      while( m_bIsOnStartup )
-        ;
-      usleep( 1000 );
-    }
-
-    void C2STestSocketListener::run()
-    {
-      m_bIsOnStartup = false;
-      m_pSocketListener->run();
+      m_pSocketListenerThread->startListener();
     }
 
     void C2STestSocketListener::shutdownSocketListener()
     {
-      m_pSocketListener->interrupt();
-      while( m_bIsRunning )
-        ;
+      m_pSocketListenerThread->stopListener();
     }
 
   }

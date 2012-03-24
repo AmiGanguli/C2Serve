@@ -29,52 +29,39 @@
 
  */
 
-#ifndef C2STESTSOCKETLISTENER_H_
-#define C2STESTSOCKETLISTENER_H_
+#ifndef C2SSOCKETLISTENERTHREAD_H_
+#define C2SSOCKETLISTENERTHREAD_H_
+
+#include "ThreadBase.h"
 
 namespace c2s
 {
   class C2SSocketListener;
-  class C2SLogInterface;
-  class C2SSocketListenerThread;
 
-  namespace test
+  class C2SSocketListenerThread : public c2s::thread::ThreadBase
   {
-    class C2STestSocketListenerDataHandling;
+  public:
 
-    class C2STestSocketListener
-    {
-    public:
+    C2SSocketListenerThread( C2SSocketListener *pSocketListener );
 
-      static void runTest();
+    virtual ~C2SSocketListenerThread();
 
-      void run();
+    void startListener();
 
-    private:
+    void stopListener();
 
-      C2STestSocketListener();
+  protected:
 
-      virtual ~C2STestSocketListener();
+    void run();
 
-      void startSocketListener();
+  private:
 
-      void shutdownSocketListener();
+    C2SSocketListener *m_pSocketListener;
 
-      static const unsigned int iPortIntervalStart;
+    bool m_bIsRunning;
 
-      static const unsigned int iPortIntervalSize;
+  };
 
-      C2SLogInterface *m_pLogInstance;
-
-      C2STestSocketListenerDataHandling *m_pSocketDataHandling;
-
-      C2SSocketListener *m_pSocketListener;
-
-      C2SSocketListenerThread *m_pSocketListenerThread;
-
-    };
-
-  }
 }
 
-#endif /* C2STESTSOCKETLISTENER_H_ */
+#endif /* C2SSOCKETLISTENERTHREAD_H_ */

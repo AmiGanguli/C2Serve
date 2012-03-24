@@ -85,6 +85,8 @@ namespace c2s
 
     void interrupt();
 
+    bool isListening() const;
+
   private:
 
     C2SSocketListener( const C2SSocketListener & );
@@ -102,6 +104,8 @@ namespace c2s
     C2SSocketInfo *m_pSocketInfo;
 
     volatile bool m_bKeepRunning;
+
+    bool m_bIsListening;
 
     const C2SLogInterface &m_logInstance;
 

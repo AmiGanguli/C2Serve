@@ -38,6 +38,7 @@
 
 #include "ThreadQueue.h"
 #include "StringUtils.h"
+#include "C2SStatusSetter.h"
 
 #include <cstring>
 
@@ -49,6 +50,7 @@ namespace c2s
       m_dataHandling( dataHandling ),
       m_pSocketInfo( new C2SSocketInfo() ),
       m_bKeepRunning( false ),
+      m_bIsListening( false ),
       m_logInstance( logInstance )
   {
   }
@@ -76,6 +78,7 @@ namespace c2s
       pAcceptThreadQueue->queue( m_acceptHandlers.back() );
     }
 
+    C2SStatusSetter setIsListening( &m_bIsListening , true );
     //TODO: check kill signal
     while ( m_bKeepRunning )
       pAcceptThreadQueue->start();
@@ -84,6 +87,11 @@ namespace c2s
 
     delete pAcceptThreadQueue;
     delete pAcceptMutex;
+  }
+
+  bool C2SSocketListener::isListening() const
+  {
+    return m_bIsListening;
   }
 
   void C2SSocketListener::connectAndRun()

@@ -32,16 +32,9 @@
 #ifndef MUTEX_H_
 #define MUTEX_H_
 
-#include "ThreadDefines.h"
 #include "GenericException.h"
 
-#ifdef USE_POSIX_THREADS
 #include <pthread.h>
-#endif
-
-#ifdef USE_BOOST_THREADS
-#include <boost/thread.hpp>
-#endif
 
 #include <iostream>
 
@@ -50,14 +43,6 @@ namespace c2s
 
   namespace thread
   {
-
-#ifdef USE_BOOST_THREADS
-
-    typedef boost::mutex Mutex;
-
-#endif //USE_BOOST_THREADS
-
-#ifdef USE_POSIX_THREADS
 
     class MutexException : public GenericException
     {
@@ -123,8 +108,6 @@ namespace c2s
     {
       return pthread_mutex_trylock( &m_mutex );
     }
-
-#endif //USE_POSIX_THREADS
 
   }
 

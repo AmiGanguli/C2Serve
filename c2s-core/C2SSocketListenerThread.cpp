@@ -29,52 +29,41 @@
 
  */
 
-#ifndef C2STESTSOCKETLISTENER_H_
-#define C2STESTSOCKETLISTENER_H_
+#include "C2SSocketListenerThread.h"
+#include "C2SSocketListener.h"
+#include "C2SStatusSetter.h"
 
 namespace c2s
 {
-  class C2SSocketListener;
-  class C2SLogInterface;
-  class C2SSocketListenerThread;
 
-  namespace test
+  C2SSocketListenerThread::C2SSocketListenerThread( C2SSocketListener *pSocketListener )
+    : m_pSocketListener( pSocketListener ),
+      m_bIsRunning( false )
   {
-    class C2STestSocketListenerDataHandling;
-
-    class C2STestSocketListener
-    {
-    public:
-
-      static void runTest();
-
-      void run();
-
-    private:
-
-      C2STestSocketListener();
-
-      virtual ~C2STestSocketListener();
-
-      void startSocketListener();
-
-      void shutdownSocketListener();
-
-      static const unsigned int iPortIntervalStart;
-
-      static const unsigned int iPortIntervalSize;
-
-      C2SLogInterface *m_pLogInstance;
-
-      C2STestSocketListenerDataHandling *m_pSocketDataHandling;
-
-      C2SSocketListener *m_pSocketListener;
-
-      C2SSocketListenerThread *m_pSocketListenerThread;
-
-    };
-
   }
-}
 
-#endif /* C2STESTSOCKETLISTENER_H_ */
+  C2SSocketListenerThread::~C2SSocketListenerThread()
+  {
+  }
+
+  void C2SSocketListenerThread::startListener()
+  {
+    this->start();
+    while ( m_pSocketListener->isListening() == false )
+      ;
+  }
+
+  void C2SSocketListenerThread::run()
+  {
+    C2SStatusSetter running( &m_bIsRunning , true );
+    m_pSocketListener->run();
+  }
+
+  void C2SSocketListenerThread::stopListener()
+  {
+    m_pSocketListener->interrupt();
+    while( m_bIsRunning )
+      ;
+  }
+
+}

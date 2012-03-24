@@ -32,7 +32,12 @@
 #ifndef THREADBASE_H_
 #define THREADBASE_H_
 
-#include "Thread.h"
+#include "ThreadException.h"
+#include "Lock.h"
+
+#include <pthread.h>
+
+#include <assert.h>
 
 namespace c2s
 {
@@ -42,20 +47,85 @@ namespace c2s
     class ThreadBase
     {
     public:
-      virtual ~ThreadBase(){};
 
-      void operator()() { this->run(); }
+      ThreadBase()
+        : m_pMutex( new Mutex ),
+          m_bDestroyMutex( true ),
+          m_pthread( 0 )
+      {};
+
+      virtual ~ThreadBase()
+      {
+        if ( m_pthread )
+          pthread_detach( m_pthread );
+
+        if ( m_bDestroyMutex )
+          delete m_pMutex;
+      };
+
+      inline void start();
+
+    protected:
 
       virtual void run() = 0;
 
-      void start() { m_thread.start(); }
-
-    protected:
-      ThreadBase() { m_thread.set( *this ); }
+      Mutex *m_pMutex;
 
     private:
-      Thread<ThreadBase> m_thread;
+
+      ThreadBase &operator=( const ThreadBase &t );
+
+      bool m_bDestroyMutex;
+
+      ThreadBase( const ThreadBase &t );
+
+      void operator()();
+
+      static void *run( void *data );
+
+      pthread_t m_pthread;
+
     };
+
+    inline ThreadBase::ThreadBase( const ThreadBase &t )
+      : m_pMutex( t.m_pMutex ),
+        m_bDestroyMutex( false )
+    {}
+
+    inline void ThreadBase::operator()()
+    {
+      this->run();
+    }
+
+    inline void *ThreadBase::run( void *data )
+    {
+      ThreadBase *pThreadBase = reinterpret_cast<ThreadBase*>( data );
+
+      {
+        Lock<Mutex> lock( pThreadBase->m_pMutex );
+
+        pThreadBase->run();
+      }
+
+      pthread_exit( NULL );
+      return NULL;
+    }
+
+    inline void ThreadBase::start()
+    {
+      if ( m_pthread )
+      {
+        Lock<Mutex> lock( m_pMutex );
+
+        int status = pthread_detach( m_pthread );
+        if ( status )
+          throw ThreadException( "ThreadBase::start: Cannot detach thread" );
+      }
+
+      int status = pthread_create( &m_pthread , NULL , ThreadBase::run , (void *) this );
+      if ( status )
+        throw ThreadException( "ThreadBase::start: Cannot create thread" );
+    }
 
   }
 }
