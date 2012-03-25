@@ -45,24 +45,12 @@ namespace c2s
 
   struct C2SSettings;
 
-  /**
-   *
-   * @brief   C2S http server runtime.
-   *
-   * @see     C2SRuntime
-   *
-   */
   class C2SHttpServer
   {
   public:
 
     C2SHttpServer( const C2SSettings &settings , C2SLogAbstractFactory *pLogFactory = NULL );
 
-    /**
-     *
-     * @brief   Delete http server type instance.
-     *
-     */
     virtual ~C2SHttpServer();
 
     void start();

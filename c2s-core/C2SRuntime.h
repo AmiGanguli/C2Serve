@@ -45,11 +45,6 @@ namespace c2s
 
   struct C2SSettings;
 
-  /**
-   *
-   * @brief   Startup and shutdown your C2S service.
-   *
-   */
   class C2SRuntime
   {
   public:
@@ -60,28 +55,8 @@ namespace c2s
 
     void start();
 
-    /**
-     *
-     * @brief   Startup C2S service.
-     *
-     *          Create socket listener, bind socket and start listener event loop.
-     *
-     * @param   type    Service type to use.
-     *                  The service type specifies how data received from the socket has to be interpreted.
-     *                  @see C2SHttpServerType
-     *
-     * @throws  C2SException
-     *
-     */
     void run();
 
-    /**
-     *
-     * @brief   Interrupt listener and shutdown C2S service.
-     *
-     *          This method blocks until shutdown is complete.
-     *
-     */
     void shutdown();
 
   protected:
