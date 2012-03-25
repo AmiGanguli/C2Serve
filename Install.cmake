@@ -12,6 +12,15 @@ install(
 
 install(
   DIRECTORY
+    ${C2S_PROJECT_ROOT_DIR}/c2s-log/
+  DESTINATION
+    ${C2S_INSTALL_INCLUDE_DIR}/c2s-log
+  FILES_MATCHING PATTERN
+    "*.h"
+)
+
+install(
+  DIRECTORY
     ${C2S_PROJECT_ROOT_DIR}/c2s-core/
   DESTINATION
     ${C2S_INSTALL_INCLUDE_DIR}/c2s-core
