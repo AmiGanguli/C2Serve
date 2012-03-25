@@ -31,7 +31,6 @@
 
 #include "C2SSocketListener.h"
 
-#include "C2SRuntime.h"
 #include "C2SSocketInfo.h"
 #include "C2SSocketAcceptHandler.h"
 #include "C2SLogInterface.h"

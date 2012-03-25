@@ -5,6 +5,7 @@ include_directories(
   ${C2S_PROJECT_ROOT_DIR}/c2s-core
   ${C2S_PROJECT_ROOT_DIR}/c2s-util
   ${C2S_PROJECT_ROOT_DIR}/c2s-util/io
+  ${C2S_PROJECT_ROOT_DIR}/c2s-socket
 )
 
 add_library( c2s_http

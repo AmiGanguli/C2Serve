@@ -6,11 +6,11 @@ find_package( Boost COMPONENTS unit_test_framework )
 if ( Boost_FOUND )
 
 	include_directories(
-	  ${C2S_PROJECT_ROOT_DIR}/c2s-core
+	  ${C2S_PROJECT_ROOT_DIR}/c2s-socket
 	  ${Boost_INCLUDE_DIRS}
 	)
 	
-	add_executable( c2s_test_core
+	add_executable( c2s_test_socket
     C2STestCore
     C2STestSocketClient
     C2STestSocketListener
@@ -18,8 +18,8 @@ if ( Boost_FOUND )
     C2STestSocketListenerDataHandling
 	)
 	
-	target_link_libraries( c2s_test_core
-	  c2s_core
+	target_link_libraries( c2s_test_socket
+	  c2s_socket
 	  c2s_log
 	  c2s_util
 	  ${Boost_LIBRARIES}
@@ -27,11 +27,11 @@ if ( Boost_FOUND )
 	)
 	
 	install( TARGETS 
-		c2s_test_core
+		c2s_test_socket
 		DESTINATION bin )
 	
 	if ( NOT DISABLE_C2S_TESTING )
-	  add_test( c2s_test_core c2s_test_core )
+	  add_test( c2s_test_socket c2s_test_socket )
 	endif ( NOT DISABLE_C2S_TESTING )
 	
 endif ( Boost_FOUND )
