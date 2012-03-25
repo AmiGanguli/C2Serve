@@ -41,6 +41,7 @@ namespace c2s
   class C2SDataHandlingInterface;
   class C2SLogAbstractFactory;
   class C2SLogInterface;
+  class C2SSocketListenerThread;
 
   struct C2SSettings;
 
@@ -56,6 +57,8 @@ namespace c2s
     C2SRuntime( const C2SSettings &settings , C2SDataHandlingInterface *pDataHandling , C2SLogAbstractFactory *pLogFactory = NULL );
 
     virtual ~C2SRuntime();
+
+    void start();
 
     /**
      *
@@ -81,15 +84,6 @@ namespace c2s
      */
     void shutdown();
 
-    /**
-     *
-     * @brief   Blocks until C2S service startup is complete.
-     *
-     *          Use that function if you need to wait for startup (very useful for unit testing).
-     *
-     */
-    void waitForStartup();
-
   protected:
 
     C2SDataHandlingInterface *m_pDataHandling;
@@ -100,21 +94,15 @@ namespace c2s
 
     C2SRuntime &operator=( const C2SRuntime & );
 
-    void runInternal();
-
-    void shutdownInternal();
+    void createSocketListener( const C2SSettings &settings );
 
     C2SSocketListener *m_pSocketListener;
+
+    C2SSocketListenerThread *m_pSocketListenerThread;
 
     C2SLogAbstractFactory *m_pLogFactory;
 
     C2SLogInterface *m_pLogInstance;
-
-    volatile bool m_bIsRunning;
-
-    volatile bool m_bIsOnStartup;
-
-    volatile bool m_bIsOnShutdown;
 
   };
 

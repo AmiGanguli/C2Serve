@@ -50,9 +50,9 @@ namespace c2s
 
     void stopListener();
 
-  protected:
-
     void run();
+
+    void waitForStartup() const;
 
   private:
 

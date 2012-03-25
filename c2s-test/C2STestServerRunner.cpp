@@ -58,53 +58,31 @@ namespace c2s
     C2STestServerRunner::C2STestServerRunner( const std::list<C2SHttpResourcePrototype*> &resources , unsigned short iPort )
     {
       c2s::thread::Lock<c2s::thread::Mutex> lock( &m_mutex );
-
       m_serviceSettings.iPort = iPort;
-
       this->createServerRuntime();
-
       std::list<C2SHttpResourcePrototype*>::const_iterator it = resources.begin();
       for ( ; it != resources.end(); ++it )
-      {
-//            BOOST_MESSAGE( "add resource \"" + ( *it )->getContextRoot() + "\"" );
         m_pHttpServerRuntime->registerResourcePrototype( *it );
-      }
-
       this->startServerRuntime();
-//          BOOST_MESSAGE( "startup server" );
-
-//          BOOST_MESSAGE( "startup complete" );
     }
 
     C2STestServerRunner::~C2STestServerRunner()
     {
       c2s::thread::Lock<c2s::thread::Mutex> lock( &m_mutex );
-
       BOOST_MESSAGE( "shutdown server" );
       m_pHttpServerRuntime->shutdown();
-
       delete m_pHttpServerRuntime;
-      delete m_pServerRunThread;
-      delete m_pServerThread;
-
-
       BOOST_MESSAGE( "server is down" );
     }
 
     void C2STestServerRunner::createServerRuntime()
     {
-
       m_pHttpServerRuntime = new C2SHttpServer( m_serviceSettings );
-      m_pServerRunThread = new C2STestServerThread( m_pHttpServerRuntime );
-      m_pServerThread = new c2s::thread::Thread<c2s::test::C2STestServerThread>( m_pServerRunThread );
-
     }
 
     void C2STestServerRunner::startServerRuntime()
     {
-      m_pServerThread->start();
-      m_pHttpServerRuntime->waitForStartup();
-
+      m_pHttpServerRuntime->start();
     }
 
   }

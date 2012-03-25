@@ -70,10 +70,6 @@ namespace c2s
 
       C2SHttpServer *m_pHttpServerRuntime;
 
-      C2STestServerThread *m_pServerRunThread;
-
-      c2s::thread::Thread<c2s::test::C2STestServerThread> *m_pServerThread;
-
       c2s::thread::Mutex m_mutex;
 
     };

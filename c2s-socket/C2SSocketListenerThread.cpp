@@ -48,9 +48,10 @@ namespace c2s
 
   void C2SSocketListenerThread::startListener()
   {
+    if ( m_bIsRunning )
+      throw C2SSocketException( "C2SSocketListenerThread::startListener: Socket listener is already running!" );
     this->start();
-    while ( m_pSocketListener->isListening() == false )
-      ;
+    this->waitForStartup();
   }
 
   void C2SSocketListenerThread::run()
@@ -63,6 +64,12 @@ namespace c2s
   {
     m_pSocketListener->interrupt();
     while( m_bIsRunning )
+      ;
+  }
+
+  void C2SSocketListenerThread::waitForStartup() const
+  {
+    while ( m_pSocketListener->isListening() == false )
       ;
   }
 

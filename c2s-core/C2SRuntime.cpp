@@ -38,6 +38,7 @@
 #include "C2SSocketListener.h"
 #include "C2SLogInterface.h"
 #include "C2SLogSimpleMessageFactory.h"
+#include "C2SSocketListenerThread.h"
 
 #include "ThreadQueue.h"
 #include "FileUtils.h"
@@ -49,19 +50,12 @@ namespace c2s
 
   C2SRuntime::C2SRuntime( const C2SSettings &settings , C2SDataHandlingInterface *pDataHandling , C2SLogAbstractFactory *pLogFactory )
     : m_pDataHandling( pDataHandling ),
-      m_pLogFactory( pLogFactory ),
-      m_bIsRunning( false ),
-      m_bIsOnStartup( false ),
-      m_bIsOnShutdown( false )
+      m_pLogFactory( pLogFactory )
   {
     if ( !m_pLogFactory )
       m_pLogFactory = new C2SLogSimpleMessageFactory();
     m_pLogInstance = m_pLogFactory->createLogInstance();
-    //TODO: set listeners from outside (allow multiple listeners)
-    C2SSocketListenerSettings ls;
-    ls.iPort = settings.iPort;
-    ls.iNumThreads = settings.iNumThreads;
-    m_pSocketListener = new C2SSocketListener( ls , *m_pDataHandling , *m_pLogInstance );
+    this->createSocketListener( settings );
   }
 
   C2SRuntime::~C2SRuntime()
@@ -69,46 +63,33 @@ namespace c2s
     delete m_pSocketListener;
     delete m_pLogFactory;
     delete m_pLogInstance;
+    delete m_pSocketListenerThread;
+  }
+
+  void C2SRuntime::start()
+  {
+    m_pSocketListener->connect();
+    m_pSocketListenerThread->startListener();
   }
 
   void C2SRuntime::run()
   {
-    if ( m_bIsRunning || m_bIsOnStartup || m_bIsOnShutdown )
-      throw C2SException( "C2SRuntime::run: Server is already running!" );
-
-    m_bIsOnStartup = true;
-
-    C2SStatusSetter running( &m_bIsRunning , true );
-    this->runInternal();
+    m_pSocketListener->connect();
+    m_pSocketListenerThread->run();
   }
 
   void C2SRuntime::shutdown()
   {
-    if ( !m_bIsRunning )
-      throw C2SException( "C2SRuntime::shutdown: Server is currently not running!" );
-
-    C2SStatusSetter running( &m_bIsOnShutdown , true );
-    this->shutdownInternal();
+    m_pSocketListenerThread->stopListener();
   }
 
-  void C2SRuntime::waitForStartup()
+  void C2SRuntime::createSocketListener( const C2SSettings &settings )
   {
-    while( m_bIsOnStartup || !m_bIsRunning )
-      ;
+    C2SSocketListenerSettings socketListenerSettings;
+    socketListenerSettings.iPort = settings.iPort;
+    socketListenerSettings.iNumThreads = settings.iNumThreads;
+    m_pSocketListener = new C2SSocketListener( socketListenerSettings , *m_pDataHandling , *m_pLogInstance );
+    m_pSocketListenerThread = new C2SSocketListenerThread( m_pSocketListener );
   }
 
-  void C2SRuntime::runInternal()
-  {
-    m_bIsOnStartup = false;
-    m_pSocketListener->connectAndRun();
-  }
-
-  void C2SRuntime::shutdownInternal()
-  {
-    m_pSocketListener->interrupt();
-
-    //wait for run shutdown
-    while( m_bIsRunning )
-      ;
-  }
 }

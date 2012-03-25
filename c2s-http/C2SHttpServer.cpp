@@ -56,14 +56,14 @@ namespace c2s
     delete m_pHttpResourcePrototypes;
   }
 
+  void C2SHttpServer::start()
+  {
+    m_pServiceRuntime->start();
+  }
+
   void C2SHttpServer::run()
   {
     m_pServiceRuntime->run();
-  }
-
-  void C2SHttpServer::waitForStartup()
-  {
-    m_pServiceRuntime->waitForStartup();
   }
 
   void C2SHttpServer::shutdown()

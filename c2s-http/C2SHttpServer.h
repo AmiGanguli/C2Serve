@@ -65,9 +65,9 @@ namespace c2s
      */
     virtual ~C2SHttpServer();
 
-    void run();
+    void start();
 
-    void waitForStartup();
+    void run();
 
     void shutdown();
 
