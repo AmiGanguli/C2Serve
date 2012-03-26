@@ -34,6 +34,7 @@
 #include "C2SSocketInfo.h"
 
 #include <iostream>
+#include <cstring>
 
 namespace c2s
 {
