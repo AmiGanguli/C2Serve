@@ -82,7 +82,16 @@ namespace c2s
 
   void C2SRestMethodPrototype::addPathSegment( const std::string &sPathSegment )
   {
-    m_pathSegments.appendPathSegment( new C2SRestPathSegment( sPathSegment ) );
+    std::vector<std::string> vPathSegments = c2s::util::splitString( sPathSegment , '/' );
+    std::vector<std::string>::const_iterator it = vPathSegments.begin();
+    std::vector<std::string>::const_iterator end = vPathSegments.end();
+    for ( ; it != end; ++it )
+    {
+      const std::string &sSinglePathSegment = *it;
+      if ( sSinglePathSegment.size() == 0 )
+        throw C2SRestException( "C2SRestMethodPrototype::addPathSegment: " , "Invalid path segment: " + sPathSegment , InternalServerError );
+      m_pathSegments.appendPathSegment( new C2SRestPathSegment( sSinglePathSegment ) );
+    }
   }
 
   void C2SRestMethodPrototype::addQueryParameter( const std::string &sParameterID , std::string *pParameterObjectToWrite , const char *pParameterDefaultValue )
