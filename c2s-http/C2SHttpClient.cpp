@@ -81,7 +81,7 @@ namespace c2s
 #endif
   }
 
-  C2SHttpResponse C2SHttpClient::send( const C2SHttpRequest &request )
+  C2SHttpResponse *C2SHttpClient::send( const C2SHttpRequest &request )
   {
     C2SSocketInfo info;
 
@@ -159,7 +159,7 @@ namespace c2s
     if ( shutdown( info.SocketDescriptor , SHUT_WR ) )
       throw C2SHttpClientException( "C2SHttpClient::send: Cannot shutdown socket!" );
 
-    C2SHttpResponse response;
+    C2SHttpResponse *pServerResponse = new C2SHttpResponse();
 
     //initialize data buffer
     char buffer[ BUFFERSIZE ];
@@ -180,7 +180,7 @@ namespace c2s
       if ( iBytesRead < 0 )
         throw C2SHttpClientException( "C2SHttpClient::send: Error reading from socket!" );
 
-      response.push( buffer , iBytesRead );
+      pServerResponse->push( buffer , iBytesRead );
     }
 
 #ifdef WINXX
@@ -189,9 +189,9 @@ namespace c2s
     close( info.SocketDescriptor );
 #endif
 
-    response.finished();
+    pServerResponse->finished();
 
-    return response;
+    return pServerResponse;
   }
 
   void C2SHttpClient::writeToSocket( const char *data , unsigned int iSize , const C2SSocketInfo &info )

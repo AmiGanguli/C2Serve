@@ -74,7 +74,7 @@ namespace c2s
       return *this;
     }
 
-    C2SHttpResponse C2STestRestRequest::process() const
+    C2SHttpResponse *C2STestRestRequest::process() const
     {
       C2SHttpClient client( "localhost" , C2STestRestFixture::iPortOfTestServer );
       return client.send( m_request );

@@ -57,7 +57,7 @@ namespace c2s
 
     virtual ~C2SHttpClient();
 
-    C2SHttpResponse send( const C2SHttpRequest &request );
+    C2SHttpResponse *send( const C2SHttpRequest &request );
 
   private:
 

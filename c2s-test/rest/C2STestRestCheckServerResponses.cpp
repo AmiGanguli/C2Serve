@@ -101,8 +101,9 @@ namespace c2s
     void C2STestRestCheckServerResponses::checkResponse( const c2s::test::C2STestRestRequest &request , const c2s::test::C2STestRestResponse &response_check )
     {
       BOOST_MESSAGE( "processing URI \"" + request.getURI() + "\"" );
-      c2s::C2SHttpResponse response = request.process();
-      response_check.check( response );
+      c2s::C2SHttpResponse *pServerResponse = request.process();
+      response_check.check( *pServerResponse );
+      delete pServerResponse;
     }
 
     void C2STestRestCheckServerResponses::checkContextRootForGET()

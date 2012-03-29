@@ -55,7 +55,7 @@ namespace c2s
 
       C2STestRestRequest &entity( const C2SHttpMediaType &mediatype , const std::string &sEntityData );
 
-      C2SHttpResponse process() const;
+      C2SHttpResponse *process() const;
 
       const std::string &getURI() const;
 
