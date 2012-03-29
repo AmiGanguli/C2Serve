@@ -44,7 +44,7 @@ namespace c2s
   {
 
     const std::string C2STestRestMethodMediaTypeConverter::sPathToMethod = "media-type";
-    const std::string C2STestRestMethodMediaTypeConverter::sPathSegment = "convert";
+    const std::string C2STestRestMethodMediaTypeConverter::sPathSegment = "/convert/xml-or-json/";
 
     C2STestRestMethodMediaTypeConverter::C2STestRestMethodMediaTypeConverter()
       : C2SRestMethodPrototypePOST<std::string>( sPathToMethod ),
