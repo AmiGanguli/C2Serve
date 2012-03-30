@@ -33,7 +33,7 @@
 #define C2STESTSERVERRUNNER_H_
 
 #include "C2SSettings.h"
-#include "Thread.h"
+#include "Mutex.h"
 
 #include <list>
 

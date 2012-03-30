@@ -33,6 +33,7 @@
 #include "C2STestServerThread.h"
 
 #include "C2SHttpServer.h"
+#include "Lock.h"
 
 #include <boost/test/unit_test.hpp>
 

@@ -69,7 +69,7 @@ namespace c2s
 
     };
 
-    class TaskQueue
+    class TaskQueue : public ThreadBase
     {
     public:
 
@@ -81,14 +81,11 @@ namespace c2s
           m_runnables.push_back( TaskQueueRunnable( this ) );
           m_workers.queue( &( m_runnables.back() ) );
         }
-
-        m_pControllerThread = new Thread<TaskQueue>( this );
       }
 
       virtual ~TaskQueue()
       {
         this->join();
-        delete m_pControllerThread;
       }
 
       void join()
@@ -105,7 +102,7 @@ namespace c2s
         {
           m_runningMutex.lock();
           m_bIsRunning = true;
-          m_pControllerThread->start();
+          this->start();
         }
       }
 
@@ -155,8 +152,6 @@ namespace c2s
       std::list<TaskBase*> m_tasks;
 
       ThreadQueue<TaskQueueRunnable> m_workers;
-
-      Thread<TaskQueue> *m_pControllerThread;
 
       volatile bool m_bIsRunning;
 

@@ -33,7 +33,7 @@
 #define THREADQUEUE_H_
 
 #include "Lock.h"
-#include "Thread.h"
+#include "ThreadBase.h"
 
 #include <list>
 

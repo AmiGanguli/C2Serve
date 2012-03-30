@@ -33,6 +33,7 @@
 #define THREADTESTRUNNABLE_H_
 
 #include "Lock.h"
+#include "ThreadBase.h"
 
 #include <boost/test/unit_test.hpp>
 
@@ -53,7 +54,7 @@ namespace c2s
     namespace thread
     {
 
-      class ThreadTestRunnable
+      class ThreadTestRunnable : public c2s::thread::ThreadBase
       {
       public:
 
@@ -65,7 +66,7 @@ namespace c2s
             m_sID( sID )
         {};
 
-        ~ThreadTestRunnable()
+        virtual ~ThreadTestRunnable()
         {
           m_globalMutex.lock();
           BOOST_CHECK( !m_bRunning );

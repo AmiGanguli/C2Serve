@@ -37,7 +37,6 @@
 
 #include "TaskQueue.h"
 #include "ThreadQueue.h"
-#include "Thread.h"
 
 using namespace c2s::test::thread;
 
@@ -47,14 +46,13 @@ BOOST_AUTO_TEST_CASE( gThreadRun )
   c2s::thread::Mutex globalMutex;
   
   ThreadTestRunnable p( "RunCheck" , &globalMutex );
-  c2s::thread::Thread<ThreadTestRunnable> t( &p );
 
   //first run
-  t.start();
+  p.start();
   while ( p.runs() < 1 );
 
   //second run
-  t.start();
+  p.start();
   while ( p.runs() < 2 );
 }
 
@@ -64,16 +62,15 @@ BOOST_AUTO_TEST_CASE( gThreadSynchronization )
   c2s::thread::Mutex globalMutex;
   
   ThreadTestRunnable p( "SyncCheck" , &globalMutex );
-  c2s::thread::Thread<ThreadTestRunnable> t( &p );
 
   //first run
-  t.start();
+  p.start();
 
   //second run
-  t.start();
+  p.start();
 
   //third run
-  t.start();
+  p.start();
 
   while ( p.runs() < 3 );
 }
