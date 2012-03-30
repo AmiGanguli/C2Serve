@@ -32,8 +32,8 @@
 #ifndef THREADTESTRUNNABLE_H_
 #define THREADTESTRUNNABLE_H_
 
-#include "Lock.h"
-#include "ThreadBase.h"
+#include "C2SLock.h"
+#include "C2SThreadBase.h"
 
 #include <boost/test/unit_test.hpp>
 
@@ -54,11 +54,11 @@ namespace c2s
     namespace thread
     {
 
-      class ThreadTestRunnable : public c2s::thread::ThreadBase
+      class ThreadTestRunnable : public c2s::thread::C2SThreadBase
       {
       public:
 
-        ThreadTestRunnable( const std::string &sID , c2s::thread::Mutex *pGlobalMutex )
+        ThreadTestRunnable( const std::string &sID , c2s::thread::C2SMutex *pGlobalMutex )
           : m_iRunCounter( 0 ),
             m_bRunning( false ),
             m_globalMutex( *pGlobalMutex ),
@@ -75,7 +75,7 @@ namespace c2s
 
         void run()
         {
-          c2s::thread::Lock<c2s::thread::Mutex> lock( &m_mutex );
+          c2s::thread::C2SLock<c2s::thread::C2SMutex> lock( &m_mutex );
 
           m_globalMutex.lock();
           BOOST_CHECK( !m_bRunning );
@@ -99,7 +99,7 @@ namespace c2s
 
         int runs()
         {
-          c2s::thread::Lock<c2s::thread::Mutex> lock( &m_mutex );
+          c2s::thread::C2SLock<c2s::thread::C2SMutex> lock( &m_mutex );
           return m_iRunCounter;
         }
 
@@ -109,9 +109,9 @@ namespace c2s
 
         bool m_bRunning;
 
-        c2s::thread::Mutex m_mutex;
+        c2s::thread::C2SMutex m_mutex;
         
-        c2s::thread::Mutex &m_globalMutex;
+        c2s::thread::C2SMutex &m_globalMutex;
 
         int m_iSleepMS;
 

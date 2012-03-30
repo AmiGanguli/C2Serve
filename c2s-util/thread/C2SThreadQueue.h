@@ -29,11 +29,12 @@
 
  */
 
-#ifndef THREADQUEUE_H_
-#define THREADQUEUE_H_
+#ifndef C2STHREADQUEUE_H_
+#define C2STHREADQUEUE_H_
 
-#include "Lock.h"
-#include "ThreadBase.h"
+#include "C2SLock.h"
+#include "C2SMutex.h"
+#include "C2SThreadBase.h"
 
 #include <list>
 
@@ -43,24 +44,24 @@ namespace c2s
   namespace thread
   {
 
-    template <class Runnable> class ThreadQueue;
+    template <class Runnable> class C2SThreadQueue;
 
-    class ThreadQueueException : public ThreadException
+    class C2SThreadQueueException : public C2SThreadException
     {
     public:
 
-      ThreadQueueException( const std::string &msg ) : ThreadException( msg ) {};
+      C2SThreadQueueException( const std::string &msg ) : C2SThreadException( msg ) {};
 
     };
 
     template <class Runnable>
-    class ThreadQueue
+    class C2SThreadQueue
     {
     public:
 
-      ThreadQueue();
+      C2SThreadQueue();
 
-      virtual ~ThreadQueue();
+      virtual ~C2SThreadQueue();
 
       void queue( Runnable *pRunnable );
 
@@ -71,17 +72,17 @@ namespace c2s
 
     private:
 
-      class ThreadQueueRunner : public ThreadBase
+      class C2SThreadQueueRunner : public C2SThreadBase
       {
       public:
 
-        ThreadQueueRunner( Runnable *pRunnable , ThreadQueue<Runnable> *pQueue )
+        C2SThreadQueueRunner( Runnable *pRunnable , C2SThreadQueue<Runnable> *pQueue )
           : m_runnable( *pRunnable ),
             m_pQueue( pQueue )
         {
         };
             
-        ~ThreadQueueRunner()
+        ~C2SThreadQueueRunner()
         {
         }
 
@@ -92,35 +93,35 @@ namespace c2s
 
       private:
 
-        ThreadQueueRunner( const ThreadQueueRunner &r );
+        C2SThreadQueueRunner( const C2SThreadQueueRunner &r );
 
-        ThreadQueueRunner &operator=( const ThreadQueueRunner &r );
+        C2SThreadQueueRunner &operator=( const C2SThreadQueueRunner &r );
 
         Runnable &m_runnable;
 
-        ThreadQueue<Runnable> *m_pQueue;
+        C2SThreadQueue<Runnable> *m_pQueue;
 
-        Mutex m_mutex;
+        C2SMutex m_mutex;
 
       };
 
     protected:
 
-      friend class ThreadQueueRunner;
+      friend class C2SThreadQueueRunner;
 
-      void reregister( ThreadQueueRunner *pRunner );
+      void reregister( C2SThreadQueueRunner *pRunner );
 
     private:
 
-      std::list<ThreadQueueRunner*> m_threads;
+      std::list<C2SThreadQueueRunner*> m_threads;
 
       unsigned int m_iSize;
 
-      Mutex m_writeMutex;
+      C2SMutex m_writeMutex;
 
-      Mutex m_occupiedMutex;
+      C2SMutex m_occupiedMutex;
 
-      Mutex m_busyMutex;
+      C2SMutex m_busyMutex;
 
 #ifdef DEBUG
       bool m_bLocked;
@@ -129,7 +130,7 @@ namespace c2s
     };
 
     template <class Runnable>
-    ThreadQueue<Runnable>::ThreadQueue()
+    C2SThreadQueue<Runnable>::C2SThreadQueue()
       : m_iSize( 0 )
 #ifdef DEBUG
         , m_bLocked( false )
@@ -139,28 +140,28 @@ namespace c2s
     }
 
     template <class Runnable>
-    ThreadQueue<Runnable>::~ThreadQueue()
+    C2SThreadQueue<Runnable>::~C2SThreadQueue()
     {
-      typename std::list<ThreadQueueRunner*>::iterator it = m_threads.begin();
+      typename std::list<C2SThreadQueueRunner*>::iterator it = m_threads.begin();
       for ( ; it != m_threads.end(); ++it )
         delete ( *it );
     }
 
     template <class Runnable>
-    void ThreadQueue<Runnable>::queue( Runnable *pRunnable )
+    void C2SThreadQueue<Runnable>::queue( Runnable *pRunnable )
     {
-      Lock<Mutex> writeLock( &m_writeMutex );
+      C2SLock<C2SMutex> writeLock( &m_writeMutex );
       ++m_iSize;
-      m_threads.push_back( new ThreadQueueRunner( pRunnable , this ) );
+      m_threads.push_back( new C2SThreadQueueRunner( pRunnable , this ) );
     }
 
     template <class Runnable>
-    void ThreadQueue<Runnable>::start()
+    void C2SThreadQueue<Runnable>::start()
     {
       //TODO: This won't block on windows
       m_occupiedMutex.lock();
 
-      Lock<Mutex> writeLock( &m_writeMutex );
+      C2SLock<C2SMutex> writeLock( &m_writeMutex );
 
 #ifdef DEBUG
       assert( !m_bLocked );
@@ -173,7 +174,7 @@ namespace c2s
         m_bLocked = false;
 #endif
         m_occupiedMutex.unlock();
-        throw ThreadQueueException( "ThreadQueue::start: Thread queue is empty!" );
+        throw C2SThreadQueueException( "C2SThreadQueue::start: Thread queue is empty!" );
       }
 
       assert( m_threads.size() <= m_iSize );
@@ -181,7 +182,7 @@ namespace c2s
       if ( m_iSize == m_threads.size() )
         m_busyMutex.lock();
 
-      ThreadQueueRunner &runner = *( m_threads.front() );
+      C2SThreadQueueRunner &runner = *( m_threads.front() );
       m_threads.pop_front();
 
       if ( m_threads.size() )
@@ -195,15 +196,15 @@ namespace c2s
     }
 
     template <class Runnable>
-    void ThreadQueue<Runnable>::join()
+    void C2SThreadQueue<Runnable>::join()
     {
-      Lock<Mutex> lock( &m_busyMutex );
+      C2SLock<C2SMutex> lock( &m_busyMutex );
     }
 
     template <class Runnable>
-    void ThreadQueue<Runnable>::reregister( ThreadQueueRunner *pRunner )
+    void C2SThreadQueue<Runnable>::reregister( C2SThreadQueueRunner *pRunner )
     {
-      Lock<Mutex> writeLock( &m_writeMutex );
+      C2SLock<C2SMutex> writeLock( &m_writeMutex );
 
 #ifdef DEBUG
       assert( !m_bLocked );
@@ -228,21 +229,21 @@ namespace c2s
     }
 
     template <class Runnable>
-    void ThreadQueue<Runnable>::ThreadQueueRunner::startThread()
+    void C2SThreadQueue<Runnable>::C2SThreadQueueRunner::startThread()
     {
       m_mutex.lock();
       m_mutex.unlock();
 
       if ( !m_pQueue )
-        throw ThreadQueueException( "ThreadQueueRunner::start: Parent thread queue is not set!" );
+        throw C2SThreadQueueException( "C2SThreadQueueRunner::start: Parent thread queue is not set!" );
 
       this->start();
     }
 
     template <class Runnable>
-    void ThreadQueue<Runnable>::ThreadQueueRunner::run()
+    void C2SThreadQueue<Runnable>::C2SThreadQueueRunner::run()
     {
-      Lock<Mutex> lock( &m_mutex );
+      C2SLock<C2SMutex> lock( &m_mutex );
 
       m_runnable.run();
       assert( m_pQueue );
@@ -253,4 +254,4 @@ namespace c2s
 
 }
 
-#endif /* THREADQUEUE_H_ */
+#endif /* C2STHREADQUEUE_H_ */

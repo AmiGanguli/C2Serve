@@ -32,7 +32,7 @@
 #ifndef C2STESTRESTCHECKMULTITHREADING_H_
 #define C2STESTRESTCHECKMULTITHREADING_H_
 
-#include "TaskQueue.h"
+#include "C2SThreadTaskInterface.h"
 
 #include "C2STestRestRequest.h"
 #include "C2STestRestResponse.h"
@@ -43,7 +43,7 @@ namespace c2s
   namespace test
   {
 
-    class C2STestRestCheckMultiThreading : public c2s::thread::TaskBase
+    class C2STestRestCheckMultiThreading : public c2s::thread::C2SThreadTaskInterface
     {
     public:
 
@@ -56,6 +56,8 @@ namespace c2s
     private:
 
       C2STestRestCheckMultiThreading( const c2s::test::C2STestRestRequest &request , const c2s::test::C2STestRestResponse &response_check );
+
+      virtual ~C2STestRestCheckMultiThreading(){};
 
       static C2STestRestCheckMultiThreading *create( unsigned int iSleepMS );
 

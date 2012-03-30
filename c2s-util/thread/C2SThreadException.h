@@ -29,10 +29,10 @@
 
  */
 
-#ifndef LOCK_H_
-#define LOCK_H_
+#ifndef C2STHREADEXCEPTION_H_
+#define C2STHREADEXCEPTION_H_
 
-#include "Mutex.h"
+#include "GenericException.h"
 
 namespace c2s
 {
@@ -40,29 +40,11 @@ namespace c2s
   namespace thread
   {
 
-    template <class Lockable>
-    class Lock
+    class C2SThreadException : public GenericException
     {
     public:
 
-      Lock( Lockable *pLockable )
-        : m_lockable( *pLockable )
-      {
-        m_lockable.lock();
-      }
-
-      virtual ~Lock()
-      {
-        m_lockable.unlock();
-      }
-
-    private:
-
-      Lock( const Lock &lock );
-
-      Lock &operator=( const Lock &lock );
-
-      Lockable &m_lockable;
+      C2SThreadException( const std::string &msg ) : GenericException( msg ) {};
 
     };
 
@@ -70,4 +52,4 @@ namespace c2s
 
 }
 
-#endif /* LOCK_H_ */
+#endif /* C2STHREADEXCEPTION_H_ */

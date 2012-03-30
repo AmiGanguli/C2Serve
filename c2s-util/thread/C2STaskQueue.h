@@ -29,35 +29,24 @@
 
  */
 
-#ifndef TASKQUEUE_H_
-#define TASKQUEUE_H_
+#ifndef C2STASKQUEUE_H_
+#define C2STASKQUEUE_H_
 
-#include "ThreadQueue.h"
+#include "C2SThreadQueue.h"
+#include "C2SThreadTaskInterface.h"
 
 namespace c2s
 {
   namespace thread
   {
 
-    class TaskBase
+    class C2STaskQueue;
+
+    class C2STaskQueueRunnable
     {
     public:
 
-      TaskBase(){};
-
-      virtual ~TaskBase(){};
-
-      virtual void run() = 0;
-
-    };
-
-    class TaskQueue;
-
-    class TaskQueueRunnable
-    {
-    public:
-
-      TaskQueueRunnable( TaskQueue *pQueue )
+      C2STaskQueueRunnable( C2STaskQueue *pQueue )
         : m_pQueue( pQueue )
       {};
 
@@ -65,38 +54,38 @@ namespace c2s
 
     private:
 
-      TaskQueue *m_pQueue;
+      C2STaskQueue *m_pQueue;
 
     };
 
-    class TaskQueue : public ThreadBase
+    class C2STaskQueue : public C2SThreadBase
     {
     public:
 
-      TaskQueue( unsigned int iNumThreads )
+      C2STaskQueue( unsigned int iNumThreads )
         : m_bIsRunning( false )
       {
         for ( unsigned int i = 0; i < iNumThreads; ++i )
         {
-          m_runnables.push_back( TaskQueueRunnable( this ) );
+          m_runnables.push_back( C2STaskQueueRunnable( this ) );
           m_workers.queue( &( m_runnables.back() ) );
         }
       }
 
-      virtual ~TaskQueue()
+      virtual ~C2STaskQueue()
       {
         this->join();
       }
 
       void join()
       {
-        Lock<Mutex> lock( &m_runningMutex );
+        C2SLock<C2SMutex> lock( &m_runningMutex );
         m_workers.join();
       }
 
-      void queue( TaskBase *task )
+      void queue( C2SThreadTaskInterface *task )
       {
-        Lock<Mutex> lock( &m_mutex );
+        C2SLock<C2SMutex> lock( &m_mutex );
         m_tasks.push_back( task );
         if ( !m_bIsRunning )
         {
@@ -129,15 +118,15 @@ namespace c2s
 
     protected:
 
-      friend class TaskQueueRunnable;
+      friend class C2STaskQueueRunnable;
 
-      TaskBase *detach()
+      C2SThreadTaskInterface *detach()
       {
-        Lock<Mutex> lock( &m_mutex );
+        C2SLock<C2SMutex> lock( &m_mutex );
 
         assert( m_tasks.size() );
 
-        TaskBase *pNextTask = *( m_tasks.begin() );
+        C2SThreadTaskInterface *pNextTask = *( m_tasks.begin() );
         m_tasks.pop_front();
 
         m_detachMutex.unlock();
@@ -147,29 +136,29 @@ namespace c2s
 
     private:
 
-      std::list<TaskQueueRunnable> m_runnables;
+      std::list<C2STaskQueueRunnable> m_runnables;
 
-      std::list<TaskBase*> m_tasks;
+      std::list<C2SThreadTaskInterface*> m_tasks;
 
-      ThreadQueue<TaskQueueRunnable> m_workers;
+      C2SThreadQueue<C2STaskQueueRunnable> m_workers;
 
       volatile bool m_bIsRunning;
 
-      Mutex m_mutex;
+      C2SMutex m_mutex;
 
-      Mutex m_runningMutex;
+      C2SMutex m_runningMutex;
 
-      Mutex m_detachMutex;
+      C2SMutex m_detachMutex;
 
     };
 
-    inline void TaskQueueRunnable::run()
+    inline void C2STaskQueueRunnable::run()
     {
-      TaskBase *pTask = m_pQueue->detach();
+      C2SThreadTaskInterface *pTask = m_pQueue->detach();
       pTask->run();
     }
 
   }
 }
 
-#endif /* TASKQUEUE_H_ */
+#endif /* C2STASKQUEUE_H_ */

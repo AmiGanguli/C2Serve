@@ -32,7 +32,7 @@
 #ifndef C2SLOGMUTEX_H_
 #define C2SLOGMUTEX_H_
 
-#include "Mutex.h"
+#include "C2SMutex.h"
 
 namespace c2s
 {
@@ -51,7 +51,7 @@ namespace c2s
 
   private:
 
-    thread::Mutex m_mutex;
+    thread::C2SMutex m_mutex;
 
   };
 

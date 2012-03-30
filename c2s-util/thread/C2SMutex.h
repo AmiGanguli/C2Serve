@@ -29,39 +29,88 @@
 
  */
 
-#ifndef THREADBASE_H_
-#define THREADBASE_H_
+#ifndef C2SMUTEX_H_
+#define C2SMUTEX_H_
 
-#include "ThreadPosix.h"
+#include "GenericException.h"
+
+#include <pthread.h>
+
+#include <iostream>
 
 namespace c2s
 {
+
   namespace thread
   {
 
-    class ThreadBase : public ThreadPosix
+    class C2SMutexException : public GenericException
     {
     public:
 
-      ThreadBase(){};
-
-      virtual ~ThreadBase(){};
-
-    protected:
-
-      virtual void doWork() { this->run(); }
-
-      virtual void run() = 0;
-
-    private:
-
-      ThreadBase( const ThreadBase &t );
-
-      ThreadBase &operator=( const ThreadBase &t );
+      C2SMutexException( const std::string &msg ) : GenericException( msg ) {};
 
     };
 
+    class C2SMutex
+    {
+    public:
+
+      C2SMutex();
+
+      ~C2SMutex();
+
+      inline void lock();
+
+      int trylock();
+
+      inline void unlock();
+
+    private:
+
+      C2SMutex( const C2SMutex &mutex );
+
+      C2SMutex &operator=( const C2SMutex &mutex );
+
+      pthread_mutex_t m_mutex;
+
+    };
+
+    inline C2SMutex::C2SMutex()
+    {
+      int status = pthread_mutex_init( &m_mutex , NULL );
+      if ( status )
+        throw C2SMutexException( "C2SMutex::C2SMutex: Cannot initialize mutex!" );
+    };
+
+    inline void C2SMutex::lock()
+    {
+      int status = pthread_mutex_lock( &m_mutex );
+      if ( status )
+        throw C2SMutexException( "C2SMutex::lock: Cannot lock mutex!" );
+    }
+
+    inline void C2SMutex::unlock()
+    {
+      int status = pthread_mutex_unlock( &m_mutex );
+      if ( status )
+        throw C2SMutexException( "C2SMutex::unlock: Cannot unlock mutex!" );
+    }
+
+    inline C2SMutex::~C2SMutex()
+    {
+      int status = pthread_mutex_destroy( &m_mutex );
+      if ( status )
+        std::cerr << "C2SMutex::~C2SMutex: Error destroying mutex!" << std::endl;
+    };
+
+    inline int C2SMutex::trylock()
+    {
+      return pthread_mutex_trylock( &m_mutex );
+    }
+
   }
+
 }
 
-#endif /* THREADBASE_H_ */
+#endif /* C2SMUTEX_H_ */

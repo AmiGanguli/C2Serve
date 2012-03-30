@@ -33,7 +33,7 @@
 #define C2STESTSERVERRUNNER_H_
 
 #include "C2SSettings.h"
-#include "Mutex.h"
+#include "C2SMutex.h"
 
 #include <list>
 
@@ -70,7 +70,7 @@ namespace c2s
 
       C2SHttpServer *m_pHttpServerRuntime;
 
-      c2s::thread::Mutex m_mutex;
+      c2s::thread::C2SMutex m_mutex;
 
     };
 

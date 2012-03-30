@@ -32,7 +32,7 @@
 #ifndef THREADTESTTASKQUEUERUNNABLE_H_
 #define THREADTESTTASKQUEUERUNNABLE_H_
 
-#include "TaskQueue.h"
+#include "C2SThreadTaskInterface.h"
 
 #define NUM_TASK_THREADS 30
 #define SLEEP_TIME_MS_TASK 10
@@ -44,14 +44,16 @@ namespace c2s
     namespace thread
     {
 
-      class ThreadTestTaskQueueRunnable : public c2s::thread::TaskBase
+      class ThreadTestTaskQueueRunnable : public c2s::thread::C2SThreadTaskInterface
       {
       public:
 
-        ThreadTestTaskQueueRunnable( unsigned int *pRunningThreads , c2s::thread::Mutex *pGlobalMutex )
+        ThreadTestTaskQueueRunnable( unsigned int *pRunningThreads , c2s::thread::C2SMutex *pGlobalMutex )
           : m_pRunningThreads( pRunningThreads ),
             m_globalMutex( *pGlobalMutex )
         {};
+
+        virtual ~ThreadTestTaskQueueRunnable(){};
 
         void run()
         {
@@ -75,7 +77,7 @@ namespace c2s
 
         unsigned int *m_pRunningThreads;
 
-        c2s::thread::Mutex &m_globalMutex;
+        c2s::thread::C2SMutex &m_globalMutex;
 
       };
 

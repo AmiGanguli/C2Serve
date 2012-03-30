@@ -35,7 +35,7 @@
 
 #include "C2SRestMethodPrototypeGET.h"
 
-#include "Mutex.h"
+#include "C2SMutex.h"
 
 namespace c2s
 {
@@ -46,7 +46,7 @@ namespace c2s
     {
     public:
 
-      C2STestRestMethodThreading( c2s::thread::Mutex *pGlobalMutex );
+      C2STestRestMethodThreading( c2s::thread::C2SMutex *pGlobalMutex );
 
       C2SHttpResponse *process();
 
@@ -64,7 +64,7 @@ namespace c2s
 
       int m_iSleepMS;
 
-      c2s::thread::Mutex &m_globalMutex;
+      c2s::thread::C2SMutex &m_globalMutex;
 
     };
 

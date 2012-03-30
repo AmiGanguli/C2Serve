@@ -29,10 +29,8 @@
 
  */
 
-#ifndef THREADEXCEPTION_H_
-#define THREADEXCEPTION_H_
-
-#include "GenericException.h"
+#ifndef C2SLOCK_H_
+#define C2SLOCK_H_
 
 namespace c2s
 {
@@ -40,11 +38,29 @@ namespace c2s
   namespace thread
   {
 
-    class ThreadException : public GenericException
+    template <class Lockable>
+    class C2SLock
     {
     public:
 
-      ThreadException( const std::string &msg ) : GenericException( msg ) {};
+      C2SLock( Lockable *pLockable )
+        : m_lockable( *pLockable )
+      {
+        m_lockable.lock();
+      }
+
+      virtual ~C2SLock()
+      {
+        m_lockable.unlock();
+      }
+
+    private:
+
+      C2SLock( const C2SLock &lock );
+
+      C2SLock &operator=( const C2SLock &lock );
+
+      Lockable &m_lockable;
 
     };
 
@@ -52,4 +68,4 @@ namespace c2s
 
 }
 
-#endif /* THREADEXCEPTION_H_ */
+#endif /* C2SLOCK_H_ */
