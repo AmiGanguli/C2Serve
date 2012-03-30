@@ -29,8 +29,8 @@
 
  */
 
-#ifndef THREADTESTRUNNABLE_H_
-#define THREADTESTRUNNABLE_H_
+#ifndef C2STHREADTESTRUNNABLE_H_
+#define C2STHREADTESTRUNNABLE_H_
 
 #include "C2SLock.h"
 #include "C2SThreadBase.h"
@@ -54,11 +54,11 @@ namespace c2s
     namespace thread
     {
 
-      class ThreadTestRunnable : public c2s::thread::C2SThreadBase
+      class C2SThreadTestRunnable : public c2s::thread::C2SThreadBase
       {
       public:
 
-        ThreadTestRunnable( const std::string &sID , c2s::thread::C2SMutex *pGlobalMutex )
+        C2SThreadTestRunnable( const std::string &sID , c2s::thread::C2SMutex *pGlobalMutex )
           : m_iRunCounter( 0 ),
             m_bRunning( false ),
             m_globalMutex( *pGlobalMutex ),
@@ -66,7 +66,7 @@ namespace c2s
             m_sID( sID )
         {};
 
-        virtual ~ThreadTestRunnable()
+        virtual ~C2SThreadTestRunnable()
         {
           m_globalMutex.lock();
           BOOST_CHECK( !m_bRunning );
@@ -125,4 +125,4 @@ namespace c2s
 
 }
 
-#endif /* THREADTESTRUNNABLE_H_ */
+#endif /* C2STHREADTESTRUNNABLE_H_ */

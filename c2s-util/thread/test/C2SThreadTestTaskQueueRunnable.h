@@ -29,8 +29,8 @@
 
  */
 
-#ifndef THREADTESTTASKQUEUERUNNABLE_H_
-#define THREADTESTTASKQUEUERUNNABLE_H_
+#ifndef C2STHREADTESTTASKQUEUERUNNABLE_H_
+#define C2STHREADTESTTASKQUEUERUNNABLE_H_
 
 #include "C2SThreadTaskInterface.h"
 
@@ -44,16 +44,16 @@ namespace c2s
     namespace thread
     {
 
-      class ThreadTestTaskQueueRunnable : public c2s::thread::C2SThreadTaskInterface
+      class C2SThreadTestTaskQueueRunnable : public c2s::thread::C2SThreadTaskInterface
       {
       public:
 
-        ThreadTestTaskQueueRunnable( unsigned int *pRunningThreads , c2s::thread::C2SMutex *pGlobalMutex )
+        C2SThreadTestTaskQueueRunnable( unsigned int *pRunningThreads , c2s::thread::C2SMutex *pGlobalMutex )
           : m_pRunningThreads( pRunningThreads ),
             m_globalMutex( *pGlobalMutex )
         {};
 
-        virtual ~ThreadTestTaskQueueRunnable(){};
+        virtual ~C2SThreadTestTaskQueueRunnable(){};
 
         void run()
         {
@@ -85,4 +85,4 @@ namespace c2s
   }
 }
 
-#endif /* THREADTESTTASKQUEUERUNNABLE_H_ */
+#endif /* C2STHREADTESTTASKQUEUERUNNABLE_H_ */
