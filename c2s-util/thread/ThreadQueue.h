@@ -71,7 +71,7 @@ namespace c2s
 
     private:
 
-      class ThreadQueueRunner
+      class ThreadQueueRunner : public ThreadBase
       {
       public:
 
@@ -79,18 +79,16 @@ namespace c2s
           : m_runnable( *pRunnable ),
             m_pQueue( pQueue )
         {
-          m_pThread = new Thread<ThreadQueueRunner>( this );
         };
             
         ~ThreadQueueRunner()
         {
-          delete m_pThread;
         }
 
         void run();
 
         //TODO: Exception handling
-        void start();
+        void startThread();
 
       private:
 
@@ -99,8 +97,6 @@ namespace c2s
         ThreadQueueRunner &operator=( const ThreadQueueRunner &r );
 
         Runnable &m_runnable;
-
-        Thread<ThreadQueueRunner> *m_pThread;
 
         ThreadQueue<Runnable> *m_pQueue;
 
@@ -195,7 +191,7 @@ namespace c2s
       m_bLocked = false;
 #endif
 
-      runner.start();
+      runner.startThread();
     }
 
     template <class Runnable>
@@ -232,7 +228,7 @@ namespace c2s
     }
 
     template <class Runnable>
-    void ThreadQueue<Runnable>::ThreadQueueRunner::start()
+    void ThreadQueue<Runnable>::ThreadQueueRunner::startThread()
     {
       m_mutex.lock();
       m_mutex.unlock();
@@ -240,7 +236,7 @@ namespace c2s
       if ( !m_pQueue )
         throw ThreadQueueException( "ThreadQueueRunner::start: Parent thread queue is not set!" );
 
-      m_pThread->start();
+      this->start();
     }
 
     template <class Runnable>
