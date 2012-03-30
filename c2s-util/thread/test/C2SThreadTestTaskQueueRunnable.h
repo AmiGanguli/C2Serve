@@ -57,9 +57,8 @@ namespace c2s
 
         void run()
         {
-          ++( *m_pRunningThreads );
-
           m_globalMutex.lock();
+          ++( *m_pRunningThreads );
           BOOST_CHECK( ( *m_pRunningThreads ) <= NUM_TASK_THREADS );
           BOOST_MESSAGE( "#tasks running: " << *m_pRunningThreads );
           m_globalMutex.unlock();
@@ -70,7 +69,9 @@ namespace c2s
           usleep( SLEEP_TIME_MS_TASK * 1000 );
 #endif
 
+          m_globalMutex.lock();
           --( *m_pRunningThreads );
+          m_globalMutex.unlock();
         }
 
       private:
