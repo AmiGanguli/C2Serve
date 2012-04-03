@@ -51,7 +51,7 @@ namespace c2s
   namespace test
   {
 
-    c2s::thread::Mutex *C2STestRestFixture::pGlobalMutex = NULL;
+    c2s::thread::C2SMutex *C2STestRestFixture::pGlobalMutex = NULL;
 
     const unsigned int C2STestRestFixture::iPortOfTestServerRandomStart = 8180;
     const unsigned int C2STestRestFixture::iPortOfTestServerRandomRange = 50;
@@ -63,7 +63,7 @@ namespace c2s
     C2STestRestFixture::C2STestRestFixture() : m_sr( NULL )
     {
       if ( !pGlobalMutex )
-        pGlobalMutex = new c2s::thread::Mutex();
+        pGlobalMutex = new c2s::thread::C2SMutex();
 
       srand ( time( NULL ) );
       iPortOfTestServer = iPortOfTestServerRandomStart + ( rand() % iPortOfTestServerRandomRange );
@@ -76,7 +76,7 @@ namespace c2s
       delete pGlobalMutex;
     }
 
-    std::list<c2s::C2SHttpResourcePrototype*> C2STestRestFixture::createResources( c2s::thread::Mutex *pGlobalMutex )
+    std::list<c2s::C2SHttpResourcePrototype*> C2STestRestFixture::createResources( c2s::thread::C2SMutex *pGlobalMutex )
     {
       std::list<c2s::C2SHttpResourcePrototype*> resources;
 

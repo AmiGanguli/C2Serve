@@ -32,13 +32,13 @@
 #ifndef C2SSOCKETLISTENERTHREAD_H_
 #define C2SSOCKETLISTENERTHREAD_H_
 
-#include "ThreadBase.h"
+#include "C2SThreadBase.h"
 
 namespace c2s
 {
   class C2SSocketListener;
 
-  class C2SSocketListenerThread : public c2s::thread::ThreadBase
+  class C2SSocketListenerThread : public c2s::thread::C2SThreadBase
   {
   public:
 

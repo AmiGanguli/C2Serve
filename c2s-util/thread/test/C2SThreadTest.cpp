@@ -32,63 +32,60 @@
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
-#include "ThreadTestRunnable.h"
-#include "ThreadTestTaskQueueRunnable.h"
+#include "C2SThreadTestRunnable.h"
+#include "C2SThreadTestTaskQueueRunnable.h"
 
-#include "TaskQueue.h"
-#include "ThreadQueue.h"
-#include "Thread.h"
+#include "C2STaskQueue.h"
+#include "C2SThreadQueue.h"
 
 using namespace c2s::test::thread;
 
-BOOST_AUTO_TEST_CASE( gThreadRun )
+BOOST_AUTO_TEST_CASE( run )
 {
   //mutex to synchronize access to boost unittest functions
-  c2s::thread::Mutex globalMutex;
+  c2s::thread::C2SMutex globalMutex;
   
-  ThreadTestRunnable p( "RunCheck" , &globalMutex );
-  c2s::thread::Thread<ThreadTestRunnable> t( &p );
+  C2SThreadTestRunnable p( "RunCheck" , &globalMutex );
 
   //first run
-  t.start();
+  p.start();
   while ( p.runs() < 1 );
 
   //second run
-  t.start();
+  p.start();
   while ( p.runs() < 2 );
 }
 
-BOOST_AUTO_TEST_CASE( gThreadSynchronization )
+BOOST_AUTO_TEST_CASE( synchronization )
 {
   //mutex to synchronize access to boost unittest functions
-  c2s::thread::Mutex globalMutex;
+  c2s::thread::C2SMutex globalMutex;
   
-  ThreadTestRunnable p( "SyncCheck" , &globalMutex );
-  c2s::thread::Thread<ThreadTestRunnable> t( &p );
+  C2SThreadTestRunnable p( "SyncCheck" , &globalMutex );
 
   //first run
-  t.start();
+  p.start();
 
   //second run
-  t.start();
+  p.start();
 
   //third run
-  t.start();
+  p.start();
 
   while ( p.runs() < 3 );
 }
 
-BOOST_AUTO_TEST_CASE( gThreadQueue )
+BOOST_AUTO_TEST_CASE( queue )
 {
   //mutex to synchronize access to boost unittest functions
-  c2s::thread::Mutex globalMutex;
+  c2s::thread::C2SMutex globalMutex;
   
-  c2s::thread::ThreadQueue<ThreadTestRunnable> tq;
+  c2s::thread::C2SThreadQueue<C2SThreadTestRunnable> tq;
 
-  ThreadTestRunnable r1( "ThreadQueue#1" , &globalMutex );
+  C2SThreadTestRunnable r1( "ThreadQueue#1" , &globalMutex );
   tq.queue( &r1 );
 
-  ThreadTestRunnable r2( "ThreadQueue#2" , &globalMutex );
+  C2SThreadTestRunnable r2( "ThreadQueue#2" , &globalMutex );
   tq.queue( &r2 );
 
   tq.start();
@@ -102,22 +99,22 @@ BOOST_AUTO_TEST_CASE( gThreadQueue )
   tq.join();
 }
 
-BOOST_AUTO_TEST_CASE( gTaskQueue )
+BOOST_AUTO_TEST_CASE( task_queue )
 {
   //mutex to synchronize access to boost unittest functions
-  c2s::thread::Mutex globalMutex;
+  c2s::thread::C2SMutex globalMutex;
 
-  c2s::thread::TaskQueue tq( NUM_TASK_THREADS );
+  c2s::thread::C2STaskQueue tq( NUM_TASK_THREADS );
   unsigned int iNumThreadsRunning = 0;
   unsigned int iNumTasks = 100;
 
-  std::list<ThreadTestTaskQueueRunnable*> runs;
+  std::list<C2SThreadTestTaskQueueRunnable*> runs;
 
   for ( unsigned int i = 0; i < iNumTasks; ++i )
-    runs.push_back( new ThreadTestTaskQueueRunnable ( &iNumThreadsRunning , &globalMutex ) );
+    runs.push_back( new C2SThreadTestTaskQueueRunnable ( &iNumThreadsRunning , &globalMutex ) );
 
 
-  std::list<ThreadTestTaskQueueRunnable*>::iterator it = runs.begin();
+  std::list<C2SThreadTestTaskQueueRunnable*>::iterator it = runs.begin();
   for ( ; it != runs.end(); ++it )
     tq.queue( *it );
 

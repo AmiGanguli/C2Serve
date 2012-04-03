@@ -40,7 +40,7 @@ namespace c2s
 
     const std::string C2STestRestMethodThreading::sPath = "threading";
 
-    C2STestRestMethodThreading::C2STestRestMethodThreading( c2s::thread::Mutex *pGlobalMutex )
+    C2STestRestMethodThreading::C2STestRestMethodThreading( c2s::thread::C2SMutex *pGlobalMutex )
       : C2SRestMethodPrototypeGET<>( sPath ),
         m_bIsRunning( false ),
         m_iSleepMS( 0 ),

@@ -29,14 +29,8 @@
 
  */
 
-#ifndef MUTEX_H_
-#define MUTEX_H_
-
-#include "GenericException.h"
-
-#include <pthread.h>
-
-#include <iostream>
+#ifndef C2SLOCK_H_
+#define C2SLOCK_H_
 
 namespace c2s
 {
@@ -44,73 +38,34 @@ namespace c2s
   namespace thread
   {
 
-    class MutexException : public GenericException
+    template <class Lockable>
+    class C2SLock
     {
     public:
 
-      MutexException( const std::string &msg ) : GenericException( msg ) {};
+      C2SLock( Lockable *pLockable )
+        : m_lockable( *pLockable )
+      {
+        m_lockable.lock();
+      }
 
-    };
-
-    class Mutex
-    {
-    public:
-
-      Mutex();
-
-      ~Mutex();
-
-      inline void lock();
-
-      int trylock();
-
-      inline void unlock();
+      virtual ~C2SLock()
+      {
+        m_lockable.unlock();
+      }
 
     private:
 
-      Mutex( const Mutex &mutex );
+      C2SLock( const C2SLock &lock );
 
-      Mutex &operator=( const Mutex &mutex );
+      C2SLock &operator=( const C2SLock &lock );
 
-      pthread_mutex_t m_mutex;
+      Lockable &m_lockable;
 
     };
-
-    inline Mutex::Mutex()
-    {
-      int status = pthread_mutex_init( &m_mutex , NULL );
-      if ( status )
-        throw MutexException( "Mutex::Mutex: Cannot initialize mutex!" );
-    };
-
-    inline void Mutex::lock()
-    {
-      int status = pthread_mutex_lock( &m_mutex );
-      if ( status )
-        throw MutexException( "Mutex::lock: Cannot lock mutex!" );
-    }
-
-    inline void Mutex::unlock()
-    {
-      int status = pthread_mutex_unlock( &m_mutex );
-      if ( status )
-        throw MutexException( "Mutex::unlock: Cannot unlock mutex!" );
-    }
-
-    inline Mutex::~Mutex()
-    {
-      int status = pthread_mutex_destroy( &m_mutex );
-      if ( status )
-        std::cerr << "Mutex::~Mutex: Error destroying mutex!" << std::endl;
-    };
-
-    inline int Mutex::trylock()
-    {
-      return pthread_mutex_trylock( &m_mutex );
-    }
 
   }
 
 }
 
-#endif /* MUTEX_H_ */
+#endif /* C2SLOCK_H_ */

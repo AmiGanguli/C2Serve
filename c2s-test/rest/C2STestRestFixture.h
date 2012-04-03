@@ -32,7 +32,7 @@
 #ifndef C2STESTRESTFIXTURE_H_
 #define C2STESTRESTFIXTURE_H_
 
-#include "Mutex.h"
+#include "C2SMutex.h"
 
 #include <list>
 
@@ -54,7 +54,7 @@ namespace c2s
 
       virtual ~C2STestRestFixture();
 
-      static c2s::thread::Mutex *pGlobalMutex;
+      static c2s::thread::C2SMutex *pGlobalMutex;
 
       static unsigned int iPortOfTestServer;
 
@@ -64,7 +64,7 @@ namespace c2s
 
     private:
 
-      static std::list<C2SHttpResourcePrototype*> createResources( c2s::thread::Mutex *pGlobalMutex );
+      static std::list<C2SHttpResourcePrototype*> createResources( c2s::thread::C2SMutex *pGlobalMutex );
 
       static const unsigned int iPortOfTestServerRandomStart;
 

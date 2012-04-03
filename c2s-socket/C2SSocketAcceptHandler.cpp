@@ -33,7 +33,8 @@
 #include "C2SDataPullInterface.h"
 #include "C2SDataHandlingInterface.h"
 
-#include "Lock.h"
+#include "C2SLock.h"
+#include "C2SMutex.h"
 
 #ifndef WINXX
 #include <sys/socket.h>
@@ -64,7 +65,7 @@ namespace c2s
   }
 
   //pDataHandler will be deleted
-  C2SSocketAcceptHandler::C2SSocketAcceptHandler( const C2SSocketInfo &socketInfo , const C2SDataHandlingInterface &dataHandling , c2s::thread::Mutex *pAcceptMutex )
+  C2SSocketAcceptHandler::C2SSocketAcceptHandler( const C2SSocketInfo &socketInfo , const C2SDataHandlingInterface &dataHandling , c2s::thread::C2SMutex *pAcceptMutex )
     : m_socketInfo( socketInfo ),
       m_pDataPull( NULL ),
       m_bInterrupted( false ),
@@ -93,7 +94,7 @@ namespace c2s
 #endif
 
     {
-      c2s::thread::Lock<c2s::thread::Mutex> lock( &m_acceptMutex );
+      c2s::thread::C2SLock<c2s::thread::C2SMutex> lock( &m_acceptMutex );
 
       if ( m_bInterrupted )
         return;

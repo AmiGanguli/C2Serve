@@ -40,9 +40,6 @@
 #include "C2SLogSimpleMessageFactory.h"
 #include "C2SSocketListenerThread.h"
 
-#include "ThreadQueue.h"
-#include "FileUtils.h"
-
 #define TIMEOUT_MS 5000
 
 namespace c2s

@@ -35,7 +35,7 @@
 #include "C2SSocketAcceptHandler.h"
 #include "C2SLogInterface.h"
 
-#include "ThreadQueue.h"
+#include "C2SThreadQueue.h"
 #include "StringUtils.h"
 #include "C2SStatusSetter.h"
 
@@ -68,8 +68,8 @@ namespace c2s
   void C2SSocketListener::run()
   {
     m_bKeepRunning = true;
-    c2s::thread::Mutex *pAcceptMutex = new c2s::thread::Mutex();
-    c2s::thread::ThreadQueue<C2SSocketAcceptHandler> *pAcceptThreadQueue = new c2s::thread::ThreadQueue<C2SSocketAcceptHandler>();
+    c2s::thread::C2SMutex *pAcceptMutex = new c2s::thread::C2SMutex();
+    c2s::thread::C2SThreadQueue<C2SSocketAcceptHandler> *pAcceptThreadQueue = new c2s::thread::C2SThreadQueue<C2SSocketAcceptHandler>();
 
     for ( unsigned int i = 0; i < m_settings.iNumThreads; ++i )
     {

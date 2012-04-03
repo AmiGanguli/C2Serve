@@ -33,6 +33,7 @@
 #include "C2STestRestMethodThreading.h"
 #include "C2STestRestFixture.h"
 
+#include "C2STaskQueue.h"
 #include "StringUtils.h"
 
 namespace c2s
@@ -52,7 +53,7 @@ namespace c2s
       unsigned int iNumThreads = 5;
       unsigned int iSleepMS = 5;
 
-      c2s::thread::TaskQueue tq( iNumThreads );
+      c2s::thread::C2STaskQueue tq( iNumThreads );
       std::list<C2STestRestCheckMultiThreading*> checks;
 
       for ( unsigned int i = 0; i < iNumRequests; ++i )
@@ -72,7 +73,7 @@ namespace c2s
     void C2STestRestCheckMultiThreading::run()
     {
       c2s::C2SHttpResponse *pServerResponse = m_request.process();
-      c2s::thread::Lock<c2s::thread::Mutex> lock( c2s::test::C2STestRestFixture::pGlobalMutex );
+      c2s::thread::C2SLock<c2s::thread::C2SMutex> lock( c2s::test::C2STestRestFixture::pGlobalMutex );
       response_check.check( *pServerResponse );
       delete pServerResponse;
     }

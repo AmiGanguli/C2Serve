@@ -30,98 +30,30 @@
  */
 
 
-#ifndef THREADPOSIX_H_
-#define THREADPOSIX_H_
-
-#include "ThreadException.h"
-#include "Lock.h"
-
-#include <pthread.h>
-
-#include <assert.h>
+#ifndef C2STHREADTASKINTERFACE_H_
+#define C2STHREADTASKINTERFACE_H_
 
 namespace c2s
 {
   namespace thread
   {
 
-    class ThreadPosix
+    class C2SThreadTaskInterface
     {
     public:
 
-      ThreadPosix()
-        : m_pMutex( new Mutex ),
-          m_bDestroyMutex( true ),
-          m_pthread( 0 )
-      {};
+      virtual ~C2SThreadTaskInterface(){};
 
-      virtual ~ThreadPosix()
-      {
-        if ( m_pthread )
-          pthread_detach( m_pthread );
-
-        if ( m_bDestroyMutex )
-          delete m_pMutex;
-      };
-
-      inline void start();
+      virtual void run() = 0;
 
     protected:
 
-      virtual void doWork() = 0;
-
-      Mutex *m_pMutex;
-
-    private:
-
-      ThreadPosix &operator=( const ThreadPosix &t );
-
-      bool m_bDestroyMutex;
-
-      ThreadPosix( const ThreadPosix &t );
-
-      static void *run( void *data );
-
-      pthread_t m_pthread;
+      C2SThreadTaskInterface(){};
 
     };
-
-    inline ThreadPosix::ThreadPosix( const ThreadPosix &t )
-      : m_pMutex( t.m_pMutex ),
-        m_bDestroyMutex( false )
-    {}
-
-    inline void *ThreadPosix::run( void *data )
-    {
-      ThreadPosix *pThreadPosix = reinterpret_cast<ThreadPosix*>( data );
-
-      {
-        Lock<Mutex> lock( pThreadPosix->m_pMutex );
-        pThreadPosix->doWork();
-      }
-
-      pthread_exit( NULL );
-      return NULL;
-    }
-
-    inline void ThreadPosix::start()
-    {
-      if ( m_pthread )
-      {
-        Lock<Mutex> lock( m_pMutex );
-
-        int status = pthread_detach( m_pthread );
-        if ( status )
-          throw ThreadException( "ThreadPosix::start: Cannot detach thread" );
-      }
-
-      int status = pthread_create( &m_pthread , NULL , ThreadPosix::run , (void *) this );
-      if ( status )
-        throw ThreadException( "ThreadPosix::start: Cannot create thread" );
-    }
 
   }
 }
 
 
-#endif /* THREADPOSIX_H_ */
+#endif /* C2STHREADTASKINTERFACE_H_ */

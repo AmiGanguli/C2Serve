@@ -9,15 +9,15 @@ include_directories( ../ ${Boost_INCLUDE_DIRS} )
     
 if( NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" )
 
-add_executable( threadtest_posix
-    ThreadTest )
+add_executable( c2s_test_thread_posix
+    C2SThreadTest )
 
-target_link_libraries( threadtest_posix ${Boost_LIBRARIES} pthread )
+target_link_libraries( c2s_test_thread_posix ${Boost_LIBRARIES} pthread )
 
-install( TARGETS threadtest_posix DESTINATION bin )
+install( TARGETS c2s_test_thread_posix DESTINATION bin )
 
 if ( NOT C2Serve_DISABLE_TESTING )
-  add_test( threadtest_posix threadtest_posix )
+  add_test( c2s_test_thread_posix c2s_test_thread_posix )
 endif ( NOT C2Serve_DISABLE_TESTING )
 
 

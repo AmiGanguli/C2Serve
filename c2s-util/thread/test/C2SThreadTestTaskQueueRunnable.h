@@ -29,39 +29,61 @@
 
  */
 
-#ifndef THREADBASE_H_
-#define THREADBASE_H_
+#ifndef C2STHREADTESTTASKQUEUERUNNABLE_H_
+#define C2STHREADTESTTASKQUEUERUNNABLE_H_
 
-#include "ThreadPosix.h"
+#include "C2SThreadTaskInterface.h"
+
+#define NUM_TASK_THREADS 30
+#define SLEEP_TIME_MS_TASK 10
 
 namespace c2s
 {
-  namespace thread
+  namespace test
   {
-
-    class ThreadBase : public ThreadPosix
+    namespace thread
     {
-    public:
 
-      ThreadBase(){};
+      class C2SThreadTestTaskQueueRunnable : public c2s::thread::C2SThreadTaskInterface
+      {
+      public:
 
-      virtual ~ThreadBase(){};
+        C2SThreadTestTaskQueueRunnable( unsigned int *pRunningThreads , c2s::thread::C2SMutex *pGlobalMutex )
+          : m_pRunningThreads( pRunningThreads ),
+            m_globalMutex( *pGlobalMutex )
+        {};
 
-    protected:
+        virtual ~C2SThreadTestTaskQueueRunnable(){};
 
-      virtual void doWork() { this->run(); }
+        void run()
+        {
+          m_globalMutex.lock();
+          ++( *m_pRunningThreads );
+          BOOST_CHECK( ( *m_pRunningThreads ) <= NUM_TASK_THREADS );
+          BOOST_MESSAGE( "#tasks running: " << *m_pRunningThreads );
+          m_globalMutex.unlock();
 
-      virtual void run() = 0;
+#ifdef WINXX
+          Sleep( SLEEP_TIME_MS_TASK );
+#else	  
+          usleep( SLEEP_TIME_MS_TASK * 1000 );
+#endif
 
-    private:
+          m_globalMutex.lock();
+          --( *m_pRunningThreads );
+          m_globalMutex.unlock();
+        }
 
-      ThreadBase( const ThreadBase &t );
+      private:
 
-      ThreadBase &operator=( const ThreadBase &t );
+        unsigned int *m_pRunningThreads;
 
-    };
+        c2s::thread::C2SMutex &m_globalMutex;
 
+      };
+
+    }
   }
 }
 
-#endif /* THREADBASE_H_ */
+#endif /* C2STHREADTESTTASKQUEUERUNNABLE_H_ */

@@ -34,7 +34,7 @@
 #include "C2SLogMutex.h"
 #include "C2SLogPublicationInterface.h"
 
-#include "Lock.h"
+#include "C2SLock.h"
 
 namespace c2s
 {
@@ -93,7 +93,7 @@ namespace c2s
 
   void C2SLogBase::publishMessageSynchronized( const std::string &sLogMessage ) const
   {
-    thread::Lock<C2SLogMutex> m_lock( m_pLogMutex );
+    thread::C2SLock<C2SLogMutex> m_lock( m_pLogMutex );
     m_logPublication.writeLine( sLogMessage );
   }
 

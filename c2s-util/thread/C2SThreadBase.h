@@ -29,45 +29,39 @@
 
  */
 
-#ifndef LOCK_H_
-#define LOCK_H_
+#ifndef C2STHREADBASE_H_
+#define C2STHREADBASE_H_
 
-#include "Mutex.h"
+#include "C2SThreadPosix.h"
 
 namespace c2s
 {
-
   namespace thread
   {
 
-    template <class Lockable>
-    class Lock
+    class C2SThreadBase : public C2SThreadPosix
     {
     public:
 
-      Lock( Lockable *pLockable )
-        : m_lockable( *pLockable )
-      {
-        m_lockable.lock();
-      }
+      C2SThreadBase(){};
 
-      virtual ~Lock()
-      {
-        m_lockable.unlock();
-      }
+      virtual ~C2SThreadBase(){};
+
+    protected:
+
+      virtual void doWork() { this->run(); }
+
+      virtual void run() = 0;
 
     private:
 
-      Lock( const Lock &lock );
+      C2SThreadBase( const C2SThreadBase & );
 
-      Lock &operator=( const Lock &lock );
-
-      Lockable &m_lockable;
+      C2SThreadBase &operator=( const C2SThreadBase & );
 
     };
 
   }
-
 }
 
-#endif /* LOCK_H_ */
+#endif /* C2STHREADBASE_H_ */

@@ -29,99 +29,27 @@
 
  */
 
-#ifndef THREADTESTRUNNABLE_H_
-#define THREADTESTRUNNABLE_H_
+#ifndef C2STHREADEXCEPTION_H_
+#define C2STHREADEXCEPTION_H_
 
-#include "Lock.h"
-
-#include <boost/test/unit_test.hpp>
-
-#include <string>
-
-#ifdef WINXX
-#include <windows.h>
-#endif
-
-#define SLEEP_TIME_MS 30
+#include "GenericException.h"
 
 namespace c2s
 {
 
-  namespace test
+  namespace thread
   {
 
-    namespace thread
+    class C2SThreadException : public GenericException
     {
+    public:
 
-      class ThreadTestRunnable
-      {
-      public:
+      C2SThreadException( const std::string &msg ) : GenericException( msg ) {};
 
-        ThreadTestRunnable( const std::string &sID , c2s::thread::Mutex *pGlobalMutex )
-          : m_iRunCounter( 0 ),
-            m_bRunning( false ),
-            m_globalMutex( *pGlobalMutex ),
-            m_iSleepMS( SLEEP_TIME_MS ),
-            m_sID( sID )
-        {};
-
-        ~ThreadTestRunnable()
-        {
-          m_globalMutex.lock();
-          BOOST_CHECK( !m_bRunning );
-          m_globalMutex.unlock();
-        }
-
-        void run()
-        {
-          c2s::thread::Lock<c2s::thread::Mutex> lock( &m_mutex );
-
-          m_globalMutex.lock();
-          BOOST_CHECK( !m_bRunning );
-          BOOST_MESSAGE( "Running \"" + m_sID + "\"" );
-          m_globalMutex.unlock();
-
-          m_bRunning = true;
-#ifdef WINXX
-          Sleep( m_iSleepMS );
-#else
-          usleep( m_iSleepMS * 1000 );
-#endif
-          m_bRunning = false;
-
-          m_globalMutex.lock();
-          BOOST_MESSAGE( "Stopping \"" + m_sID + "\"" );
-          m_globalMutex.unlock();
-
-          ++m_iRunCounter;
-        }
-
-        int runs()
-        {
-          c2s::thread::Lock<c2s::thread::Mutex> lock( &m_mutex );
-          return m_iRunCounter;
-        }
-
-      private:
-
-        int m_iRunCounter;
-
-        bool m_bRunning;
-
-        c2s::thread::Mutex m_mutex;
-        
-        c2s::thread::Mutex &m_globalMutex;
-
-        int m_iSleepMS;
-
-        std::string m_sID;
-
-      };
-
-    }
+    };
 
   }
 
 }
 
-#endif /* THREADTESTRUNNABLE_H_ */
+#endif /* C2STHREADEXCEPTION_H_ */

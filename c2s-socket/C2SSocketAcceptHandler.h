@@ -36,7 +36,7 @@
 #include "C2SSocketInfo.h"
 #include "C2SDataPushInterface.h"
 
-#include "Mutex.h"
+#include "C2SMutex.h"
 
 namespace c2s
 {
@@ -69,7 +69,7 @@ namespace c2s
   {
   public:
 
-    C2SSocketAcceptHandler( const C2SSocketInfo &socketInfo , const C2SDataHandlingInterface &dataHandling , c2s::thread::Mutex *pAcceptMutex );
+    C2SSocketAcceptHandler( const C2SSocketInfo &socketInfo , const C2SDataHandlingInterface &dataHandling , c2s::thread::C2SMutex *pAcceptMutex );
 
     virtual ~C2SSocketAcceptHandler();
 
@@ -95,7 +95,7 @@ namespace c2s
 
     bool m_bInterrupted;
 
-    c2s::thread::Mutex &m_acceptMutex;
+    c2s::thread::C2SMutex &m_acceptMutex;
 
   };
 

@@ -29,58 +29,88 @@
 
  */
 
-#ifndef THREAD_H_
-#define THREAD_H_
+#ifndef C2SMUTEX_H_
+#define C2SMUTEX_H_
 
-#include "ThreadBase.h"
+#include "GenericException.h"
+
+#include <pthread.h>
+
+#include <iostream>
 
 namespace c2s
 {
+
   namespace thread
   {
 
-    template <class Runnable>
-    class Thread : public ThreadBase
+    class C2SMutexException : public GenericException
     {
     public:
 
-      Thread( Runnable *runnable )
-        : m_runnable( runnable )
-      {};
-
-      Thread()
-        : m_runnable( NULL )
-      {};
-
-      void set( Runnable &runnable ) { m_runnable = &runnable; }
-
-      virtual ~Thread()
-      {
-      };
-
-    protected:
-
-      void run();
-
-    private:
-
-      Runnable *m_runnable;
+      C2SMutexException( const std::string &msg ) : GenericException( msg ) {};
 
     };
 
-    template <class Runnable>
-    inline void Thread<Runnable>::run()
+    class C2SMutex
     {
-#ifdef USE_BOOST_THREADS
-      Lock<Mutex> lock( m_pMutex );
-#endif
+    public:
 
-      assert( m_runnable != NULL );
-      m_runnable->run();
+      C2SMutex();
+
+      ~C2SMutex();
+
+      inline void lock();
+
+      int trylock();
+
+      inline void unlock();
+
+    private:
+
+      C2SMutex( const C2SMutex &mutex );
+
+      C2SMutex &operator=( const C2SMutex &mutex );
+
+      pthread_mutex_t m_mutex;
+
+    };
+
+    inline C2SMutex::C2SMutex()
+    {
+      int status = pthread_mutex_init( &m_mutex , NULL );
+      if ( status )
+        throw C2SMutexException( "C2SMutex::C2SMutex: Cannot initialize mutex!" );
+    };
+
+    inline void C2SMutex::lock()
+    {
+      int status = pthread_mutex_lock( &m_mutex );
+      if ( status )
+        throw C2SMutexException( "C2SMutex::lock: Cannot lock mutex!" );
+    }
+
+    inline void C2SMutex::unlock()
+    {
+      int status = pthread_mutex_unlock( &m_mutex );
+      if ( status )
+        throw C2SMutexException( "C2SMutex::unlock: Cannot unlock mutex!" );
+    }
+
+    inline C2SMutex::~C2SMutex()
+    {
+      int status = pthread_mutex_destroy( &m_mutex );
+      if ( status )
+        std::cerr << "C2SMutex::~C2SMutex: Error destroying mutex!" << std::endl;
+    };
+
+    inline int C2SMutex::trylock()
+    {
+      return pthread_mutex_trylock( &m_mutex );
     }
 
   }
+
 }
 
-
-#endif /* THREAD_H_ */
+#endif /* C2SMUTEX_H_ */
