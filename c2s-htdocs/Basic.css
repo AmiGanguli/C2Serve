@@ -56,6 +56,20 @@ div.section
   border-style: none;
 }
 
+div.section table
+{
+  width: 800px;
+  margin: 0px auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+div.section table td
+{
+	vertical-align: top;
+	padding: 5px;
+}
+
 div.code
 {
 	width: 850px;

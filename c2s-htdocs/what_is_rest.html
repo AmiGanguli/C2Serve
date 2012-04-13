@@ -38,20 +38,58 @@
 
       <h3>Stateless communication</h3>
         A REST request is self-contained.
-        This means that neither the client nor the server needs to store information between requests. It does not mean that a REST resource or client cannot have a state, but the state will be either turned into resource state, or kept on the client.
+        This means that neither the client nor the server needs to store information between requests.
+        It does <b>not</b> mean that a REST resource or client cannot have a state, but the state will be either turned into resource state, or kept on the client.
         
       <h3>Addressability</h3>
         Each resource provided by a REST service has a unique address (the URI).
+        A URI is the way to identify resources in the web.
+        It allows the user to easily remark resources by simply storing the according URI (creating a bookmark or whatever).   
         
       <h3>Various representations</h3>
         According to the request, a REST web service should be able to provide a various number of representations of a resource.
+        The information which representation to choose is to be done by the client and sent with the request.
+        A web browser for instance can handle (display) data from all resources that produce html.
         
       <h3>Methods</h3>
-        REST defines the standard methods GET, POST, PUT and DELETE to be implemented for each resource.
+        REST defines the standard methods GET, POST, PUT, DELETE, HEAD and OPTIONS to be implemented for each resource.
+        
+        <table>
+          <tr>
+            <td>GET:</td>
+            <td>Request a resource from the server. A GET request is defined to be a safe operation. This means that a GET request causes no side effects on the server.</td>
+          </tr>
+          <tr>
+            <td>POST:</td>
+            <td>
+              Create a new subordinate of the resource identified by the Request-URI.
+              The URI of the created subordinate is delivered as result back to the client. 
+              An example could be posting a new message to a mailing-list, forum or whatever.
+            </td>
+          </tr>
+          <tr>
+            <td>PUT:</td>
+            <td>Store the enclosed entity under the supplied request URI or, if already existing, modify the resource.</td>
+          </tr>
+          <tr>
+            <td>DELETE:</td>
+            <td>Delete the resource under the supplied URI.</td>
+          </tr>
+          <tr>
+            <td>HEAD:</td>
+            <td>Request metadata for the resource under the supplied URI.</td>
+          </tr>
+          <tr>
+            <td>OPTIONS:</td>
+            <td>Request avaiable methods of a resource.</td>
+          </tr>
+        </table>
+        
+        For further details view the <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html" target="_blank">http specification</a>.
         
       <h3>Hypermedia</h3>
         Link things together so that a simple navigation between resources of a web service is realized.
-        The client is able to move from one state of the to the next.
+        The client should be able to move from one state of a service to the next.
         
    </div> 
   </div>
