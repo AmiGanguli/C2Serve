@@ -84,6 +84,7 @@ namespace c2s
             
         ~C2SThreadQueueRunner()
         {
+          C2SLock<C2SMutex> lock( &m_mutex );
         }
 
         void run();

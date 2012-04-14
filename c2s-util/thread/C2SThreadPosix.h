@@ -29,7 +29,6 @@
 
  */
 
-
 #ifndef THREADPOSIX_H_
 #define THREADPOSIX_H_
 
@@ -51,18 +50,13 @@ namespace c2s
     public:
 
       C2SThreadPosix()
-        : m_pMutex( new C2SMutex ),
-          m_bDestroyMutex( true ),
-          m_pthread( 0 )
+        : m_pthread( 0 )
       {};
 
       virtual ~C2SThreadPosix()
       {
         if ( m_pthread )
           pthread_detach( m_pthread );
-
-        if ( m_bDestroyMutex )
-          delete m_pMutex;
       };
 
       inline void start();
@@ -71,13 +65,9 @@ namespace c2s
 
       virtual void doWork() = 0;
 
-      C2SMutex *m_pMutex;
-
     private:
 
       C2SThreadPosix &operator=( const C2SThreadPosix &t );
-
-      bool m_bDestroyMutex;
 
       C2SThreadPosix( const C2SThreadPosix &t );
 
@@ -87,20 +77,10 @@ namespace c2s
 
     };
 
-    inline C2SThreadPosix::C2SThreadPosix( const C2SThreadPosix &t )
-      : m_pMutex( t.m_pMutex ),
-        m_bDestroyMutex( false )
-    {}
-
     inline void *C2SThreadPosix::run( void *data )
     {
       C2SThreadPosix *pThreadPosix = reinterpret_cast<C2SThreadPosix*>( data );
-
-      {
-        C2SLock<C2SMutex> lock( pThreadPosix->m_pMutex );
-        pThreadPosix->doWork();
-      }
-
+      pThreadPosix->doWork();
       pthread_exit( NULL );
       return NULL;
     }
@@ -109,8 +89,6 @@ namespace c2s
     {
       if ( m_pthread )
       {
-        C2SLock<C2SMutex> lock( m_pMutex );
-
         int status = pthread_detach( m_pthread );
         if ( status )
           throw C2SThreadException( "C2SThreadPosix::start: Cannot detach thread" );
