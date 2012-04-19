@@ -66,7 +66,6 @@ namespace c2s
 #ifdef WINXX
     WSACleanup();
 #endif
-//    m_type.release();
   }
 
   void C2SSocketListener::run()
