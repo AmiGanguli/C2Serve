@@ -38,6 +38,7 @@
 #include "C2SThreadQueueException.h"
 
 #include <list>
+#include <cassert>
 
 namespace c2s
 {

@@ -64,7 +64,7 @@ namespace c2s
 
     };
 
-    DWORD WINAPI c2sThreadCallback( LPVOID lpParam )
+    static DWORD WINAPI c2sThreadCallback( LPVOID lpParam )
     {
       C2SThreadWindows *pThreadObject = ( C2SThreadWindows* ) lpParam;
       pThreadObject->runInThread();
