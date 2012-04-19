@@ -36,7 +36,7 @@
 
 namespace c2s
 {
-  class C2SSocketInfo;
+  struct C2SSocketInfo;
 
   class C2SSocketClientConnection
   {

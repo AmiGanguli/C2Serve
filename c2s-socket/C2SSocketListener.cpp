@@ -40,6 +40,7 @@
 #include "C2SStatusSetter.h"
 
 #include <cstring>
+#include <cassert>
 
 namespace c2s
 {
@@ -62,6 +63,9 @@ namespace c2s
 
     delete m_pSocketInfo;
 
+#ifdef WINXX
+    WSACleanup();
+#endif
 //    m_type.release();
   }
 

@@ -39,6 +39,7 @@
 #include "C2SLogSimpleMessageFactory.h"
 
 #include <boost/test/unit_test.hpp>
+#include <ctime>
 
 namespace c2s
 {

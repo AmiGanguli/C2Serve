@@ -30,9 +30,9 @@ include( Install.cmake )
 
 add_subdirectory( c2s-util )
 add_subdirectory( c2s-log )
+add_subdirectory( c2s-socket )
 
 if( NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" )
-  add_subdirectory( c2s-socket )
   add_subdirectory( c2s-core )
   add_subdirectory( c2s-http )
   add_subdirectory( c2s-rest )
