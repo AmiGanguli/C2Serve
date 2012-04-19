@@ -35,6 +35,7 @@
 #include "C2SLock.h"
 #include "C2SMutex.h"
 #include "C2SThreadBase.h"
+#include "C2SThreadQueueException.h"
 
 #include <list>
 
@@ -45,14 +46,6 @@ namespace c2s
   {
 
     template <class Runnable> class C2SThreadQueue;
-
-    class C2SThreadQueueException : public C2SThreadException
-    {
-    public:
-
-      C2SThreadQueueException( const std::string &msg ) : C2SThreadException( msg ) {};
-
-    };
 
     template <class Runnable>
     class C2SThreadQueue
@@ -159,8 +152,12 @@ namespace c2s
     template <class Runnable>
     void C2SThreadQueue<Runnable>::start()
     {
-      //TODO: This won't block on windows
       m_occupiedMutex.lock();
+      //TODO
+#ifdef WINXX
+      while( m_threads.size() == 0 )
+        ;
+#endif
 
       C2SLock<C2SMutex> writeLock( &m_writeMutex );
 
@@ -200,6 +197,11 @@ namespace c2s
     void C2SThreadQueue<Runnable>::join()
     {
       C2SLock<C2SMutex> lock( &m_busyMutex );
+      //TODO
+#ifdef WINXX
+      while ( m_threads.size() != m_iSize )
+        ;
+#endif
     }
 
     template <class Runnable>

@@ -32,9 +32,13 @@
 #ifndef C2SMUTEX_H_
 #define C2SMUTEX_H_
 
-#include "GenericException.h"
+#include "C2SMutexException.h"
 
+#ifdef WINXX
+#include <windows.h>
+#else //WINXX
 #include <pthread.h>
+#endif //WINXX
 
 #include <iostream>
 
@@ -43,14 +47,6 @@ namespace c2s
 
   namespace thread
   {
-
-    class C2SMutexException : public GenericException
-    {
-    public:
-
-      C2SMutexException( const std::string &msg ) : GenericException( msg ) {};
-
-    };
 
     class C2SMutex
     {
@@ -72,9 +68,48 @@ namespace c2s
 
       C2SMutex &operator=( const C2SMutex &mutex );
 
+#ifdef WINXX
+
+      CRITICAL_SECTION m_criticalSection;
+
+#else //WINXX
+
       pthread_mutex_t m_mutex;
 
+#endif //WINXX
+
     };
+
+#ifdef WINXX
+
+    inline C2SMutex::C2SMutex()
+    {
+      if ( !InitializeCriticalSectionAndSpinCount( &m_criticalSection, 0x00000400) )
+        throw C2SMutexException( "C2SMutex::C2SMutex() Error initializing critical section!" );
+    };
+
+    inline C2SMutex::~C2SMutex()
+    {
+      DeleteCriticalSection( &m_criticalSection );
+    };
+
+    inline void C2SMutex::lock()
+    {
+      EnterCriticalSection( &m_criticalSection );
+    }
+
+    inline void C2SMutex::unlock()
+    {
+      LeaveCriticalSection( &m_criticalSection );
+    }
+
+    inline int C2SMutex::trylock()
+    {
+      //we must return 0 on sucess (according to pthread)
+      return static_cast<int>( TryEnterCriticalSection( &m_criticalSection ) == 0 );
+    }
+
+#else //WINXX
 
     inline C2SMutex::C2SMutex()
     {
@@ -108,6 +143,8 @@ namespace c2s
     {
       return pthread_mutex_trylock( &m_mutex );
     }
+
+#endif //WINXX
 
   }
 
