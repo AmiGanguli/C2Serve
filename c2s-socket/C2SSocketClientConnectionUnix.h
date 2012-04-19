@@ -1,6 +1,6 @@
 /**
 
- Copyright (c) 2012, C2Serve (http://www.c2serve.eu)
+ Copyright (c) 2011, C2Serve (http://www.c2serve.eu)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -29,35 +29,39 @@
 
  */
 
-#ifndef C2SSOCKETCLIENTCONNECTION_H_
-#define C2SSOCKETCLIENTCONNECTION_H_
+#ifndef C2SSOCKETCLIENTCONNECTIONUNIX_H_
+#define C2SSOCKETCLIENTCONNECTIONUNIX_H_
 
-#ifdef WINXX
-#include "C2SSocketClientConnectionWindows.h"
-#define C2S_SOCKET_CLIENT_CONNECTION_IMPLEMENTATION C2SSocketClientConnectionWindows
-#else //WINXX
-#include "C2SSocketClientConnectionUnix.h"
-#define C2S_SOCKET_CLIENT_CONNECTION_IMPLEMENTATION C2SSocketClientConnectionUnix
-#endif //WINXX
 #include <string>
 
 namespace c2s
 {
   struct C2SSocketInfo;
 
-  class C2SSocketClientConnection : public C2S_SOCKET_CLIENT_CONNECTION_IMPLEMENTATION
+  class C2SSocketClientConnectionUnix
   {
   public:
 
-    C2SSocketClientConnection( const std::string &sHost , unsigned short iPort );
+    C2SSocketClientConnectionUnix();
 
-    virtual ~C2SSocketClientConnection();
+    virtual ~C2SSocketClientConnectionUnix();
 
-    void writeToSocket( const char *pDataToWriteToSocket , unsigned int iDataLength );
+  protected:
 
-    unsigned int readFromSocket( char *pBufferToWriteDataReadFromSocket , unsigned int iBufferSize );
+    void connectSocket( const std::string &sHost , unsigned short iPort );
+
+    void closeSocket();
+
+    int sendNextChunkOfDataToSocket( const char *pDataToWriteToSocket , unsigned int iDataLengthToWriteToSocket );
+
+    int receiveNextChunkOfDataFromSocket( char *pBufferToWriteDataReadFromSocket , unsigned int iBufferSize );
+
+    void shutdownSendOperations();
+
+    C2SSocketInfo *m_pSocketInfo;
 
   };
 
-} /* namespace c2s */
-#endif /* C2SSOCKETCLIENTCONNECTION_H_ */
+}
+
+#endif /* C2SSOCKETCLIENTCONNECTIONUNIX_H_ */

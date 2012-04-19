@@ -57,7 +57,7 @@ namespace c2s
       this->createTestMessageExpectedToReceiveFromSocket();
       m_pSocketDataHandling = new C2STestSocketListenerDataHandling( m_sTestMessageToSendThroughSocket , m_sTestMessageExpectedToReceiveFromSocket );
       C2SSocketListenerSettings socketListenerSettings;
-      srand( time( NULL ) );
+      srand( static_cast<int>( time( NULL ) ) );
       socketListenerSettings.iPort = iPortIntervalStart + rand() % iPortIntervalSize;
       m_pSocketListener = new C2SSocketListener( socketListenerSettings , *m_pSocketDataHandling , *m_pLogInstance );
       m_pSocketListenerThread = new C2SSocketListenerThread( m_pSocketListener );

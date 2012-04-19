@@ -39,7 +39,7 @@ namespace c2s
 
     const unsigned int C2STestSocketClient::iSizeOfBufferForReadingFromSocket = 8;
 
-    C2STestSocketClient::C2STestSocketClient( const std::string &sHost , unsigned int iPort )
+    C2STestSocketClient::C2STestSocketClient( const std::string &sHost , unsigned short iPort )
       : m_sHost( sHost ),
         m_iPort( iPort )
     {
