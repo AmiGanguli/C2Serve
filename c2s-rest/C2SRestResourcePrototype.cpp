@@ -118,7 +118,7 @@ namespace c2s
 
   void C2SRestResourcePrototype::createAndSendResponseFromResourceDescription( const C2SHttpRequest &request )
   {
-    if ( request.header().Method != GET )
+    if ( request.header().Method != C2S_GET )
       throw C2SRestException( "C2SRestResourcePrototype::processRequest: " , "Access to context root of RESTful resource only allowed as GET request" , MethodNotAllowed );
 
     C2SHttpResponse response = m_resourceDescription.process( request );

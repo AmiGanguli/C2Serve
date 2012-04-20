@@ -18,7 +18,7 @@ namespace c2s
   public:
 
     C2SRestMethodPrototypeDELETE( const std::string &sPath )
-      : C2SRestMethodPrototype( DELETE , sPath )
+      : C2SRestMethodPrototype( C2S_DELETE , sPath )
     {}
 
   private:

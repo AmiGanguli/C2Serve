@@ -145,7 +145,7 @@ namespace c2s
 
     if ( request.header().Fields.getContentLength() )
     {
-      if ( request.header().Method == GET )
+      if ( request.header().Method == C2S_GET )
         throw C2SHttpException( "C2SHttpClient::send: " , "No content allowed for GET request" , BadRequest );
 
       const C2SHttpEntity &entity = request.entity();
@@ -155,9 +155,14 @@ namespace c2s
     //send header
     C2SHttpClient::writeToSocket( sRequestData.c_str() , sRequestData.size() , info );
 
+#ifdef WINXX
+    if ( shutdown( info.SocketDescriptor , SD_SEND ) )
+      throw C2SHttpClientException( "C2SHttpClient::send: Cannot shutdown socket! Error: " + c2s::util::toString( WSAGetLastError() ) );
+#else
     //writing to socket is finished
     if ( shutdown( info.SocketDescriptor , SHUT_WR ) )
       throw C2SHttpClientException( "C2SHttpClient::send: Cannot shutdown socket!" );
+#endif
 
     C2SHttpResponse *pServerResponse = new C2SHttpResponse();
 
@@ -197,7 +202,7 @@ namespace c2s
   void C2SHttpClient::writeToSocket( const char *data , unsigned int iSize , const C2SSocketInfo &info )
   {
 #ifdef WINXX
-    int n = ::send( info.SocketDescriptor , data , iSize , 0 );
+    /*int n = */::send( info.SocketDescriptor , data , iSize , 0 );
 #else
     int iBytesWritten = 0;
     while ( iBytesWritten < static_cast<int>( iSize ) )

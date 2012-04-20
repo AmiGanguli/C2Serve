@@ -50,6 +50,10 @@ namespace c2s
 
   private:
 
+    C2SHttpDataHandlingImpl ( const C2SHttpDataHandlingImpl & );
+
+    C2SHttpDataHandlingImpl &operator=( const C2SHttpDataHandlingImpl & );
+
     const C2SHttpResourcePrototypeList &m_listOfResourcePrototypes;
 
   };

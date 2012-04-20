@@ -157,22 +157,22 @@ namespace c2s
     if ( startsWith( data , size , METHOD_POST , std::strlen( METHOD_POST ) ) )
     {
       iRefSize = std::strlen( METHOD_POST );
-      pHeader->Method = POST;
+      pHeader->Method = C2S_POST;
     }
     else if ( startsWith( data , size , METHOD_GET , std::strlen( METHOD_GET ) ) )
     {
       iRefSize = std::strlen( METHOD_GET );
-      pHeader->Method = GET;
+      pHeader->Method = C2S_GET;
     }
     else if ( startsWith( data , size , METHOD_PUT , std::strlen( METHOD_PUT ) ) )
     {
       iRefSize = std::strlen( METHOD_PUT );
-      pHeader->Method = PUT;
+      pHeader->Method = C2S_PUT;
     }
     else if ( startsWith( data , size , METHOD_DELETE , std::strlen( METHOD_DELETE ) ) )
     {
       iRefSize = std::strlen( METHOD_DELETE );
-      pHeader->Method = DELETE;
+      pHeader->Method = C2S_DELETE;
     }
     else
       throw C2SHttpException( "C2SHttpParser::handleFirstLine: " , "Cannot read header: " + std::string( data , size ) , BadRequest );

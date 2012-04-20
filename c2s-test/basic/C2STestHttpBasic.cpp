@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST1 )
   parser.parse( sChunk3.c_str() , sChunk3.size() , &header );
   parser.parse( sChunk4.c_str() , sChunk4.size() , &header );
 
-  BOOST_CHECK( header.Method == c2s::POST );
+  BOOST_CHECK( header.Method == c2s::C2S_POST );
   BOOST_CHECK( header.URI == "/c2s/test/http-parser" );
   BOOST_CHECK( header.Version == 1.1f );
 
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST2 )
   parser.parse( sChunk3.c_str() , sChunk3.size() , &header );
   parser.parse( sChunk4.c_str() , sChunk4.size() , &header );
 
-  BOOST_CHECK( header.Method == c2s::POST );
+  BOOST_CHECK( header.Method == c2s::C2S_POST );
   BOOST_CHECK( header.URI == "/c2s/test/http-parser/" );
   BOOST_CHECK( header.Version == 1.1f );
 
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE( HttpRequestPOST3 )
   BOOST_CHECK( header.QueryFields.getValueForFieldName( "fieldname2" ) == "value2" );
   BOOST_CHECK( header.QueryFields.getValueForFieldName( "fieldname3" ) == "value3" );
 
-  BOOST_CHECK( header.Method == c2s::POST );
+  BOOST_CHECK( header.Method == c2s::C2S_POST );
   BOOST_CHECK( header.URI == "/c2s/test/http-parser" );
   BOOST_CHECK( header.Version == 1.1f );
 
@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE( HttpRequestGET )
   c2s::C2SHttpParser parser;
   c2s::C2SHttpRequestHeader header;
 
-  header.Method = c2s::POST;
+  header.Method = c2s::C2S_POST;
 
   std::string sChunk1 = "\n\nGET /c2s/test/http-parser/ HTTP/1.1\r\nAccept: text/html,";
   std::string sChunk2 = "application/xhtml+xml,application/xml;q=0.9,*/*;q=0.834\r\n";
@@ -259,7 +259,7 @@ BOOST_AUTO_TEST_CASE( HttpRequestGET )
   parser.parse( sChunk1.c_str() , sChunk1.size() , &header );
   parser.parse( sChunk2.c_str() , sChunk2.size() , &header );
 
-  BOOST_CHECK( header.Method == c2s::GET );
+  BOOST_CHECK( header.Method == c2s::C2S_GET );
   BOOST_CHECK( header.URI == "/c2s/test/http-parser/" );
   BOOST_CHECK( header.Version == 1.1f );
 

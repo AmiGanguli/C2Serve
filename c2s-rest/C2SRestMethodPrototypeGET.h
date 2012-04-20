@@ -55,7 +55,7 @@ namespace c2s
 
   template <class ResponseEntityType>
   C2SRestMethodPrototypeGET<ResponseEntityType>::C2SRestMethodPrototypeGET( const std::string &sPath )
-    : C2SRestMethodPrototypeResponseEntity<ResponseEntityType>( GET , sPath )
+    : C2SRestMethodPrototypeResponseEntity<ResponseEntityType>( C2S_GET , sPath )
   {};
 
 }

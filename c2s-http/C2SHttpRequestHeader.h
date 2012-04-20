@@ -56,7 +56,7 @@ namespace c2s
     {};
 
     C2SHttpRequestHeader()
-      : Method( GET ),
+      : Method( C2S_GET ),
         Version( 1.1f )
     {};
 
