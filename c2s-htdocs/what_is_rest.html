@@ -33,8 +33,15 @@
    <div class="section" style="margin-top: 50px;">
     
       <h1>What is REST?</h1>
-
-      <h2>The principles of REST</h2>
+      
+        REST stands for <i>REpresentational State Transfer</i>.
+        Besides SOAP or other specifications, REST provides a new way to implement web services.
+        It is the result of the dissertation of Roy Fielding (University of California, 2000) and is based on a set of principles that are already known from the world wide web.
+        
+        <br />
+        <br />
+        
+        A REST service architecture is based on the HTTP protocol but to be a REST service it has to follow a set of rules: 
 
       <h3>Stateless communication</h3>
         A REST request is self-contained.
@@ -44,7 +51,8 @@
       <h3>Addressability</h3>
         Each resource provided by a REST service has a unique address (the URI).
         A URI is the way to identify resources in the web.
-        It allows the user to easily remark resources by simply storing the according URI (creating a bookmark or whatever).   
+        It allows the user to easily remark resources by simply storing the according URI (creating a bookmark or whatever).
+        URIs are supposed to have a directory-like structure so that they can be used intuitively.
         
       <h3>Various representations</h3>
         According to the request, a REST web service should be able to provide a various number of representations of a resource.
@@ -53,6 +61,7 @@
         
       <h3>Methods</h3>
         REST defines the standard methods GET, POST, PUT, DELETE, HEAD and OPTIONS to be implemented for each resource.
+        The explicit usage of these methods is one of the key characteristics.
         
         <table>
           <tr>
@@ -85,14 +94,28 @@
           </tr>
         </table>
         
-        For further details view the <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html" target="_blank">http specification</a>.
-        
       <h3>Hypermedia</h3>
         Link things together so that a simple navigation between resources of a web service is realized.
         The client should be able to move from one state of a service to the next.
         
+      <div class="bib">
+      
+        Further reading:
+        
+        <ul>
+          
+          <li>Chapter 5 of Roy Fieldings dissertation: <a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm" target="_blank">http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm</a></li>
+          <li>HTTP specification: <a href="http://www.ietf.org/rfc/rfc2616.txt" target="_blank">http://www.ietf.org/rfc/rfc2616.txt</a>
+        
+        </ul>
+      
+      </div>
+        
    </div> 
   </div>
+
+  <script type="text/javascript" src="http://fc.webmasterpro.de/counter.php?name=c2serve"></script>
+  <noscript><div><img src="http://fc.webmasterpro.de/as_noscript.php?name=c2serve" style="width:1px;height:1px;" alt="" /></div></noscript>
 
 </body>
 </html>

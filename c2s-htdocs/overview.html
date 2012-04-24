@@ -16,6 +16,7 @@
     <table class="menu"><tr>
        
        <td class="item"><a class="selected" href="overview.html">overview</a></td>
+       <td class="item"><a href="what_is_rest.html">what is REST?</a></td>
        <td class="item"><a href="license.html">license</a></td>
        <td class="item"><a href="getting_started.html">getting started</a></td>
        <td class="item"><a href="server_startup.html">server startup</a></td>
@@ -36,7 +37,7 @@
       <h2>What is C2Serve?</h2>
       
       C2Serve is a small C++ framework that allows you to easily create your own REST web service.
-      It is designed in a manner that is is possible to provide the basic functionality of a REST service such as methods that handle GET, POST, PUT and DELETE http requests.
+      It is designed in a manner that is is possible to provide the basic functionality of a REST service such as methods that handle GET, POST, PUT and DELETE HTTP requests.
       Furthermore, the framework provides multithreading and is thus able to handle multiple requests concurrently.
       The focus is on a small set of basic features, implemented properly, instead of providing large functionality.
       Of course, you are always free to extend the basic functionality to adjust the core framework to your own needs.
@@ -53,11 +54,11 @@
         </li>
         
         <li>
-          Parse requests according to the http protocol defined <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html" target="_blank">here</a>. 
+          Parse requests according to the HTTP protocol defined <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html" target="_blank">here</a>. 
         </li>
         
         <li>
-          Match the http requests to REST resources and methods.
+          Match the HTTP requests to REST resources and methods.
         </li>
         
         <li>
@@ -65,13 +66,18 @@
         </li>
         
         <li>
-          Provide classes and interfaces to read and write http entities.
+          Provide classes and interfaces to read and write HTTP entities.
+        </li>
+        
+        <li>
+          Allow to easily define path and query parameters.
         </li>
         
       </ul>
       
       For questions, bug reports or requests please contact
       <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#107;&#97;&#121;&#64;&#99;&#50;&#115;&#101;&#114;&#118;&#101;&#46;&#101;&#117;?Subject=[C2S]">kay@c2serve.eu</a>.
+      Or visit us at <a href="https://github.com/c2s/C2Serve">GitHub</a>. 
       
       <h2>Motivation</h2>
       
@@ -80,7 +86,7 @@
       In web development, C++ is not really the language of choice.
       Instead you would choose Java, PHP or other modern languages.
       However, in some cases it is necessary to integrate a C++ application into an environment of distributed systems.
-      Or maybe you want to use the power of multiple machines to run your C++ applications. 
+      Or you simply want to use the power of multiple machines to run your C++ applications. 
       
       <br />
       <br />
@@ -115,12 +121,26 @@
         </li>
         
         <li>
-          Easy usage.
+          Easy usage. Documentation and/or example code available.
+        </li>
+        
+        <li>
+          Standalone framework (no dependencies to other 3rd party libraries).
+        </li>
+        
+        <li>
+          Realized under the concept of test-driven development.
+        </li>
+        
+        <li>
+          Easy integration in development and build process.
         </li>
       
       </ul>
       
       So I decided to create an own framework.
+      Here it is.
+      Except for Windows support (which is planned in the near future), these requirements are hopefully fulfilled. 
       
       <h2>Important Notes</h2>
       

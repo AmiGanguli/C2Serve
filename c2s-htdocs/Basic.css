@@ -70,6 +70,13 @@ div.section table td
 	padding: 5px;
 }
 
+div.bib
+{
+	font-size: 11pt;
+	font-style: italic;
+	margin-top: 20px;
+}
+
 div.code
 {
 	width: 850px;
