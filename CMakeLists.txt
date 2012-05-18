@@ -34,14 +34,11 @@ add_subdirectory( c2s-socket )
 add_subdirectory( c2s-core )
 add_subdirectory( c2s-http )
 add_subdirectory( c2s-rest )
+add_subdirectory( c2s-example )
 
 if ( NOT C2Serve_DISABLE_TESTING )
   add_subdirectory( c2s-test )
 endif ( NOT C2Serve_DISABLE_TESTING )
-
-if( NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" )
-  add_subdirectory( c2s-example )
-endif( NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" )
   
 
 
