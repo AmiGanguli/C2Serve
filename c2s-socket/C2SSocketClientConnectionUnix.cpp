@@ -30,6 +30,7 @@
  */
 
 #include "C2SSocketClientConnectionUnix.h"
+#include "C2SSocketClientException.h"
 #include "C2SSocketInfo.h"
 
 namespace c2s

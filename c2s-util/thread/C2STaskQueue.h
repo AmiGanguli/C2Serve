@@ -112,6 +112,7 @@ namespace c2s
 #endif
           if ( !m_tasks.size() )
           {
+            m_detachMutex.unlock();
             break;
           }
 
@@ -136,10 +137,10 @@ namespace c2s
         C2SThreadTaskInterface *pNextTask = *( m_tasks.begin() );
         m_tasks.pop_front();
 
-        if ( !m_tasks.size() )
-        {
+//        if ( !m_tasks.size() )
+//        {
           m_detachMutex.unlock();
-        }
+//        }
         m_bStartingNextTask = false;
         return pNextTask;
       }
