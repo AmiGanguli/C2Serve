@@ -49,7 +49,12 @@ namespace c2s
 
     void C2STestRestCheckMultiThreading::runTest()
     {
+#ifdef WINXX
+      //TODO
+      unsigned int iNumRequests = 20;
+#else
       unsigned int iNumRequests = 1000;
+#endif
       unsigned int iNumThreads = 5;
       unsigned int iSleepMS = 5;
 

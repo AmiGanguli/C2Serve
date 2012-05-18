@@ -52,6 +52,9 @@ namespace c2s
       m_bKeepRunning( false ),
       m_bIsListening( false ),
       m_logInstance( logInstance )
+#ifdef WINXX
+      ,m_bIsWSACleanup( false )
+#endif
   {
   }
 
@@ -64,7 +67,8 @@ namespace c2s
     delete m_pSocketInfo;
 
 #ifdef WINXX
-    WSACleanup();
+    if ( m_bIsWSACleanup )
+      WSACleanup();
 #endif
   }
 
@@ -141,6 +145,8 @@ namespace c2s
     ret = WSAStartup( MAKEWORD( 2 , 0 ) , &wsa );
     if ( ret != 0 )
       throw C2SSocketListenerException( "C2SSocketListener::connect: Could not initialize winsock! Error: " + c2s::util::toString( ret ) );
+
+    m_bIsWSACleanup = true;
 
     SOCKADDR_IN addr;
 

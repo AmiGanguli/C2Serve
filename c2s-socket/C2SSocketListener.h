@@ -93,6 +93,10 @@ namespace c2s
 
     const C2SLogInterface &m_logInstance;
 
+#ifdef WINXX
+    bool m_bIsWSACleanup;
+#endif
+
   };
 
 }
