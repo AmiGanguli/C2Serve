@@ -1,5 +1,5 @@
-
 cmake_minimum_required(VERSION 2.6)
+project( C2Serve )
 
 
 #Set C2Serve_DISABLE_SYSTEM_SETTINGS to suppress incorporation of C2Serve system settings
