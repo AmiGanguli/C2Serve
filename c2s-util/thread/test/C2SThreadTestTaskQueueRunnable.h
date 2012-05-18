@@ -39,16 +39,16 @@
 
 namespace c2s
 {
-  namespace test
+  namespace thread
   {
-    namespace thread
+    namespace test
     {
 
-      class C2SThreadTestTaskQueueRunnable : public c2s::thread::C2SThreadTaskInterface
+      class C2SThreadTestTaskQueueRunnable : public C2SThreadTaskInterface
       {
       public:
 
-        C2SThreadTestTaskQueueRunnable( unsigned int *pRunningThreads , c2s::thread::C2SMutex *pGlobalMutex )
+        C2SThreadTestTaskQueueRunnable( unsigned int *pRunningThreads , C2SMutex *pGlobalMutex )
           : m_pRunningThreads( pRunningThreads ),
             m_globalMutex( *pGlobalMutex )
         {};
@@ -76,9 +76,13 @@ namespace c2s
 
       private:
 
+        C2SThreadTestTaskQueueRunnable( const C2SThreadTestTaskQueueRunnable & );
+
+        C2SThreadTestTaskQueueRunnable &operator=( const C2SThreadTestTaskQueueRunnable & );
+
         unsigned int *m_pRunningThreads;
 
-        c2s::thread::C2SMutex &m_globalMutex;
+        C2SMutex &m_globalMutex;
 
       };
 

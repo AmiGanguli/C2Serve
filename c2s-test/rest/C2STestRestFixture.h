@@ -56,7 +56,7 @@ namespace c2s
 
       static c2s::thread::C2SMutex *pGlobalMutex;
 
-      static unsigned int iPortOfTestServer;
+      static unsigned short iPortOfTestServer;
 
       static const std::string sContextRootOfTestResource;
 
@@ -66,9 +66,9 @@ namespace c2s
 
       static std::list<C2SHttpResourcePrototype*> createResources( c2s::thread::C2SMutex *pGlobalMutex );
 
-      static const unsigned int iPortOfTestServerRandomStart;
+      static const unsigned short iPortOfTestServerRandomStart;
 
-      static const unsigned int iPortOfTestServerRandomRange;
+      static const unsigned short iPortOfTestServerRandomRange;
 
       c2s::test::C2STestServerRunner *m_sr;
 

@@ -73,7 +73,7 @@ namespace c2s
       if ( !request.header().URI.size() )
         throw C2SHttpException( "C2SHttpResourceManager::bestMatch:" , "No URI specified" , BadRequest );
 
-      if ( request.header().URI == "/" && request.header().Method == GET )
+      if ( request.header().URI == "/" && request.header().Method == C2S_GET )
       {
         //get root resource
         C2SHttpResourcePrototypeList::iterator it = m_pClonesOfResourcePrototypesList->find( "/" );

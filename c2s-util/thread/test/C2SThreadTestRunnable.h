@@ -33,6 +33,7 @@
 #define C2STHREADTESTRUNNABLE_H_
 
 #include "C2SLock.h"
+#include "C2SMutex.h"
 #include "C2SThreadBase.h"
 
 #include <boost/test/unit_test.hpp>
@@ -48,18 +49,19 @@
 namespace c2s
 {
 
-  namespace test
+  namespace thread
   {
 
-    namespace thread
+    namespace test
     {
 
-      class C2SThreadTestRunnable : public c2s::thread::C2SThreadBase
+      class C2SThreadTestRunnable : public C2SThreadBase
       {
       public:
 
-        C2SThreadTestRunnable( const std::string &sID , c2s::thread::C2SMutex *pGlobalMutex )
+        C2SThreadTestRunnable( const std::string &sID , C2SMutex *pGlobalMutex )
           : m_iRunCounter( 0 ),
+            m_bIsInStartup( false ),
             m_bRunning( false ),
             m_globalMutex( *pGlobalMutex ),
             m_iSleepMS( SLEEP_TIME_MS ),
@@ -73,9 +75,15 @@ namespace c2s
           m_globalMutex.unlock();
         }
 
+        void startThread()
+        {
+          m_bIsInStartup = true;
+          this->start();
+        }
+
         void run()
         {
-          c2s::thread::C2SLock<c2s::thread::C2SMutex> lock( &m_mutex );
+          C2SLock< C2SMutex > lock( &m_mutex );
 
           m_globalMutex.lock();
           BOOST_CHECK( !m_bRunning );
@@ -83,6 +91,7 @@ namespace c2s
           m_globalMutex.unlock();
 
           m_bRunning = true;
+          m_bIsInStartup = false;
 #ifdef WINXX
           Sleep( m_iSleepMS );
 #else
@@ -99,19 +108,27 @@ namespace c2s
 
         int runs()
         {
-          c2s::thread::C2SLock<c2s::thread::C2SMutex> lock( &m_mutex );
+          C2SLock< C2SMutex > lock( &m_mutex );
           return m_iRunCounter;
+        }
+
+        void blockUntilThreadIsStarted()
+        {
+          while( m_bIsInStartup )
+            ;
         }
 
       private:
 
         int m_iRunCounter;
 
-        bool m_bRunning;
+        volatile bool m_bIsInStartup;
 
-        c2s::thread::C2SMutex m_mutex;
+        volatile bool m_bRunning;
+
+        C2SMutex m_mutex;
         
-        c2s::thread::C2SMutex &m_globalMutex;
+        C2SMutex &m_globalMutex;
 
         int m_iSleepMS;
 

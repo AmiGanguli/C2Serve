@@ -63,7 +63,8 @@ namespace c2s
     public:
 
       C2STaskQueue( unsigned int iNumThreads )
-        : m_bIsRunning( false )
+        : m_bIsRunning( false ),
+          m_bStartingNextTask( false )
       {
         for ( unsigned int i = 0; i < iNumThreads; ++i )
         {
@@ -80,6 +81,8 @@ namespace c2s
       void join()
       {
         C2SLock<C2SMutex> lock( &m_runningMutex );
+        while( m_tasks.size() > 0 )
+          ;
         m_workers.join();
       }
 
@@ -102,13 +105,18 @@ namespace c2s
         while( bContinue )
         {
           m_detachMutex.lock();
-
+          //TODO
+#ifdef WINXX
+          while( m_bStartingNextTask )
+            ;
+#endif
           if ( !m_tasks.size() )
           {
             m_detachMutex.unlock();
             break;
           }
 
+          m_bStartingNextTask = true;
           m_workers.start();
         }
 
@@ -129,8 +137,11 @@ namespace c2s
         C2SThreadTaskInterface *pNextTask = *( m_tasks.begin() );
         m_tasks.pop_front();
 
-        m_detachMutex.unlock();
-
+//        if ( !m_tasks.size() )
+//        {
+          m_detachMutex.unlock();
+//        }
+        m_bStartingNextTask = false;
         return pNextTask;
       }
 
@@ -143,6 +154,8 @@ namespace c2s
       C2SThreadQueue<C2STaskQueueRunnable> m_workers;
 
       volatile bool m_bIsRunning;
+
+      volatile bool m_bStartingNextTask;
 
       C2SMutex m_mutex;
 

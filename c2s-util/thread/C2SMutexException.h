@@ -29,47 +29,26 @@
 
  */
 
-#ifndef C2STHREADBASE_H_
-#define C2STHREADBASE_H_
 
-#ifdef WINXX
-#include "C2SThreadWindows.h"
-#else //WINXX
-#include "C2SThreadPosix.h"
-#endif //WINXX
+#ifndef C2SMUTEXEXCEPTION_H_
+#define C2SMUTEXEXCEPTION_H_
+
+#include "GenericException.h"
 
 namespace c2s
 {
   namespace thread
   {
 
-#ifdef WINXX
-    class C2SThreadBase : public C2SThreadWindows
-#else //WINXX
-    class C2SThreadBase : public C2SThreadPosix
-#endif //WINXX
+    class C2SMutexException : public GenericException
     {
     public:
 
-      C2SThreadBase(){};
+      C2SMutexException( const std::string &msg ) : GenericException( msg ) {};
 
-      virtual ~C2SThreadBase(){};
-
-    protected:
-
-      virtual void doWork() { this->run(); }
-
-      virtual void run() = 0;
-
-    private:
-
-      C2SThreadBase( const C2SThreadBase & );
-
-      C2SThreadBase &operator=( const C2SThreadBase & );
-
-    };
+  };
 
   }
 }
 
-#endif /* C2STHREADBASE_H_ */
+#endif /* C2SMUTEXEXCEPTION_H_ */

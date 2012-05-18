@@ -43,7 +43,7 @@ namespace c2s
     {
     public:
 
-      C2STestSocketClient( const std::string &sHost , unsigned int iPort );
+      C2STestSocketClient( const std::string &sHost , unsigned short iPort );
 
       virtual ~C2STestSocketClient();
 
@@ -55,7 +55,7 @@ namespace c2s
 
       std::string m_sHost;
 
-      unsigned int m_iPort;
+      unsigned short m_iPort;
 
     };
 

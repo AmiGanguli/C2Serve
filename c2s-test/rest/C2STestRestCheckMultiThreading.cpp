@@ -49,7 +49,12 @@ namespace c2s
 
     void C2STestRestCheckMultiThreading::runTest()
     {
+#ifdef WINXX
+      //TODO
+      unsigned int iNumRequests = 20;
+#else
       unsigned int iNumRequests = 1000;
+#endif
       unsigned int iNumThreads = 5;
       unsigned int iSleepMS = 5;
 
@@ -83,7 +88,7 @@ namespace c2s
       return new C2STestRestCheckMultiThreading(
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodThreading::sPath + "/" + c2s::util::toString( iSleepMS ) )
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodThreading::sPath + "/" + c2s::util::toString( iSleepMS ) )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::OK )

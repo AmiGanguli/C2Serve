@@ -38,12 +38,13 @@
 #include "C2STaskQueue.h"
 #include "C2SThreadQueue.h"
 
-using namespace c2s::test::thread;
+using namespace c2s::thread;
+using namespace c2s::thread::test;
 
 BOOST_AUTO_TEST_CASE( run )
 {
   //mutex to synchronize access to boost unittest functions
-  c2s::thread::C2SMutex globalMutex;
+  C2SMutex globalMutex;
   
   C2SThreadTestRunnable p( "RunCheck" , &globalMutex );
 
@@ -59,18 +60,21 @@ BOOST_AUTO_TEST_CASE( run )
 BOOST_AUTO_TEST_CASE( synchronization )
 {
   //mutex to synchronize access to boost unittest functions
-  c2s::thread::C2SMutex globalMutex;
+  C2SMutex globalMutex;
   
   C2SThreadTestRunnable p( "SyncCheck" , &globalMutex );
 
   //first run
-  p.start();
+  p.startThread();
+  p.blockUntilThreadIsStarted();
 
   //second run
-  p.start();
+  p.startThread();
+  p.blockUntilThreadIsStarted();
 
   //third run
-  p.start();
+  p.startThread();
+  p.blockUntilThreadIsStarted();
 
   while ( p.runs() < 3 );
 }
@@ -78,23 +82,19 @@ BOOST_AUTO_TEST_CASE( synchronization )
 BOOST_AUTO_TEST_CASE( queue )
 {
   //mutex to synchronize access to boost unittest functions
-  c2s::thread::C2SMutex globalMutex;
+  C2SMutex globalMutex;
   
-  c2s::thread::C2SThreadQueue<C2SThreadTestRunnable> tq;
+  C2SThreadQueue<C2SThreadTestRunnable> tq;
 
-  C2SThreadTestRunnable r1( "ThreadQueue#1" , &globalMutex );
+  C2SThreadTestRunnable r1( "ThreadQueueRunner#1" , &globalMutex );
   tq.queue( &r1 );
 
-  C2SThreadTestRunnable r2( "ThreadQueue#2" , &globalMutex );
+  C2SThreadTestRunnable r2( "ThreadQueueRunner#2" , &globalMutex );
   tq.queue( &r2 );
 
-  tq.start();
-  tq.start();
-  tq.start();
-  tq.start();
-  tq.start();
-  tq.start();
-  tq.start();
+  unsigned int iNumberOfThreadsToStart = 100;
+  for ( unsigned int iNumberOfThreadsStarted = 0; iNumberOfThreadsStarted < iNumberOfThreadsToStart; ++iNumberOfThreadsStarted )
+    tq.start();
 
   tq.join();
 }
@@ -102,9 +102,9 @@ BOOST_AUTO_TEST_CASE( queue )
 BOOST_AUTO_TEST_CASE( task_queue )
 {
   //mutex to synchronize access to boost unittest functions
-  c2s::thread::C2SMutex globalMutex;
+  C2SMutex globalMutex;
 
-  c2s::thread::C2STaskQueue tq( NUM_TASK_THREADS );
+  C2STaskQueue tq( NUM_TASK_THREADS );
   unsigned int iNumThreadsRunning = 0;
   unsigned int iNumTasks = 100;
 

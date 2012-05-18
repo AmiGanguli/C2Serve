@@ -44,6 +44,7 @@
 #include "C2SRestException.h"
 
 #include <cstdlib>
+#include <ctime>
 
 namespace c2s
 {
@@ -53,9 +54,9 @@ namespace c2s
 
     c2s::thread::C2SMutex *C2STestRestFixture::pGlobalMutex = NULL;
 
-    const unsigned int C2STestRestFixture::iPortOfTestServerRandomStart = 8180;
-    const unsigned int C2STestRestFixture::iPortOfTestServerRandomRange = 50;
-    unsigned int C2STestRestFixture::iPortOfTestServer = 8183;
+    const unsigned short C2STestRestFixture::iPortOfTestServerRandomStart = 8180;
+    const unsigned short C2STestRestFixture::iPortOfTestServerRandomRange = 50;
+    unsigned short C2STestRestFixture::iPortOfTestServer = 8183;
 
     const std::string C2STestRestFixture::sContextRootOfTestResource = "g/forrest/test/rest-check/resource-1";
     const std::string C2STestRestFixture::sContextRootOfEmptyResource = "g/forrest/test/rest-check/resource-2";
@@ -65,7 +66,7 @@ namespace c2s
       if ( !pGlobalMutex )
         pGlobalMutex = new c2s::thread::C2SMutex();
 
-      srand ( time( NULL ) );
+      srand ( static_cast<int>( time( NULL ) ) );
       iPortOfTestServer = iPortOfTestServerRandomStart + ( rand() % iPortOfTestServerRandomRange );
       m_sr = new c2s::test::C2STestServerRunner( C2STestRestFixture::createResources( pGlobalMutex ) , iPortOfTestServer );
     };

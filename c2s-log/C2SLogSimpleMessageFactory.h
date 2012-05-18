@@ -54,6 +54,10 @@ namespace c2s
 
   private:
 
+    C2SLogSimpleMessageFactory ( const C2SLogSimpleMessageFactory & );
+
+    C2SLogSimpleMessageFactory &operator=( const C2SLogSimpleMessageFactory & );
+
     static const C2SLogPublicationImplStandardOutput defaultLogPublication;
 
     const C2SLogPublicationInterface &m_logPublication;

@@ -32,6 +32,7 @@
 #include "C2SSocketClientConnection.h"
 #include "C2SSocketClientException.h"
 #include "C2SSocketInfo.h"
+#include "StringUtils.h"
 
 #include <iostream>
 #include <cstring>
@@ -39,12 +40,10 @@
 namespace c2s
 {
 
-  C2SSocketClientConnection::C2SSocketClientConnection( const std::string &sHost , unsigned int iPort )
-    : m_sHost( sHost ),
-      m_iPort( iPort ),
-      m_pSocketInfo( new C2SSocketInfo() )
+  C2SSocketClientConnection::C2SSocketClientConnection( const std::string &sHost , unsigned short iPort )
   {
-    this->connectSocket();
+    m_pSocketInfo = new C2SSocketInfo();
+    this->connectSocket( sHost , iPort );
   }
 
   C2SSocketClientConnection::~C2SSocketClientConnection()
@@ -60,48 +59,20 @@ namespace c2s
     {
       const char *pDataLeftToWriteToSocket = &pDataToWriteToSocket[ iBytesWrittenToSocket ];
       unsigned int iDataLengthLeftToWriteToSocket = iDataLength - iBytesWrittenToSocket;
-      iBytesWrittenToSocket += write( m_pSocketInfo->SocketDescriptor , pDataLeftToWriteToSocket , iDataLengthLeftToWriteToSocket );
+      iBytesWrittenToSocket += this->sendNextChunkOfDataToSocket( pDataLeftToWriteToSocket , iDataLengthLeftToWriteToSocket );
       if ( iBytesWrittenToSocket < 0 )
         throw C2SSocketClientException( "C2SSocketClientConnection::writeToSocket: ERROR writing to socket" );
     }
-    if ( shutdown( m_pSocketInfo->SocketDescriptor , SHUT_WR ) )
-      throw C2SSocketClientException( "C2SSocketClientConnection::writeToSocket: Cannot shutdown socket!" );
+    this->shutdownSendOperations();
   }
 
   unsigned int C2SSocketClientConnection::readFromSocket( char *pBufferToWriteDataReadFromSocket , unsigned int iBufferSize )
   {
     long iNumberOfBytesReadFromSocket = iBufferSize;
-    iNumberOfBytesReadFromSocket = read( m_pSocketInfo->SocketDescriptor , pBufferToWriteDataReadFromSocket , iBufferSize );
+    iNumberOfBytesReadFromSocket = this->receiveNextChunkOfDataFromSocket( pBufferToWriteDataReadFromSocket , iBufferSize );
     if ( iNumberOfBytesReadFromSocket < 0 )
       throw C2SSocketClientException( "C2SSocketClientConnection::readFromSocket: Error reading from socket!" );
     return iNumberOfBytesReadFromSocket;
-  }
-
-  void C2SSocketClientConnection::connectSocket()
-  {
-    struct sockaddr_in serverAddress;
-    struct hostent *server;
-
-    m_pSocketInfo->SocketDescriptor = socket( AF_INET , SOCK_STREAM , 0 );
-    if ( m_pSocketInfo->SocketDescriptor < 0 )
-      throw C2SSocketClientException( "C2SSocketClient::connectToSocket: ERROR opening socket" );
-
-    server = gethostbyname( m_sHost.c_str() );
-    if ( server == NULL )
-      throw C2SSocketClientException( "C2SSocketClient::connectToSocket: ERROR, no such host" );
-
-    bzero( reinterpret_cast<char *>( &serverAddress ) , sizeof( serverAddress ) );
-    serverAddress.sin_family = AF_INET;
-    bcopy( ( char * ) server->h_addr , ( char * ) &serverAddress.sin_addr.s_addr , server->h_length );
-
-    serverAddress.sin_port = htons( m_iPort );
-    if ( connect( m_pSocketInfo->SocketDescriptor , ( struct sockaddr *) &serverAddress , sizeof( serverAddress ) ) < 0 )
-      throw C2SSocketClientException( "C2SSocketClient::connectToSocket: ERROR connecting to socket" );
-  }
-
-  void C2SSocketClientConnection::closeSocket()
-  {
-    close( m_pSocketInfo->SocketDescriptor );
   }
 
 }

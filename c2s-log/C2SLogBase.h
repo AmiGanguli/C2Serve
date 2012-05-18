@@ -70,6 +70,12 @@ namespace c2s
 
     C2SLogMutex *m_pLogMutex;
 
+  private:
+
+    C2SLogBase( const C2SLogBase & );
+
+    C2SLogBase &operator=( const C2SLogBase & );
+
   };
 
 }

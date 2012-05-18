@@ -55,6 +55,10 @@ namespace c2s
 
   private:
 
+    C2SRestMatchMethodToRequest( const C2SRestMatchMethodToRequest & );
+
+    C2SRestMatchMethodToRequest &operator=( const C2SRestMatchMethodToRequest & );
+
     C2SRestPathIDList createPathIDListFromRequest();
 
     std::map<int,C2SRestMethodPrototype*> getMethodCandidatesSortedByDistanceToPathIDs( const C2SRestPathIDList &listOfRequestPathIDs );

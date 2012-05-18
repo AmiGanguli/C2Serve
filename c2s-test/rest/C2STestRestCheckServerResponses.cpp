@@ -112,7 +112,7 @@ namespace c2s
       checkResponse(
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , c2s::test::C2STestRestFixture::sContextRootOfTestResource )
+          build( c2s::C2S_GET , c2s::test::C2STestRestFixture::sContextRootOfTestResource )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::OK )
@@ -126,7 +126,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource )
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::OK )
@@ -140,7 +140,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource )
+          build( c2s::C2S_POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::MethodNotAllowed )
@@ -154,7 +154,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::PUT , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource )
+          build( c2s::C2S_PUT , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::MethodNotAllowed )
@@ -168,7 +168,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::DELETE , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource )
+          build( c2s::C2S_DELETE , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::MethodNotAllowed )
@@ -182,7 +182,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/not-a-method" )
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/not-a-method" )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::NotFound )
@@ -196,7 +196,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + c2s::test::C2STestRestMethodQueryFields::sPath )
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + c2s::test::C2STestRestMethodQueryFields::sPath )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::NotFound )
@@ -210,7 +210,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath )
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::NotFound )
@@ -224,7 +224,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4/invalid" )
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4/invalid" )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::NotFound )
@@ -238,7 +238,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodQueryFields::sPath ).
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodQueryFields::sPath ).
           query_field( C2STestRestMethodQueryFields::sQueryField1Name , c2s::test::C2STestRestMethodQueryFields::sQueryField1ValueExpected ).
           query_field( C2STestRestMethodQueryFields::sQueryField2Name , c2s::test::C2STestRestMethodQueryFields::sQueryField2ValueExpected )
           ,
@@ -254,7 +254,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodQueryFields::sPath )
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodQueryFields::sPath )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::BadRequest )
@@ -268,7 +268,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodInvalidEntity::sPath )
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodInvalidEntity::sPath )
           ,
           c2s::test::C2STestRestResponse::build( c2s::InternalServerError )
 
@@ -281,7 +281,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
           accept( c2s::C2SHttpMediaType::application__xml )
           ,
           c2s::test::C2STestRestResponse::build( c2s::OK ).
@@ -296,7 +296,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
           accept( c2s::C2SHttpMediaType::application__json )
           ,
           c2s::test::C2STestRestResponse::build( c2s::OK ).
@@ -311,7 +311,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
           accept( c2s::C2SHttpMediaType::wildcard )
           ,
           c2s::test::C2STestRestResponse::build( c2s::OK ).
@@ -326,7 +326,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" )
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" )
           ,
           c2s::test::C2STestRestResponse::build( c2s::NotAcceptable )
 
@@ -339,7 +339,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
           accept( c2s::C2SHttpMediaType::application__xhtml_xml )
           ,
           c2s::test::C2STestRestResponse::build( c2s::NotAcceptable )
@@ -353,7 +353,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+          build( c2s::C2S_POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
           accept( c2s::C2SHttpMediaType::application__json )
           ,
           c2s::test::C2STestRestResponse::build( c2s::Created ).
@@ -368,7 +368,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::PUT , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+          build( c2s::C2S_PUT , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
           accept( c2s::C2SHttpMediaType::application__xml )
           ,
           c2s::test::C2STestRestResponse::build( c2s::MethodNotAllowed )
@@ -382,7 +382,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::DELETE , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodDELETE::sPath )
+          build( c2s::C2S_DELETE , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodDELETE::sPath )
           ,
           c2s::test::C2STestRestResponse::build( c2s::Created )
 
@@ -395,7 +395,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::DELETE , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+          build( c2s::C2S_DELETE , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
           accept( c2s::C2SHttpMediaType::application__xml )
           ,
           c2s::test::C2STestRestResponse::build( c2s::MethodNotAllowed )
@@ -409,7 +409,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
           accept( c2s::C2SHttpMediaType::application__xml ).
           query_field( "multiplier" , "2" )
           ,
@@ -425,7 +425,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
           accept( c2s::C2SHttpMediaType::application__json ).
           query_field( "multiplier" , "2" )
           ,
@@ -442,7 +442,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/2/4" ).
           accept( c2s::C2SHttpMediaType::application__json ).
           query_field( "multiplier" , "k2" )
           ,
@@ -457,7 +457,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/string/4" ).
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodAdd::sPath + "/string/4" ).
           accept( c2s::C2SHttpMediaType::application__json ).
           query_field( "multiplier" , "2" )
           ,
@@ -472,7 +472,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , c2s::test::C2STestRestFixture::sContextRootOfEmptyResource )
+          build( c2s::C2S_GET , c2s::test::C2STestRestFixture::sContextRootOfEmptyResource )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::OK )
@@ -486,7 +486,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfEmptyResource )
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfEmptyResource )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::OK )
@@ -500,7 +500,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfEmptyResource + "/not-a-method" )
+          build( c2s::C2S_GET , "/" + c2s::test::C2STestRestFixture::sContextRootOfEmptyResource + "/not-a-method" )
           ,
           c2s::test::C2STestRestResponse::
           build( c2s::NotFound )
@@ -521,7 +521,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPathToMethod + "/" + C2STestRestMethodMediaTypeConverter::sPathSegment ).
+          build( c2s::C2S_POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPathToMethod + "/" + C2STestRestMethodMediaTypeConverter::sPathSegment ).
           accept( c2s::C2SHttpMediaType::application__json ).
           entity( c2s::C2SHttpMediaType::application__xml , sEntityDataToSend )
           ,
@@ -545,7 +545,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPathToMethod + "/" + C2STestRestMethodMediaTypeConverter::sPathSegment ).
+          build( c2s::C2S_POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPathToMethod + "/" + C2STestRestMethodMediaTypeConverter::sPathSegment ).
           accept( c2s::C2SHttpMediaType::application__xml ).
           entity( c2s::C2SHttpMediaType::application__json , sEntityDataToSend )
           ,
@@ -562,7 +562,7 @@ namespace c2s
       checkResponse (
 
           c2s::test::C2STestRestRequest::
-          build( c2s::POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPathToMethod + "/" + C2STestRestMethodMediaTypeConverter::sPathSegment ).
+          build( c2s::C2S_POST , "/" + c2s::test::C2STestRestFixture::sContextRootOfTestResource + "/" + c2s::test::C2STestRestMethodMediaTypeConverter::sPathToMethod + "/" + C2STestRestMethodMediaTypeConverter::sPathSegment ).
           accept( c2s::C2SHttpMediaType::application__xml ).
           entity( c2s::C2SHttpMediaType::text__html , "<html>my content</html>" )
           ,

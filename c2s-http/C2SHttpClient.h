@@ -38,7 +38,7 @@
 namespace c2s
 {
 
-  class C2SSocketInfo;
+  struct C2SSocketInfo;
   class C2SHttpRequest;
 
   class C2SHttpClientException : public C2SException

@@ -55,7 +55,7 @@ namespace c2s
 
   template <class ResponseEntityType>
   C2SRestMethodPrototypePOST<ResponseEntityType>::C2SRestMethodPrototypePOST( const std::string &sPath )
-    : C2SRestMethodPrototypeRequestEntity<ResponseEntityType>( POST , sPath )
+    : C2SRestMethodPrototypeRequestEntity<ResponseEntityType>( C2S_POST , sPath )
   {};
 
 }

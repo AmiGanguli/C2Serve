@@ -37,10 +37,10 @@ namespace c2s
 
   typedef enum {
 
-    GET = 0,
-    POST = 1,
-    PUT = 2,
-    DELETE = 3
+    C2S_GET = 0,
+    C2S_POST = 1,
+    C2S_PUT = 2,
+    C2S_DELETE = 3
 
   } C2SHttpMethod;
 

@@ -29,47 +29,76 @@
 
  */
 
-#ifndef C2STHREADBASE_H_
-#define C2STHREADBASE_H_
 
-#ifdef WINXX
-#include "C2SThreadWindows.h"
-#else //WINXX
-#include "C2SThreadPosix.h"
-#endif //WINXX
+#ifndef C2STHREADWINDOWS_H_
+#define C2STHREADWINDOWS_H_
+
+#include <windows.h>
 
 namespace c2s
 {
   namespace thread
   {
 
-#ifdef WINXX
-    class C2SThreadBase : public C2SThreadWindows
-#else //WINXX
-    class C2SThreadBase : public C2SThreadPosix
-#endif //WINXX
+    class C2SThreadWindows
     {
     public:
 
-      C2SThreadBase(){};
+      C2SThreadWindows();
 
-      virtual ~C2SThreadBase(){};
+      virtual ~C2SThreadWindows();
+
+      inline void start();
+
+      inline void runInThread();
 
     protected:
 
-      virtual void doWork() { this->run(); }
-
-      virtual void run() = 0;
+      virtual void doWork() = 0;
 
     private:
 
-      C2SThreadBase( const C2SThreadBase & );
+      HANDLE m_pThreadHandle;
 
-      C2SThreadBase &operator=( const C2SThreadBase & );
+      DWORD m_dwThreadId;
 
     };
+
+    static DWORD WINAPI c2sThreadCallback( LPVOID lpParam )
+    {
+      C2SThreadWindows *pThreadObject = ( C2SThreadWindows* ) lpParam;
+      pThreadObject->runInThread();
+      return 0;
+    }
+
+    inline C2SThreadWindows::C2SThreadWindows()
+      : m_pThreadHandle( NULL ),
+        m_dwThreadId( 0 )
+    {};
+
+    inline C2SThreadWindows::~C2SThreadWindows()
+    {
+      CloseHandle( m_pThreadHandle );
+    };
+
+    inline void C2SThreadWindows::start()
+    {
+      m_pThreadHandle = CreateThread(
+          NULL,                   // default security attributes
+          0,                      // use default stack size
+          c2sThreadCallback,       // thread function name
+          this,          // argument to thread function
+          0,                      // use default creation flags
+          &m_dwThreadId
+        );
+    }
+
+    inline void C2SThreadWindows::runInThread()
+    {
+      this->doWork();
+    }
 
   }
 }
 
-#endif /* C2STHREADBASE_H_ */
+#endif /* C2STHREADWINDOWS_H_ */

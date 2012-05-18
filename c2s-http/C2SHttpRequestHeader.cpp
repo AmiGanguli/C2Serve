@@ -40,13 +40,13 @@ namespace c2s
   {
     std::stringstream strs;
 
-    if ( Method == GET )
+    if ( Method == C2S_GET )
       strs << "GET ";
-    else if ( Method == POST )
+    else if ( Method == C2S_POST )
       strs << "POST ";
-    else if ( Method == PUT )
+    else if ( Method == C2S_PUT )
       strs << "PUT ";
-    else if ( Method == DELETE )
+    else if ( Method == C2S_DELETE )
       strs << "DELETE ";
     else throw C2SHttpException( "C2SHttpRequestHeader::toString: " , "Cannot stream method type" , BadRequest );
 
