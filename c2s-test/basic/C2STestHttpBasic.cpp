@@ -45,26 +45,18 @@
 
 #define USE_PORT 8181
 
-//TODO: redirect server logging to BOOST_MESSAGE
-
-//BOOST_AUTO_TEST_CASE( gMapTest )
-//{
-//  std::map<std::string,std::string> resources;
-//
-//  resources[ "/" ] = "index.html";
-//  resources[ "/default" ] = "default.html";
-//  resources[ "test/basic/" ] = "myVarResource";
-//  resources[ "test/basic/echo" ] = "myEchoResource";
-//
-//  BOOST_MESSAGE( resources.lower_bound( "/test/basic/echo" )->second );
-//}
-
 //TODO: move test to core/util
 BOOST_AUTO_TEST_CASE( URLCoding )
 {
+#ifdef WINXX
+  std::string sTestCharacterSequence = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"$%&/()=?*'-_.:;,<>";
+  std::string sTestCharacterSequenceWithoutPercent = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"$&/()=?*'-_.:;,<>";
+  std::string sTestCharacterSequenceEncodedExpected = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ%21%22%24%25%26%2f%28%29%3d%3f%2a%27-_.%3a%3b%2c%3c%3e";
+#else //WINXX
   std::string sTestCharacterSequence = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"�$%&/()=?�*'-_.:;,<>";
   std::string sTestCharacterSequenceWithoutPercent = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"�$&/()=?�*'-_.:;,<>";
   std::string sTestCharacterSequenceEncodedExpected = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ%21%22%ef%bf%bd%24%25%26%2f%28%29%3d%3f%ef%bf%bd%2a%27-_.%3a%3b%2c%3c%3e";
+#endif //WINXX
 
   std::string sTestCharacterSequenceEncoded = c2s::util::urlEncode( sTestCharacterSequence );
   BOOST_MESSAGE( "url encoded: " << sTestCharacterSequenceEncoded );
