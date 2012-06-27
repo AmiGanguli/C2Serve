@@ -33,6 +33,8 @@
 #include "C2SSocketClientException.h"
 #include "C2SSocketInfo.h"
 
+#include <string.h>
+
 namespace c2s
 {
 
